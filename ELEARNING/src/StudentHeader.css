@@ -1,0 +1,156 @@
+.student-header {
+  background-color: #1e1e2f;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.student-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #3b82f6;
+}
+
+.student-logo img {
+  width: 32px;
+  height: 32px;
+}
+
+.student-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.notification-icon,
+.quiz-icon,
+.student-icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #9333ea;
+  position: relative;
+}
+
+.notification-icon:hover,
+.quiz-icon:hover,
+.student-icon:hover {
+  color: #3b82f6;
+  transform: scale(1.1);
+  transition: 0.3s ease;
+}
+body.light-mode {
+  --bg: #ffffff;
+  --text: #1e1e2f;
+}
+
+body.dark-mode {
+  --bg: #1e1e2f;
+  --text: #ffffff;
+}
+
+.student-header {
+  background-color: var(--bg);
+  color: var(--text);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.student-header-left {
+  display: flex;
+  align-items: center;
+}
+
+.student-logo {
+  width: 36px;
+  margin-right: 0.5rem;
+}
+
+.student-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #9333ea;
+}
+
+.student-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.language-dropdown .p-dropdown-label {
+  color: var(--text);
+}
+
+.theme-toggle-icon {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #9333ea;
+}
+
+.notif-icon {
+  position: relative;
+  font-size: 1.2rem;
+  color: #9333ea;
+}
+
+.notif-dot {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background: #f87171;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-area {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.student-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.student-name {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.student-role {
+  font-size: 0.75rem;
+  color: #888;
+}
+.student-icon {
+  font-size: 1.8rem;
+  color: #9333ea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

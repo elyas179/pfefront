@@ -1,0 +1,536 @@
+/* Positionnement */
+.header {
+  width: 100%;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(219, 219, 219, 0);
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: var(--bg);
+  z-index: 999;
+}
+
+.header-content {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Boutons */
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn.red {
+  background-color: red;
+  color: white;
+}
+
+/* Sélecteurs */
+.lang-select {
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* Thème clair / sombre */
+:root {
+  --bg:#ffffff;
+  --text: #c5b8b8;
+}
+
+body.light-mode {
+  --bg: #ffffff;
+  --text: #131212;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+body.dark-mode {
+  --bg: #404040;
+  --text: #ffffff;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.theme-toggle {
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+}
+.footer {
+  width: 100%;
+  padding: 20px;
+  background-color: #f0f0f0;
+  text-align: center;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.footer-links {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: #555;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: 500;
+}
+
+.footer-links a:hover {
+  color: #000;
+}
+
+.divider {
+  margin: 0 5px;
+  color: #aaa;
+}
+
+.footer-copy {
+  color: #666;
+  font-size: 14px;
+}
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+.home-intro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+  min-height: 70vh;
+}
+
+
+.image-container img {
+  width: 400px;
+  max-width: 100%;
+ height:auto;
+}
+
+.text-container {
+  max-width: 300px;
+  text-align: left;
+  top: 0%;
+left: 0%;
+
+}
+
+.text-container h1 {
+  font-size: 2.2em;
+  margin-bottom: 10px;
+  color: #333;
+  left:0
+}
+
+.text-container p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: #555;
+}
+/* Style du bouton "S'inscrire" */
+.signup-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem; /* équivaut à text-sm */
+  background-color: #ef4444; /* bg-red-500 */
+  color: white;
+  border-radius: 0.375rem;
+  transition: background-color 0.3s ease;
+}
+
+.signup-button:hover {
+  background-color: #dc2626; /* bg-red-600 */
+}
+
+
+
+.signup-button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+  transition: all 0.3s ease;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.signup-button:hover {
+  box-shadow: 0 12px 25px rgba(239, 68, 68, 0.6);
+}
+.register-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #f0f0f0, #fafafa);
+}
+
+.register-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.register-logo {
+  width: 50px;
+  margin-bottom: 1rem;
+}
+
+.register-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.register-subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.register-steps {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.register-form label {
+  text-align: left;
+  display: block;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.input-password {
+  position: relative;
+}
+
+.input-password svg {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  cursor: pointer;
+}
+
+.role-select {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: space-around;
+  font-size: 0.95rem;
+}
+
+.register-submit {
+  width: 100%;
+  padding: 0.8rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.6rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+body {
+  font-family: 'Segoe UI', sans-serif;
+}
+.card {
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.p-steps .p-steps-item {
+  margin-right: 2rem /* augmente ou diminue selon l’espace souhaité */
+}
+.p-steps .p-steps-item {
+  margin-right: 2.5rem;
+  font-weight: 500;
+}
+.p-steps .p-steps-item:last-chisld {
+  margin-right: 0;
+}
+
+
+
+
+
+
+
+/* ======= GLOBAL THEME ======= */
+body.light-mode {
+  background-color: #ffffff;
+  color: #1e1e2f;
+}
+
+body.dark-mode {
+  background-color: #1e1e2f;
+  color: white;
+}
+
+h1, h2, h3, .brand, .gradient-title {
+  color: #9333ea;
+}
+
+button, .cta-button, .auth-button-filled {
+  background-color: #9333ea;
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 0 0 10px #9333ea60;
+}
+
+button:hover, .cta-button:hover, .auth-button-filled:hover {
+  background-color: #3b82f6;
+  box-shadow: 0 0 20px #3b82f6aa;
+}
+
+/* ======= HOME ======= */
+.home-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem;
+  min-height: 100vh;
+}
+
+.home-left {
+  flex: 1;
+  padding-right: 2rem;
+}
+
+.home-left h1 {
+  font-size: 2.5rem;
+  background: linear-gradient(to right, #9333ea, #3b82f6);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.home-left p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.home-right img {
+  width: 500px;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ======= AUTH (LOGIN + REGISTER) ======= */
+.auth-container {
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.auth-left, .auth-right {
+  flex: 1;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-left {
+  background-color: #1e1e2f;
+  color: white;
+  text-align: center;
+}
+
+.auth-right {
+  background-color: white;
+  color: #1e1e2f;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .auth-right {
+  background-color: #1e1e2f;
+  color: white;
+}
+
+.auth-right h2 {
+  color: #9333ea;
+  margin-bottom: 1.5rem;
+}
+
+.auth-right form {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-right input {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+body.dark-mode .auth-right input {
+  background-color: #333;
+  color: white;
+  border: 1px solid #555;
+}
+
+.auth-button-outlined {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+/* ======= HEADER ======= */
+.header {
+  width: 100%;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  background-color: #1e1e2f;
+  z-index: 999;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.header select, .header button {
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.lang-select {
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  background-color: #333;
+  color: white;
+}
+
+.theme-toggle {
+  font-size: 20px;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* ======= SOCIAL ICONS ======= */
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.social-icons i {
+  transition: transform 0.3s ease;
+}
+
+.social-icons i:hover {
+  transform: scale(1.2);
+}
+
+/* ======= RADIO (ROLES) ======= */
+.role-select {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  color: white;
+}
+
+.role-select label input[type="radio"]:checked + span {
+  color: #9333ea;
+}
+
+.role-select label span {
+  margin-left: 0.5rem;
+  font-weight: 500;
+}
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem 1rem; /* Ajuste si besoin */
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}

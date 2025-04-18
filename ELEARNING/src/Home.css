@@ -1,0 +1,120 @@
+body.dark-mode {
+    background-color: #4e4b4b;
+    color: white;
+  }
+  
+  .home-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4rem;
+    min-height: 100vh;
+    flex-wrap: wrap;
+  }
+  
+  .home-left h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .home-left .brand {
+    color: #ef4444;
+  }
+  
+  .home-left p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  
+  .cta-button {
+    background-color: #ef4444;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .cta-button:hover {
+    background-color: #dc2626;
+  }
+  
+  .student-image {
+    width: 520px; /* 🔥 image plus grande */
+    max-width: 100%;
+    height: auto;
+    animation: floatUpDown 3s ease-in-out infinite;
+  }
+  
+  @keyframes floatUpDown {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+  
+  .fade-out {
+    animation: fadeOut 0.5s forwards;
+  }
+  
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
+  
+  /* ✅ Corrigé et repositionné */
+  .home-left {
+    flex: 1;
+    padding-right: 2rem;
+    max-width: 600px;
+  }
+  
+  .home-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  
+  
+  .gradient-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, #9333ea, #3b82f6);
+    background-size: 200% auto;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: shineText 4s ease-in-out infinite;
+    position: relative;
+  }
+  
+  /* Ajoute ce bloc pour le glow */
+  .gradient-title::after {
+    content: 'Bienvenue sur Curio Learning Platform';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    color: #9333ea;
+    filter: blur(6px);
+    z-index: -1;
+    opacity: 0.6;
+  }
+  
+  @keyframes shineText {
+    0% {
+      background-position: 0% center;
+    }
+    50% {
+      background-position: 100% center;
+    }
+    100% {
+      background-position: 0% center;
+    }
+  }
+  
