@@ -1,0 +1,106 @@
+/* Courses.css */
+
+.courses-container {
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  
+  .courses-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .courses-header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #9333ea;
+  }
+  
+  .carousel-img {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  .filters-toggle {
+    margin-top: 2rem;
+    text-align: center;
+  }
+  
+  .filters-section {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .p-dropdown {
+    min-width: 200px;
+  }
+  
+  /* Filter Modal Styles */
+  .filter-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(8px);
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .filter-form {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .filter-form label {
+    font-weight: bold;
+  }
+  
+  .filter-form .p-dropdown,
+  .filter-form .p-inputtext {
+    width: 100%;
+  }
+  
+  /* Dark mode support */
+  body.dark-mode .courses-container {
+    background-color: #1e1e2f;
+    color: white;
+  }
+  
+  body.dark-mode .courses-header h1 {
+    color: #9333ea;
+  }
+  
+  body.dark-mode .p-dropdown {
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+  }
+  
+  body.dark-mode .p-dropdown-label {
+    color: white;
+  }
+  
+  body.dark-mode .filter-form {
+    background-color: #2d2d3a;
+    color: white;
+  }
+  

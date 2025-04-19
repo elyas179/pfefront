@@ -3,25 +3,23 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import { AnimatePresence } from "framer-motion";
 
 import Header from "./Header";
-import StudentHeader from "./StudentHeader";
 import Footer from "./Footer";
 import Home from "./Home";
 import Login from "./Login";
 import Register from "./Register";
 import Student from "./Student";
 import Chat from "./Chat";
-
+import StudentHeader from "./StudentHeader"; // Assure-toi de l'importer
+import Courses from "./Courses";
 const AppContent = () => {
   const location = useLocation();
   const isStudentPage = location.pathname === "/student";
+  const isChatPage = location.pathname === "/chat";
 
   return (
     <>
-      {/* Affiche Header global sauf sur /student */}
-      {!isStudentPage && <Header />}
-      
-      {/* Affiche Header spécial uniquement sur /student */}
-      {isStudentPage && <StudentHeader />}
+      {/* Show student header for /student and /chat, otherwise default header */}
+      {(isStudentPage || isChatPage) ? <StudentHeader /> : <Header />}
 
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
@@ -30,6 +28,8 @@ const AppContent = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/student" element={<Student />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/courses" element={<Courses />} />
+
         </Routes>
       </AnimatePresence>
 

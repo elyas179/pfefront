@@ -100,23 +100,24 @@ body.dark-mode {
 
 .notif-icon {
   position: relative;
-  font-size: 1.2rem;
-  color: #9333ea;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 1rem;
+  color: inherit;
+  font-size: 1.25rem;
 }
-
 .notif-dot {
   position: absolute;
-  top: -8px;
-  right: -10px;
-  background: #f87171;
+  top: -4px;
+  right: -4px;
+  background-color: #9333ea; /* Violet néon */
   color: white;
-  border-radius: 50%;
-  font-size: 0.65rem;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: bold;
+  padding: 2px 5px;
+  border-radius: 9999px;
+  line-height: 1;
 }
 
 .profile-area {
@@ -154,3 +155,4 @@ body.dark-mode {
   align-items: center;
   justify-content: center;
 }
+

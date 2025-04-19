@@ -6,10 +6,10 @@ import "./Student.css";
 import Footer from "./Footer";
 
 const dashboardItems = [
-  { icon: "pi pi-chart-bar", label: "Tableau de bord" },
-  { icon: "pi pi-book", label: "Cours" },
+  
+  { icon: "pi pi-book", label: "mes Cours", to:"/courses"  },
   { icon: "pi pi-pencil", label: "Quizzes" },
-  { icon: "pi pi-wrench", label: "Outils" },
+
   { icon: "pi pi-users", label: "Communauté" },
   { icon: "pi pi-cog", label: "Paramètres" },
   { icon: "pi pi-comments", label: "Chat Bot", to: "/chat" },

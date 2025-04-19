@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { FaSun, FaMoon, FaBell } from "react-icons/fa";
 import { Dropdown } from "primereact/dropdown";
+import { useNavigate } from "react-router-dom";
 import "./StudentHeader.css";
 
 const StudentHeader = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [language, setLanguage] = useState("fr");
+  const navigate = useNavigate();
 
   const languages = [
     { name: "🇫🇷 Français", code: "fr" },
@@ -24,7 +26,6 @@ const StudentHeader = () => {
       </div>
 
       <div className="student-header-right">
-        {/* Langue */}
         <Dropdown
           value={language}
           options={languages}
@@ -34,18 +35,15 @@ const StudentHeader = () => {
           placeholder="🌐 Langue"
         />
 
-        {/* Thème clair/sombre */}
         <button onClick={() => setDarkMode(!darkMode)} className="theme-toggle-icon">
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
+        <button className="notif-icon" onClick={() => navigate("/notification")}>
+  <FaBell size={20} />
+  <span className="notif-dot">3</span>
+</button>
 
-        {/* Notifications */}
-        <div className="notif-icon">
-          <FaBell />
-          <span className="notif-dot">3</span>
-        </div>
-
-        {/* Profil avec icône 👤 */}
+       
         <div className="profile-area">
           <div className="student-icon">👤</div>
           <div className="profile-info">
@@ -59,3 +57,4 @@ const StudentHeader = () => {
 };
 
 export default StudentHeader;
+
