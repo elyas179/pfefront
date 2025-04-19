@@ -15,11 +15,12 @@ const AppContent = () => {
   const location = useLocation();
   const isStudentPage = location.pathname === "/student";
   const isChatPage = location.pathname === "/chat";
+  const isCoursesPage = location.pathname === "/courses";
 
   return (
     <>
       {/* Show student header for /student and /chat, otherwise default header */}
-      {(isStudentPage || isChatPage) ? <StudentHeader /> : <Header />}
+      {(isStudentPage || isChatPage ||isCoursesPage ) ? <StudentHeader /> : <Header />}
 
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
@@ -41,6 +42,7 @@ const AppContent = () => {
 const App = () => (
   <Router>
     <AppContent />
+   
   </Router>
 );
 

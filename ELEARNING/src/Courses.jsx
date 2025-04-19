@@ -1,63 +1,189 @@
+// File: Courses.jsx
 import React, { useState } from "react";
 import { Carousel } from "primereact/carousel";
 import { Card } from "primereact/card";
-import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "./Courses.css";
-import FilterModal from "./FilterModal";
+import Footer from "./Footer";
 
-const dummyCourses = [
-  {
-    title: "Intelligence Artificielle",
-    image: "/ai.jpg",
-    description: "Explorez les concepts fondamentaux de l'IA.",
+const modulesData = {
+  L1: {
+    S1: [
+      { name: "Algorithmique", icon: "pi pi-code" },
+      { name: "Analyses", icon: "pi pi-chart-line" },
+      { name: "Algèbre", icon: "pi pi-sliders-h" },
+      { name: "MP", icon: "pi pi-compass" },
+      { name: "Structure machine", icon: "pi pi-cog" },
+    ],
+    S2: [
+      { name: "Algorithmique", icon: "pi pi-code" },
+      { name: "Analyses", icon: "pi pi-chart-line" },
+      { name: "Statistique", icon: "pi pi-chart-bar" },
+      { name: "Algèbre", icon: "pi pi-sliders-h" },
+      { name: "MP", icon: "pi pi-compass" },
+      { name: "OPM", icon: "pi pi-database" },
+      { name: "Structure machine", icon: "pi pi-cog" },
+    ],
   },
-  {
-    title: "Développement Web",
-    image: "/web.jpg",
-    description: "Apprenez à créer des sites modernes et responsives.",
+  L2: {
+    ACAD: {
+      S3: [
+        { name: "Algorithmique", icon: "pi pi-code" },
+        { name: "Architecture d’ordinateur", icon: "pi pi-desktop" },
+        { name: "Système d’information", icon: "pi pi-server" },
+        { name: "Math info", icon: "pi pi-calculator" },
+        { name: "Proba Stat", icon: "pi pi-percentage" },
+        { name: "Logique mathématique", icon: "pi pi-check-circle" },
+      ],
+      S4: [
+        { name: "Système exploitation", icon: "pi pi-cog" },
+        { name: "Architecture 2", icon: "pi pi-desktop" },
+        { name: "Théorie des langages", icon: "pi pi-globe" },
+        { name: "Base de données", icon: "pi pi-database" },
+        { name: "POO", icon: "pi pi-code" },
+        { name: "Anglais", icon: "pi pi-comment" },
+      ],
+    },
+    ISIL: {
+      S3: [
+        { name: "Algorithmique", icon: "pi pi-code" },
+        { name: "Architecture", icon: "pi pi-desktop" },
+        { name: "Analyse numérique", icon: "pi pi-percentage" },
+        { name: "Logique", icon: "pi pi-check-circle" },
+        { name: "SI", icon: "pi pi-server" },
+      ],
+      S4: [
+        { name: "Programmation web", icon: "pi pi-globe" },
+        { name: "Génie logiciel", icon: "pi pi-sliders-h" },
+        { name: "THG", icon: "pi pi-code" },
+        { name: "Architecture", icon: "pi pi-desktop" },
+        { name: "Système exploitation", icon: "pi pi-cog" },
+        { name: "Base de données", icon: "pi pi-database" },
+      ],
+    },
   },
-  {
-    title: "Analyse de Données",
-    image: "/data.jpg",
-    description: "Manipulez et analysez de grandes quantités de données.",
+  L3: {
+    ACAD: {
+      S5: [
+        { name: "Théorie des graphes", icon: "pi pi-share-alt" },
+        { name: "Génie logiciel", icon: "pi pi-sliders-h" },
+        { name: "Compile", icon: "pi pi-code" },
+        { name: "Système exploitation", icon: "pi pi-cog" },
+        { name: "Réseau", icon: "pi pi-wifi" },
+      ],
+      S6: [
+        { name: "Document structuré", icon: "pi pi-file" },
+        { name: "Programmation web", icon: "pi pi-globe" },
+        { name: "IA", icon: "pi pi-robot" },
+        { name: "Admin serveur", icon: "pi pi-server" },
+        { name: "Anglais", icon: "pi pi-comment" },
+      ],
+    },
+    ISIL: {
+      S5: [
+        { name: "Réseau", icon: "pi pi-wifi" },
+        { name: "Système exploitation", icon: "pi pi-cog" },
+        { name: "GL2", icon: "pi pi-sliders-h" },
+        { name: "Base de données", icon: "pi pi-database" },
+        { name: "Compile", icon: "pi pi-code" },
+      ],
+      S6: [
+        { name: "Génie logiciel", icon: "pi pi-sliders-h" },
+        { name: "Réseau", icon: "pi pi-wifi" },
+        { name: "IA", icon: "pi pi-robot" },
+        { name: "Anglais", icon: "pi pi-comment" },
+      ],
+    },
   },
-];
+};
 
 const Courses = () => {
-  const [showFilters, setShowFilters] = useState(false);
+  const [query, setQuery] = useState("");
+  const [selectedYear, setSelectedYear] = useState("L1");
+  const [speciality, setSpeciality] = useState("ACAD");
 
-  const courseTemplate = (course) => {
-    return (
-      <Card className="course-card" header={<img src={course.image} alt={course.title} className="course-img" />}>
-        <h3>{course.title}</h3>
-        <p>{course.description}</p>
-      </Card>
-    );
+  const filterModules = (list) => {
+    return list.filter((m) => m.name.toLowerCase().includes(query.toLowerCase()));
   };
 
+  const cardTemplate = (mod) => (
+    <Card className="module-card">
+      <div className="icon-container">
+        <i className={`${mod.icon} module-icon`}></i>
+      </div>
+      <p>{mod.name}</p>
+    </Card>
+  );
+
   return (
-    <div className={`courses-page ${showFilters ? "blurred-background" : ""}`}>
-      <h1 className="courses-title">Explorez Nos Cours</h1>
+    <div className="page-container">
+    <div className="courses-wrapper">
+      <h1 className="main-title">📚 Modules par Niveau</h1>
 
-      <Button
-        label="Afficher les Filtres"
-        icon="pi pi-filter"
-        className="filter-button"
-        onClick={() => setShowFilters(true)}
-      />
+      <div className="search-bar center">
+        <InputText
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="🔍 Rechercher un module..."
+        />
+      </div>
 
-      <Carousel
-        value={dummyCourses}
-        itemTemplate={courseTemplate}
-        numVisible={3}
-        numScroll={1}
-        className="course-carousel"
-      />
+      <div className="dropdown-selectors">
+        <Dropdown
+          value={selectedYear}
+          options={[{ label: "L1", value: "L1" }, { label: "L2", value: "L2" }, { label: "L3", value: "L3" }]}
+          onChange={(e) => setSelectedYear(e.value)}
+          placeholder="Niveau"
+          className="year-dropdown"
+        />
+        {(selectedYear === "L2" || selectedYear === "L3") && (
+          <Dropdown
+            value={speciality}
+            options={[{ label: "ACAD", value: "ACAD" }, { label: "ISIL", value: "ISIL" }]}
+            onChange={(e) => setSpeciality(e.value)}
+            placeholder="Spécialité"
+            className="spec-dropdown"
+          />
+        )}
+      </div>
 
-      {showFilters && <FilterModal onClose={() => setShowFilters(false)} />}
+      {selectedYear === "L1" &&
+        Object.entries(modulesData[selectedYear]).map(([sem, mods]) => (
+          <div key={sem} className="semester-section">
+            <h3 className="semester-title">{sem}</h3>
+            <Carousel
+              value={filterModules(mods)}
+              itemTemplate={cardTemplate}
+              numVisible={3}
+              circular
+              autoplayInterval={5000}
+              showIndicators={false}
+              showNavigators={true}
+            />
+          </div>
+        ))}
+
+      {(selectedYear === "L2" || selectedYear === "L3") &&
+        Object.entries(modulesData[selectedYear][speciality]).map(([sem, mods]) => (
+          <div key={sem} className="semester-section">
+            <h3 className="semester-title">{sem}</h3>
+            <Carousel
+              value={filterModules(mods)}
+              itemTemplate={cardTemplate}
+              numVisible={3}
+              circular
+              autoplayInterval={5000}
+              showIndicators={false}
+              showNavigators={true}
+            />
+          </div>
+        ))}
+    </div>
+  
     </div>
   );
 };
