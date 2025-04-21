@@ -1,4 +1,4 @@
-// Register.jsx
+// File: Register.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -15,6 +15,8 @@ const Register = () => {
     password: '',
     confirmPassword: '',
     role: 'etudiant',
+    level: '',
+    speciality: '',
   });
 
   const handleChange = (e) => {
@@ -56,11 +58,33 @@ const Register = () => {
           <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
           <input type="password" name="password" placeholder="Mot de passe" value={formData.password} onChange={handleChange} required />
           <input type="password" name="confirmPassword" placeholder="Confirmer le mot de passe" value={formData.confirmPassword} onChange={handleChange} required />
+          <div className="select-group">
+            <label>Niveau:</label>
+            <select name="level" value={formData.level} onChange={handleChange} required>
+              <option value="">Choisir un niveau</option>
+              <option value="L1">L1</option>
+              <option value="L2">L2</option>
+              <option value="L3">L3</option>
+            </select>
+          </div>
+
+          {(formData.level === 'L2' || formData.level === 'L3') && (
+            <div className="select-group">
+              <label>Spécialité:</label>
+              <select name="speciality" value={formData.speciality} onChange={handleChange} required>
+                <option value="">Choisir une spécialité</option>
+                <option value="ACAD">ACAD</option>
+                <option value="ISIL">ISIL</option>
+              </select>
+            </div>
+          )}
 
           <div className="role-select">
             <label><input type="radio" name="role" value="etudiant" checked={formData.role === 'etudiant'} onChange={handleChange} /> Étudiant</label>
             <label><input type="radio" name="role" value="enseignant" checked={formData.role === 'enseignant'} onChange={handleChange} /> Enseignant</label>
           </div>
+
+          
 
           <button className="auth-button-filled" type="submit">SIGN UP</button>
         </form>
