@@ -1,32 +1,48 @@
-// File: Login.jsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './AuthForm.css';
-import { motion } from 'framer-motion';
+import axios from "axios";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./AuthForm.css";
+import { motion } from "framer-motion";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const [role, setRole] = useState('etudiant');
-  const [file, setFile] = useState(null);
+  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [role, setRole] = useState("etudiant");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login:', formData, 'Role:', role, 'File:', file);
 
-    if (role === 'etudiant') {
-      navigate('/student');
-    } else {
-      // Tu peux rediriger ailleurs ici pour prof
-      alert('Connexion en tant que professeur');
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/token/",
+        {
+          username: formData.username,
+          password: formData.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      
+     
+
+      const token = response.data.access;
+      localStorage.setItem("accessToken", token);
+
+      if (role === "etudiant") {
+        navigate("/student");
+      } else {
+        alert("Connexion en tant que professeur");
+      }
+    } catch (error) {
+      console.error("Erreur de connexion :", error);
+      alert("Échec de connexion. Vérifie tes identifiants !");
     }
   };
 
@@ -40,13 +56,8 @@ const Login = () => {
     >
       <div className="auth-left">
         <h1>Hello, Friend!</h1>
-        <p>Enter your personal details and start your journey with us</p>
-        <button
-          className="auth-button-outlined"
-          onClick={() => navigate('/register')}
-        >
-          SIGN UP
-        </button>
+        <p>Connecte-toi avec ton compte</p>
+        <button className="auth-button-outlined" onClick={() => navigate('/register')}>SIGN UP</button>
       </div>
 
       <div className="auth-right">
@@ -56,33 +67,32 @@ const Login = () => {
           <i className="pi pi-linkedin" style={{ color: "#0e76a8" }}></i>
         </div>
 
-        <h2>Sign In</h2>
+        <h2>Connexion</h2>
         <form onSubmit={handleSubmit}>
           <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
+            type="text"
+            name="username"
+            placeholder="Nom d'utilisateur"
+            value={formData.username}
             onChange={handleChange}
             required
           />
           <input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="Mot de passe"
             value={formData.password}
             onChange={handleChange}
             required
           />
 
-          
           <div className="role-select">
             <label>
               <input
                 type="radio"
                 name="role"
                 value="etudiant"
-                checked={role === 'etudiant'}
+                checked={role === "etudiant"}
                 onChange={(e) => setRole(e.target.value)}
               />
               Étudiant
@@ -92,7 +102,7 @@ const Login = () => {
                 type="radio"
                 name="role"
                 value="professeur"
-                checked={role === 'professeur'}
+                checked={role === "professeur"}
                 onChange={(e) => setRole(e.target.value)}
               />
               Professeur

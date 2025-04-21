@@ -1,0 +1,103 @@
+/* MyModules.css */
+
+.my-modules-container {
+    padding: 2rem;
+    min-height: 100vh;
+    background-color: var(--background-color);
+    transition: background-color 0.3s ease;
+  }
+  
+  body.dark-mode .my-modules-container {
+    --background-color: #1e1e2f;
+  }
+  
+  body.light-mode .my-modules-container {
+    --background-color: #f4f4f4;
+  }
+  
+  .my-modules-title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #9333ea;
+  }
+  
+  .module-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    color: white;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, background 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+  }
+  
+  body.light-mode .module-card {
+    background: #ffffffcc;
+    color: #1e1e2f;
+  }
+  
+  .module-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    background: rgba(147, 51, 234, 0.1);
+  }
+  
+  .module-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #9333ea;
+  }
+  
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  .my-modules-container {
+    padding: 2rem;
+    min-height: 100vh;
+    background-color: var(--background-color);
+  }
+  
+  .my-modules-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #9333ea;
+  }
+  
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .module-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: white;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  body.light-mode .module-card {
+    background: #fff;
+    color: #1e1e2f;
+  }
+  
+  .module-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .module-icon {
+    font-size: 2.2rem;
+    color: #9333ea;
+    margin-bottom: 1rem;
+  }
+  
+  

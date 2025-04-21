@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 import './AuthForm.css';
 
 const Register = () => {
@@ -14,23 +15,23 @@ const Register = () => {
     password: '',
     confirmPassword: '',
     role: 'etudiant',
-    file: null
   });
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === 'file') {
-      setFormData({ ...formData, file: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Register:', formData);
-    if (formData.password === formData.confirmPassword) {
+    if (formData.password !== formData.confirmPassword) return;
+
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/users/register/', formData);
+      console.log('Inscription réussie:', response.data);
       if (formData.role === 'etudiant') navigate('/student');
+    } catch (error) {
+      console.error("Erreur d'inscription:", error);
     }
   };
 
@@ -55,11 +56,12 @@ const Register = () => {
           <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
           <input type="password" name="password" placeholder="Mot de passe" value={formData.password} onChange={handleChange} required />
           <input type="password" name="confirmPassword" placeholder="Confirmer le mot de passe" value={formData.confirmPassword} onChange={handleChange} required />
-          <input type="file" name="file" onChange={handleChange} />
+
           <div className="role-select">
             <label><input type="radio" name="role" value="etudiant" checked={formData.role === 'etudiant'} onChange={handleChange} /> Étudiant</label>
             <label><input type="radio" name="role" value="enseignant" checked={formData.role === 'enseignant'} onChange={handleChange} /> Enseignant</label>
           </div>
+
           <button className="auth-button-filled" type="submit">SIGN UP</button>
         </form>
       </div>
