@@ -27,12 +27,29 @@ const Register = () => {
     if (formData.password !== formData.confirmPassword) return;
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users/register/', formData);
-      console.log('Inscription réussie:', response.data);
-      if (formData.role === 'etudiant') navigate('/student');
-    } catch (error) {
-      console.error("Erreur d'inscription:", error);
-    }
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/users/register/",
+        {
+          username: formData.username,
+          password: formData.password,
+          email: formData.email,
+          first_name: formData.first_name,
+          last_name: formData.last_name,
+          user_type: formData.user_type,   
+          level: formData.level,
+          speciality: formData.speciality,           
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    console.log("✅ Registration successful:", response.data);
+}   catch (error) {
+  console.error("❌ Registration failed:", error.response?.data || error.message);
+}
+      
   };
 
   return (
@@ -69,4 +86,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Register; 
