@@ -1,15 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "primereact/card";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import "./Student.css";
-import Footer from "./Footer";
 
 const dashboardItems = [
-  
-  { icon: "pi pi-book", label: "mes Cours", to:"/courses"  },
+  { icon: "pi pi-book", label: "mes Cours", to: "/courses" },
   { icon: "pi pi-pencil", label: "Quizzes" },
-
   { icon: "pi pi-users", label: "Communauté" },
   { icon: "pi pi-cog", label: "Paramètres" },
   { icon: "pi pi-comments", label: "Chat Bot", to: "/chat" },
@@ -18,6 +15,15 @@ const dashboardItems = [
 
 const Student = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Charger l'utilisateur depuis localStorage
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
 
   return (
     <div className="student-page">
@@ -28,10 +34,15 @@ const Student = () => {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="dashboard-title">
-          Bienvenue <span>Étudiant</span> 🎓
-        </h1>
-        <p className="dashboard-subtext">Voici votre tableau de bord personnalisé.</p>
+        <div className="dashboard-header">
+          <h1 className="dashboard-title">
+            Bienvenue{" "}
+            <span>{user?.first_name || user?.username || "Étudiant"}</span> 🎓
+          </h1>
+          <p className="dashboard-subtext">
+            Voici votre tableau de bord personnalisé.
+          </p>
+        </div>
 
         <div className="dashboard-grid">
           {dashboardItems.map((item, index) => (
@@ -47,8 +58,6 @@ const Student = () => {
           ))}
         </div>
       </motion.div>
-
-      
     </div>
   );
 };
