@@ -14,13 +14,25 @@ import Notification from "./PAGES/Notification";
 import Register from "./Register";
 import Student from "./Student";
 import StudentHeader from "./StudentHeader";
+import StudentSettings from "./StudentSettings"; // ou le chemin exact
+import StudentSettingsEdit from "./StudentSettingsEdit"; 
+import StudentFAQ from "./StudentFAQ";
+import ModuleDetail from "./ModuleDetail"; 
+
+
 
 const AppContent = () => {
   const location = useLocation();
 
   // ✅ Liste des routes qui utilisent le header spécial étudiant
-  const studentRoutes = ["/student", "/chat", "/courses", "/my-modules"];
-  const isStudentHeader = studentRoutes.includes(location.pathname);
+  const isStudentHeader =
+  location.pathname.startsWith("/student") ||
+  location.pathname.startsWith("/chat") ||
+  location.pathname.startsWith("/courses") ||
+  location.pathname.startsWith("/my-modules") ||
+  location.pathname.startsWith("/studentsettings") ||
+  location.pathname.startsWith("/faq") ||
+  location.pathname.startsWith("/modules/");
 
   return (
     <>
@@ -35,7 +47,18 @@ const AppContent = () => {
           <Route path="/chat" element={<Chat />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/my-modules" element={<MyModules />} />
+<<<<<<< HEAD
           <Route path="/notification" element={<Notification />} />
+=======
+          <Route path="/studentsettings" element={<StudentSettings />} />
+          <Route path="/studentsettings/edit" element={<StudentSettingsEdit />} />
+          <Route path="/faq" element={<StudentFAQ />} />
+          <Route path="/modules/:id" element={<ModuleDetail />} />
+
+
+
+
+>>>>>>> 1e8a2c9feb92526ca0983cfa125d1a4ea243062a
         </Routes>
       </AnimatePresence>
 

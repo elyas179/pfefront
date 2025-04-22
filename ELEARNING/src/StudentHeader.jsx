@@ -7,12 +7,21 @@ import "./StudentHeader.css";
 const StudentHeader = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [language, setLanguage] = useState("fr");
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   const languages = [
     { name: "🇫🇷 Français", code: "fr" },
     { name: "🇬🇧 English", code: "en" },
   ];
+
+  useEffect(() => {
+    // 💡 Charger l'utilisateur depuis localStorage
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
 
   useEffect(() => {
     document.body.className = darkMode ? "dark-mode" : "light-mode";
@@ -38,16 +47,17 @@ const StudentHeader = () => {
         <button onClick={() => setDarkMode(!darkMode)} className="theme-toggle-icon">
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
-        <button className="notif-icon" onClick={() => navigate("/notification")}>
-  <FaBell size={20} />
-  <span className="notif-dot">3</span>
-</button>
 
-       
+        <button className="notif-icon" onClick={() => navigate("/notification")}>
+          <FaBell size={20} />
+          <span className="notif-dot">3</span>
+        </button>
+
         <div className="profile-area">
           <div className="student-icon">👤</div>
           <div className="profile-info">
-            <span className="student-name">elyas</span>
+          <span className="student-name">{user?.username || "Utilisateur"}</span>
+
             <span className="student-role">Étudiant</span>
           </div>
         </div>
@@ -57,4 +67,3 @@ const StudentHeader = () => {
 };
 
 export default StudentHeader;
-
