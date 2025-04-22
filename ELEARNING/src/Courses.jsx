@@ -5,11 +5,13 @@ import { Carousel } from "primereact/carousel";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import "./MyModules.css";
 
 const MyModules = () => {
   const [modules, setModules] = useState([]);
   const [query, setQuery] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -41,6 +43,8 @@ const MyModules = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
+      onClick={() => navigate(`/modules/${mod.id}`)}
+      style={{ cursor: "pointer" }}
     >
       <div className="icon-container">
         <i className="pi pi-book module-icon"></i>
