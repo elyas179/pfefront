@@ -1,0 +1,79 @@
+.notification-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+  }
+  
+  .notification-title {
+    color: #9333ea;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 2rem;
+  }
+  
+  .notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .notification-card {
+    background-color: #1e1e2f;
+    color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
+    padding: 15px;
+    position: relative;
+  }
+  
+  .notification-time {
+    color: #bbb;
+    font-size: 0.85rem;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+  }
+  
+  .view-btn {
+    margin-top: 10px;
+    color: #3b82f6;
+    transition: color 0.3s ease;
+  }
+  
+  .view-btn:hover {
+    color: #9333ea;
+  }
+  .notification-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .notification-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(147, 51, 234, 0.5);
+  }
+  .notification-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background-color: #9333ea;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+  }
+  .mark-all-btn {
+    text-align: right;
+    margin-bottom: 15px;
+  }
+  
+  .mark-all-btn .p-button-outlined {
+    color: #3b82f6;
+    border-color: #3b82f6;
+  }
+  
+  .mark-all-btn .p-button-outlined:hover {
+    background-color: #3b82f6;
+    color: white;
+  }
+  

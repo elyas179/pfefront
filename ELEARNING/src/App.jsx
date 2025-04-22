@@ -1,17 +1,18 @@
 // File: App.jsx
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import React from "react";
+import { Route, BrowserRouter as Router, Routes, useLocation } from "react-router-dom";
 
-import Header from "./Header";
-import Footer from "./Footer";
-import Home from "./Home";
-import Login from "./Login";
-import Register from "./Register";
-import Student from "./Student";
 import Chat from "./Chat";
 import Courses from "./Courses";
+import Footer from "./Footer";
+import Header from "./Header";
+import Home from "./Home";
+import Login from "./Login";
 import MyModules from "./MyModules";
+import Notification from "./PAGES/Notification";
+import Register from "./Register";
+import Student from "./Student";
 import StudentHeader from "./StudentHeader";
 
 const AppContent = () => {
@@ -34,6 +35,7 @@ const AppContent = () => {
           <Route path="/chat" element={<Chat />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/my-modules" element={<MyModules />} />
+          <Route path="/notification" element={<Notification />} />
         </Routes>
       </AnimatePresence>
 
