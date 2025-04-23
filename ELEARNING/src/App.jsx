@@ -1,7 +1,7 @@
 // File: App.jsx
 import { AnimatePresence } from "framer-motion";
 import React from "react";
-import { Route, BrowserRouter as Router, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 
 import Chat from "./Chat";
 import Courses from "./Courses";
@@ -18,21 +18,20 @@ import StudentSettings from "./StudentSettings"; // ou le chemin exact
 import StudentSettingsEdit from "./StudentSettingsEdit"; 
 import StudentFAQ from "./StudentFAQ";
 import ModuleDetail from "./ModuleDetail"; 
-
-
+import TeacherDashboard from './PAGES/TeacherDashboard';
 
 const AppContent = () => {
   const location = useLocation();
 
   // ✅ Liste des routes qui utilisent le header spécial étudiant
   const isStudentHeader =
-  location.pathname.startsWith("/student") ||
-  location.pathname.startsWith("/chat") ||
-  location.pathname.startsWith("/courses") ||
-  location.pathname.startsWith("/my-modules") ||
-  location.pathname.startsWith("/studentsettings") ||
-  location.pathname.startsWith("/faq") ||
-  location.pathname.startsWith("/modules/");
+    location.pathname.startsWith("/student") ||
+    location.pathname.startsWith("/chat") ||
+    location.pathname.startsWith("/courses") ||
+    location.pathname.startsWith("/my-modules") ||
+    location.pathname.startsWith("/studentsettings") ||
+    location.pathname.startsWith("/faq") ||
+    location.pathname.startsWith("/modules/");
 
   return (
     <>
@@ -47,18 +46,12 @@ const AppContent = () => {
           <Route path="/chat" element={<Chat />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/my-modules" element={<MyModules />} />
-<<<<<<< HEAD
           <Route path="/notification" element={<Notification />} />
-=======
           <Route path="/studentsettings" element={<StudentSettings />} />
           <Route path="/studentsettings/edit" element={<StudentSettingsEdit />} />
           <Route path="/faq" element={<StudentFAQ />} />
           <Route path="/modules/:id" element={<ModuleDetail />} />
-
-
-
-
->>>>>>> 1e8a2c9feb92526ca0983cfa125d1a4ea243062a
+          <Route path="/teacher" element={<TeacherDashboard />} />
         </Routes>
       </AnimatePresence>
 
