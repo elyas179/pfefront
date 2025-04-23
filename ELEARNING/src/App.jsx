@@ -46,7 +46,9 @@ const AppContent = () => {
           <Route path="/chat" element={<Chat />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/my-modules" element={<MyModules />} />
+
           <Route path="/notification" element={<Notification />} />
+
           <Route path="/studentsettings" element={<StudentSettings />} />
           <Route path="/studentsettings/edit" element={<StudentSettingsEdit />} />
           <Route path="/faq" element={<StudentFAQ />} />

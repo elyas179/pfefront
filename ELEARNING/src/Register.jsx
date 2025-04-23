@@ -24,7 +24,6 @@ const Register = () => {
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/courses/levels/')
       .then(res => {
-        console.log("📦 Levels chargés :", res.data);
         setLevels(res.data);
       })
       .catch(err => console.error('Erreur niveaux:', err));
@@ -34,12 +33,12 @@ const Register = () => {
       .catch(err => console.error('Erreur spécialités:', err));
   }, []);
 
-  const handleChange = (e) => {+33
+  const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "level") {
-      setFormData({ ...formData, [name]: String(value), speciality: '' });
+      setFormData({ ...formData, [name]: value, speciality: '' });
     } else {
-      setFormData({ ...formData, [name]: String(value) });
+      setFormData({ ...formData, [name]: value });
     }
   };
 
@@ -58,7 +57,7 @@ const Register = () => {
       password: formData.password,
       user_type: formData.role === "etudiant" ? "student" : "professor",
       level: formData.level,
-      speciality: formData.speciality || null,
+      speciality: formData.speciality === "tronc" ? null : formData.speciality,
     };
 
     try {
@@ -71,10 +70,13 @@ const Register = () => {
     }
   };
 
-  // Trouver le niveau sélectionné
   const selectedLevel = levels.find(l => String(l.id) === formData.level);
-  const showSpeciality = selectedLevel && selectedLevel.name !== 'L1';
-  const filteredSpecialities = specialities.filter(spec => spec.name === 'ISIL' || spec.name === 'ACAD');
+  const showSpeciality = !!selectedLevel;
+
+  const filteredSpecialities =
+    selectedLevel?.name === "L1"
+      ? [{ id: "tronc", name: "Tronc Commun" }]
+      : specialities.filter(spec => spec.name === 'ISIL' || spec.name === 'ACAD');
 
   return (
     <motion.div
@@ -105,7 +107,7 @@ const Register = () => {
           <select name="level" value={formData.level} onChange={handleChange} required>
             <option value="">Choisir un niveau</option>
             {levels.map(level => (
-              <option key={level.id} value={String(level.id)}>{level.name}</option>
+              <option key={level.id} value={level.id}>{level.name}</option>
             ))}
           </select>
 
@@ -113,7 +115,7 @@ const Register = () => {
             <select name="speciality" value={formData.speciality} onChange={handleChange} required>
               <option value="">Choisir une spécialité</option>
               {filteredSpecialities.map(spec => (
-                <option key={spec.id} value={String(spec.id)}>{spec.name}</option>
+                <option key={spec.id} value={spec.id}>{spec.name}</option>
               ))}
             </select>
           )}
