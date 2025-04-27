@@ -1,4 +1,4 @@
-// RequestList.jsx
+
 import React from 'react';
 
 const RequestList = ({ requests, onAccept }) => {
@@ -8,6 +8,7 @@ const RequestList = ({ requests, onAccept }) => {
       {requests.length === 0 ? (
         <p className="text-gray-500">Aucune demande en attente.</p>
       ) : (
+        
         <ul className="space-y-3">
           {requests.map((req) => (
             <li
@@ -18,12 +19,19 @@ const RequestList = ({ requests, onAccept }) => {
                 <p className="font-medium">{req.studentName}</p>
                 <p className="text-sm text-gray-500">Demande l'accès à : <strong>{req.courseName}</strong></p>
               </div>
-              <button
-                className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-                onClick={() => onAccept(req.id)}
+              <button 
+               disabled={req.status === 'accepted'}
+               className={`px-4 py-2 rounded text-white font-semibold transition ${
+                 req.status === 'accepted'
+                   ? 'bg-gray-400 cursor-not-allowed'
+                   : 'bg-green-500 hover:bg-green-600'
+               }`}
+               onClick={() => onAccept(req.id)}
               >
-                Accepter
+                {req.status === 'accepted' ? 'Acceptée' : 'Accepter'}
+                
               </button>
+
             </li>
           ))}
         </ul>

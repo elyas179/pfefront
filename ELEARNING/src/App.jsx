@@ -21,6 +21,7 @@ import ModuleDetail from "./ModuleDetail";
 import TeacherDashboard from './PAGES/TeacherDashboard';
 import StudentQuizzes from "./StudentQuizzes"; 
 import StudentPerformance from "./StudentPerformance";
+import StudentProfessors from './StudentProfessors';
 
 const AppContent = () => {
   const location = useLocation();
@@ -51,9 +52,8 @@ const AppContent = () => {
           <Route path="/chat" element={<Chat />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/my-modules" element={<MyModules />} />
-
           <Route path="/notification" element={<Notification />} />
-
+          <Route path="/StudentProfessors" element={<StudentProfessors />} />
           <Route path="/studentsettings" element={<StudentSettings />} />
           <Route path="/studentsettings/edit" element={<StudentSettingsEdit />} />
           <Route path="/faq" element={<StudentFAQ />} />
@@ -65,6 +65,7 @@ const AppContent = () => {
 
 
 
+          
         </Routes>
       </AnimatePresence>
 

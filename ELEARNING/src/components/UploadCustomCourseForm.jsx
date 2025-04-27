@@ -19,7 +19,7 @@ const UploadCustomCourseForm = ({ onUpload }) => {
       link,
     };
 
-    onUpload(newCourse); // Appel du parent
+    onUpload(newCourse); // <<< correction ici
     setTitle('');
     setType('cours-pdf');
     setLink('');
@@ -54,10 +54,16 @@ const UploadCustomCourseForm = ({ onUpload }) => {
       />
       <button
         type="submit"
-        className="bg-blue-600 text-white font-semibold px-6 py-2 rounded shadow hover:bg-blue-700 transition"
+        className="bg-blue-600 text-white text-lg font-semibold px-6 py-2 rounded shadow hover:bg-blue-700 transition"
       >
         Ajouter
       </button>
+      <button
+  type="submit"
+  className="bg-purple-600 text-white text-lg font-bold px-6 py-3 rounded shadow-md hover:bg-purple-700 transition-all duration-300"
+>
+  Ajouter
+</button>
     </form>
   );
 };

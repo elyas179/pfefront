@@ -3,6 +3,7 @@ import { Card } from "primereact/card";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import "./Student.css";
+import { Link } from "react-router-dom";
 
 const dashboardItems = [
   { icon: "pi pi-book", label: "mes Cours", to: "/courses" },
@@ -12,7 +13,15 @@ const dashboardItems = [
   { icon: "pi pi-comments", label: "Chat Bot", to: "/chat" },
   { icon: "pi pi-question-circle", label: "FAQ", to: "/faq" },
   { icon: "pi pi-chart-line", label: "performance-AI", to: "/performance" },
+  { icon: "pi pi-chart-line", label: "performance-AI", to: "/performance-ai" },
+  {icon: "pi pi-users", label: "Professeurs", to: "/StudentProfessors"}
+  
 ];
+<Link to="/StudentProfessors" className="some-class">
+  <i className="pi pi-users" /> Professeurs
+  </Link>
+
+
 
 const Student = () => {
   const navigate = useNavigate();
@@ -58,6 +67,7 @@ const Student = () => {
             </Card>
           ))}
         </div>
+        
       </motion.div>
     </div>
   );

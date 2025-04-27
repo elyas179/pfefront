@@ -21,14 +21,24 @@ const Register = () => {
   const [levels, setLevels] = useState([]);
   const [specialities, setSpecialities] = useState([]);
 
+  const token = localStorage.getItem("accessToken"); // ⬅️ Récupère le token
+
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/courses/levels/')
+    axios.get('http://127.0.0.1:8000/api/courses/levels/', {
+      headers: {
+        Authorization: `Bearer ${token}`, // ⬅️ Ajoute le token ici
+      },
+    })
       .then(res => {
         setLevels(res.data);
       })
       .catch(err => console.error('Erreur niveaux:', err));
 
-    axios.get('http://127.0.0.1:8000/api/courses/specialities/')
+    axios.get('http://127.0.0.1:8000/api/courses/specialities/',{
+      headers: {
+        Authorization: `Bearer ${token}`, // ⬅️ Ajoute le token ici
+      },
+    })
       .then(res => setSpecialities(res.data))
       .catch(err => console.error('Erreur spécialités:', err));
   }, []);
