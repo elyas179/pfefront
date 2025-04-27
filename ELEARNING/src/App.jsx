@@ -18,8 +18,8 @@ import StudentSettings from "./StudentSettings"; // ou le chemin exact
 import StudentSettingsEdit from "./StudentSettingsEdit"; 
 import StudentFAQ from "./StudentFAQ";
 import ModuleDetail from "./ModuleDetail"; 
-
-
+import StudentQuizzes from "./StudentQuizzes"; 
+import StudentPerformance from "./StudentPerformance";
 
 const AppContent = () => {
   const location = useLocation();
@@ -32,7 +32,10 @@ const AppContent = () => {
   location.pathname.startsWith("/my-modules") ||
   location.pathname.startsWith("/studentsettings") ||
   location.pathname.startsWith("/faq") ||
-  location.pathname.startsWith("/modules/");
+  location.pathname.startsWith("/modules/") ||
+  location.pathname.startsWith("/quizes") ||
+  location.pathname.startsWith("/performance");
+
 
   return (
     <>
@@ -54,8 +57,9 @@ const AppContent = () => {
           <Route path="/studentsettings/edit" element={<StudentSettingsEdit />} />
           <Route path="/faq" element={<StudentFAQ />} />
           <Route path="/modules/:id" element={<ModuleDetail />} />
+          <Route path="/quizes" element={<StudentQuizzes />} />
 
-
+          <Route path="/performance" element={<StudentPerformance />} />
 
 
 

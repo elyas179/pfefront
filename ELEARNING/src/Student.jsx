@@ -6,12 +6,12 @@ import "./Student.css";
 
 const dashboardItems = [
   { icon: "pi pi-book", label: "mes Cours", to: "/courses" },
-  { icon: "pi pi-pencil", label: "Quizzes" },
+  { icon: "pi pi-pencil", label: "Quizzes"  , to:"/quizes"},
   { icon: "pi pi-users", label: "Communauté" },
   { icon: "pi pi-cog", label: "Paramètres" , to:"/studentsettings"},
   { icon: "pi pi-comments", label: "Chat Bot", to: "/chat" },
   { icon: "pi pi-question-circle", label: "FAQ", to: "/faq" },
-  { icon: "pi pi-chart-line", label: "performance-AI", to: "/performance-ai" },
+  { icon: "pi pi-chart-line", label: "performance-AI", to: "/performance" },
 ];
 
 const Student = () => {
