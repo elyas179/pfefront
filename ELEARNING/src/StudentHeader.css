@@ -156,3 +156,410 @@ body.dark-mode {
   justify-content: center;
 }
 
+.student-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 30px;
+  background-color: var(--header-bg);
+  color: var(--text-color);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.student-logo {
+  height: 40px;
+}
+
+.student-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.student-header-left,
+.student-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.language-dropdown {
+  margin-right: 20px;
+  width: 150px;
+}
+
+.theme-toggle-icon,
+.notif-icon {
+  background: none;
+  border: none;
+  margin: 0 10px;
+  cursor: pointer;
+  color: inherit;
+}
+
+.profile-area {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.student-icon {
+  background-color: #9333ea;
+  color: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.student-name {
+  font-weight: bold;
+}
+
+.student-role {
+  font-size: 0.85rem;
+  color: gray;
+}
+
+.notif-dot {
+  background: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+.student-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 30px;
+  background-color: var(--header-bg);
+  color: var(--text-color);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.student-logo {
+  height: 40px;
+}
+
+.student-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.student-header-left,
+.student-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.language-dropdown {
+  margin-right: 20px;
+  width: 150px;
+}
+
+.theme-toggle-icon,
+.notif-icon {
+  background: none;
+  border: none;
+  margin: 0 10px;
+  cursor: pointer;
+  color: inherit;
+}
+
+.profile-area {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.student-icon {
+  background-color: #9333ea;
+  color: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.student-name {
+  font-weight: bold;
+}
+
+.student-role {
+  font-size: 0.85rem;
+  color: gray;
+}
+
+.notif-dot {
+  background: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+.delete-photo-btn {
+  margin-top: 5px;
+  background: transparent;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: transform 0.2s ease;
+}
+
+.delete-photo-btn:hover {
+  transform: scale(1.05);
+  color: darkred;
+}
+
+
+.profile-photo {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+/* File: StudentHeader.css */
+
+.student-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  background-color: var(--surface-card);
+  border-bottom: 1px solid var(--surface-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.student-header-left {
+  display: flex;
+  align-items: center;
+}
+
+.student-logo {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.student-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.student-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.language-dropdown {
+  width: 150px;
+}
+
+.theme-toggle-icon,
+.notif-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: 1.2rem;
+}
+
+.notif-dot {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  margin-left: -10px;
+  position: relative;
+  top: -10px;
+  right: 10px;
+}
+
+.profile-area {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.profile-preview-small {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0.5rem;
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.student-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: var(--surface-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.student-name {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.student-role {
+  font-size: 0.75rem;
+  color: var(--text-secondary-color);
+}
+
+.profile-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 1rem;
+  border: 2px solid var(--primary-color);
+}
+
+.photo-preview-container {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.delete-button {
+  background-color: #ff4d4f;
+  color: white;
+  padding: 0.4rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+  background-color: #d9363e;
+}
+
+/* Dark mode styles */
+body.dark-mode .student-header {
+  background-color: #1e1e2f;
+}
+
+body.dark-mode .student-title,
+body.dark-mode .theme-toggle-icon,
+body.dark-mode .student-name,
+body.dark-mode .student-role {
+  color: #ffffff;
+}
+
+body.dark-mode .notif-dot {
+  background-color: #9333ea;
+}
+
+body.dark-mode .delete-button {
+  background-color: #9333ea;
+}
+
+body.dark-mode .delete-button:hover {
+  background-color: #7c2bd5;
+}
+/* Notification icon and badge */
+.notif-icon {
+  position: relative;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(147, 51, 234, 0.3);
+}
+
+.notif-icon:hover {
+  background-color: rgba(147, 51, 234, 0.1);
+}
+
+.notif-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: #ef4444; /* Red */
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Profile image */
+.profile-preview-small {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #9333ea;
+  transition: transform 0.3s ease;
+}
+
+.profile-preview-small:hover {
+  transform: scale(1.05);
+}
+
+/* Delete button inside modal */
+.delete-button {
+  margin-top: 1rem;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+  background-color: #dc2626;
+}

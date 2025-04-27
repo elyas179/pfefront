@@ -96,29 +96,7 @@ const Login = () => {
             required
           />
 
-          <div className="role-select">
-            <label>
-              <input
-                type="radio"
-                name="role"
-                value="etudiant"
-                checked={role === "etudiant"}
-                onChange={(e) => setRole(e.target.value)}
-              />
-              Étudiant
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="role"
-                value="professeur"
-                checked={role === "professeur"}
-                onChange={(e) => setRole(e.target.value)}
-              />
-              Professeur
-            </label>
-          </div>
-
+          
           <a href="#" className="forgot">
             Mot de passe oublié ?
           </a>

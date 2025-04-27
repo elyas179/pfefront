@@ -66,4 +66,85 @@
     justify-content: center;
     padding: 3rem;
   }
+  .module-detail-container {
+    padding: 3rem 2rem;
+    background: linear-gradient(to bottom right, #1e1e2f, #111122);
+    color: white;
+    min-height: 100vh;
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  .module-title {
+    font-size: 2.5rem;
+    color: #3b82f6;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .module-description {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #ccc;
+    margin-bottom: 3rem;
+  }
+  
+  .module-section-title {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    color: #fbbf24;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .chapters-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+  
+  .chapter-card {
+    background-color: #2c2c3f;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 0 12px rgba(147, 51, 234, 0.4);
+    transition: transform 0.3s;
+  }
+  
+  .chapter-title {
+    font-size: 1.2rem;
+    color: #9333ea;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .resource-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .resource-item {
+    padding: 0.3rem 0;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    color: #e5e5e5;
+  }
+  
+  .no-resources,
+  .no-chapters {
+    font-style: italic;
+    color: #999;
+  }
+  
+  .module-detail-loading,
+  .module-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    color: white;
+    font-size: 1.3rem;
+  }
   

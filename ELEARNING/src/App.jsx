@@ -19,19 +19,24 @@ import StudentSettingsEdit from "./StudentSettingsEdit";
 import StudentFAQ from "./StudentFAQ";
 import ModuleDetail from "./ModuleDetail"; 
 import TeacherDashboard from './PAGES/TeacherDashboard';
+import StudentQuizzes from "./StudentQuizzes"; 
+import StudentPerformance from "./StudentPerformance";
 
 const AppContent = () => {
   const location = useLocation();
 
   // ✅ Liste des routes qui utilisent le header spécial étudiant
   const isStudentHeader =
-    location.pathname.startsWith("/student") ||
-    location.pathname.startsWith("/chat") ||
-    location.pathname.startsWith("/courses") ||
-    location.pathname.startsWith("/my-modules") ||
-    location.pathname.startsWith("/studentsettings") ||
-    location.pathname.startsWith("/faq") ||
-    location.pathname.startsWith("/modules/");
+  location.pathname.startsWith("/student") ||
+  location.pathname.startsWith("/chat") ||
+  location.pathname.startsWith("/courses") ||
+  location.pathname.startsWith("/my-modules") ||
+  location.pathname.startsWith("/studentsettings") ||
+  location.pathname.startsWith("/faq") ||
+  location.pathname.startsWith("/modules/") ||
+  location.pathname.startsWith("/quizes") ||
+  location.pathname.startsWith("/performance");
+
 
   return (
     <>
@@ -54,6 +59,12 @@ const AppContent = () => {
           <Route path="/faq" element={<StudentFAQ />} />
           <Route path="/modules/:id" element={<ModuleDetail />} />
           <Route path="/teacher" element={<TeacherDashboard />} />
+          <Route path="/quizes" element={<StudentQuizzes />} />
+
+          <Route path="/performance" element={<StudentPerformance />} />
+
+
+
         </Routes>
       </AnimatePresence>
 
