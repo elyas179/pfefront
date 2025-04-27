@@ -4,20 +4,23 @@ import axios from "axios";
 import { Carousel } from "primereact/carousel";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import "./MyModules.css";
 
 const MyModules = () => {
   const [modules, setModules] = useState([]);
   const [query, setQuery] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken"); // ⬅️ Récupère le token
+    const token = localStorage.getItem("accessToken");
 
     if (token) {
       axios
         .get("http://127.0.0.1:8000/api/users/my-modules", {
           headers: {
-            Authorization: `Bearer ${token}`, // ⬅️ Ajoute le token ici
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
@@ -34,23 +37,32 @@ const MyModules = () => {
   );
 
   const moduleTemplate = (mod) => (
-    <Card className="module-card">
+    <motion.div
+      className="module-card"
+      whileHover={{ scale: 1.05 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      onClick={() => navigate(`/modules/${mod.id}`)}
+      style={{ cursor: "pointer" }}
+    >
       <div className="icon-container">
         <i className="pi pi-book module-icon"></i>
       </div>
       <p>{mod.name}</p>
-    </Card>
+    </motion.div>
   );
 
   return (
     <div className="my-modules-wrapper">
       <h1 className="main-title">📚 Mes Modules</h1>
 
-      <div className="search-bar center">
+      <div className="search-bar">
         <InputText
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="🔍 Rechercher un module..."
+          className="module-search-input"
         />
       </div>
 
@@ -65,7 +77,7 @@ const MyModules = () => {
           showNavigators={true}
         />
       ) : (
-        <p className="no-modules">Aucun module trouvé</p>
+        <p className="no-modules">Aucun module trouvé.</p>
       )}
     </div>
   );

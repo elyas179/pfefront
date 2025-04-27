@@ -1,0 +1,140 @@
+.performance-container {
+    padding: 2rem;
+    min-height: 100vh;
+    background-color: #1e1e2f;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .performance-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #9333ea; /* violet néon */
+    text-shadow: 0 0 10px #9333ea;
+  }
+  
+  .performance-card {
+    background-color: #2c2c3e;
+    border-radius: 1.5rem;
+    box-shadow: 0 0 20px #9333ea66;
+    padding: 2rem;
+    max-width: 600px;
+    width: 100%;
+    animation: fadeInUp 0.6s ease;
+  }
+  
+  .performance-card p {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  .p-progressbar {
+    margin-top: 1rem;
+    height: 1.5rem;
+    border-radius: 1rem;
+    background-color: #3f3f55;
+  }
+  
+  .p-progressbar-value {
+    background: linear-gradient(90deg, #3b82f6, #9333ea);
+    border-radius: 1rem;
+    box-shadow: 0 0 10px #9333ea;
+  }
+  
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  /* Container principal */
+.performance-container {
+    padding: 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Titre */
+  .performance-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    transition: color 0.3s ease;
+  }
+  
+  /* Carte */
+  .performance-card {
+    padding: 2rem;
+    max-width: 600px;
+    width: 100%;
+    border-radius: 1.5rem;
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.4);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Textes dans la carte */
+  .performance-card p {
+    margin: 1rem 0;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    transition: color 0.3s ease;
+  }
+  
+  /* ProgressBar PrimeReact */
+  .p-progressbar {
+    margin-top: 1rem;
+    height: 1.5rem;
+    border-radius: 1rem;
+    background-color: var(--progressbar-background);
+  }
+  
+  .p-progressbar-value {
+    background: linear-gradient(90deg, #3b82f6, #9333ea);
+    border-radius: 1rem;
+    box-shadow: 0 0 10px #9333ea;
+  }
+  
+  /* Animation d'apparition */
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Dark Mode (background sombre) */
+  body.dark-mode .performance-container {
+    background-color: #1e1e2f;
+    color: #ffffff;
+  }
+  
+  body.dark-mode .performance-card {
+    background-color: #2c2c3e;
+    color: #ffffff;
+  }
+  
+  /* Light Mode (background clair) */
+  body.light-mode .performance-container {
+    background-color: #f5f5f5;
+    color: #1e1e2f;
+  }
+  
+  body.light-mode .performance-card {
+    background-color: #ffffff;
+    color: #1e1e2f;
+  }
+  

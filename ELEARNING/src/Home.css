@@ -1,120 +1,341 @@
-body.dark-mode {
-    background-color: #4e4b4b;
-    color: white;
-  }
+/* ----- Conteneur principal ----- */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 0 100px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ----- SECTION 1 — Hero améliorée ----- */
+.hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 100px 40px 80px;
+  max-width: 1300px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 40px;
+  position: relative;
+}
+
+.hero-text {
+  flex: 1;
+  max-width: 600px;
+}
+
+.hero-text h1 {
+  font-size: 3.5rem;
+  color: #3737e5;
+  line-height: 1.2;
+}
+
+.hero-text h1 span {
+  color: #9138e3;
+}
+
+.hero-text p {
+  margin-top: 20px;
+  font-size: 1.3rem;
+  color: #810a96;
+  line-height: 1.7;
+}
+
+.hero-image {
+  flex: 1;
+  max-width: 500px;
+  padding: 20px;
+}
+
+.hero-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 12px 24px rgba(191, 24, 194, 0.1);
+  object-fit: contain;
+  display: block;
+}
+
+/* ----- SECTION 2 — Image + texte ----- */
+.info-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  padding: 60px 20px;
+  margin-bottom: 80px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.info-image {
+  flex: 1 1 400px;
+  max-width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.info-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+  display: block;
+}
+
+.info-text {
+  flex: 1 1 400px;
+  max-width: 500px;
+}
+
+.info-text h2 {
+  font-size: 2rem;
+  color: #4217c5;
+  margin-bottom: 15px;
+}
+
+.info-text p {
+  font-size: 1.1rem;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* ----- SECTION 3 — Statistiques ----- */
+.stats-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 60px 20px;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.stat-card {
+  text-align: center;
+  background-color: #1e1e2f;
+  color: white;
+  border-radius: 12px;
+  width: 180px;
+  padding: 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+}
+
+.stat-card h2 {
+  font-size: 2rem;
+  color: #3b82f6;
+}
+
+.stat-card p {
+  margin-top: 8px;
+  color: #ccc;
+}
+
+/* ----- Bouton principal ----- */
+.start-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: linear-gradient(90deg, #332b3c, #3b82f6);
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: transform 0.3s ease;
+}
+
+.start-btn:hover {
+  transform: translateY(-4px);
+}
+.features-section {
+  padding: 80px 20px;
+  background-color: #f9f9ff;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: #1e1e2f;
+}
+
+.features-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.feature-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  width: 260px;
+  text-align: left;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+}
+
+.feature-card h3 {
+  color: #130515;
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+}
+
+.feature-card p {
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.cta-section {
+  background: linear-gradient(135deg, #888891 10%, #0c0f14 90%);
+  color: rgb(224, 212, 212);
+  text-align: center;
+  padding: 80px 20px;
+  border-radius: 20px;
+  max-width: 1000px;
+  margin: 100px auto 40px;
+  box-shadow: 0 12px 24px rgba(48, 46, 46, 0.2);
+}
+
+.cta-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.cta-section p {
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto 30px;
+  line-height: 1.6;
+}
+
+/* ----- FOOTER ----- */
+.site-footer {CD 
+  color: #fff;
+  padding: 30px 20px;
+  text-align: center;
+  margin-top: 8px;
+
+}
+
+.footer-content p {
+  margin: 5px 0;
   
-  .home-container {
-    display: flex;
-    justify-content: space-between;
+  font-size: 2rem;
+  color: #d30fe946;
+}
+@media (max-width: 768px) {
+  .hero-text h1 {
+    font-size: 2.2rem;
+    text-align: center;
+  }
+
+  .hero-text p,
+  .info-text p,
+  .cta-section p {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .hero-section,
+  .info-section,
+  .cta-section {
+    padding: 40px 20px;
+    flex-direction: column;
     align-items: center;
-    padding: 4rem;
-    min-height: 100vh;
-    flex-wrap: wrap;
+    text-align: center;
   }
-  
-  .home-left h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+
+  .hero-image,
+  .info-image {
+    padding: 0;
+    margin-top: 20px;
   }
-  
-  .home-left .brand {
-    color: #ef4444;
-  }
-  
-  .home-left p {
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-    line-height: 1.6;
-  }
-  
-  .cta-button {
-    background-color: #ef4444;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  
-  .cta-button:hover {
-    background-color: #dc2626;
-  }
-  
-  .student-image {
-    width: 520px; /* 🔥 image plus grande */
-    max-width: 100%;
-    height: auto;
-    animation: floatUpDown 3s ease-in-out infinite;
-  }
-  
-  @keyframes floatUpDown {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
-  }
-  
-  .fade-out {
-    animation: fadeOut 0.5s forwards;
-  }
-  
-  @keyframes fadeOut {
-    to {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-  }
-  
-  /* ✅ Corrigé et repositionné */
-  .home-left {
-    flex: 1;
-    padding-right: 2rem;
-    max-width: 600px;
-  }
-  
-  .home-right {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+
+  .features-grid,
+  .stats-container {
+    flex-direction: column;
     align-items: center;
   }
-  
-  
-  
-  .gradient-title {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    background: linear-gradient(90deg, #9333ea, #3b82f6);
-    background-size: 200% auto;
-    color: transparent;
-    background-clip: text;
-    -webkit-background-clip: text;
-    animation: shineText 4s ease-in-out infinite;
-    position: relative;
+
+  .feature-card,
+  .stat-card {
+    width: 90%;
   }
-  
-  /* Ajoute ce bloc pour le glow */
-  .gradient-title::after {
-    content: 'Bienvenue sur Curio Learning Platform';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    color: #9333ea;
-    filter: blur(6px);
-    z-index: -1;
-    opacity: 0.6;
+
+  .cta-section h2 {
+    font-size: 2rem;
   }
-  
-  @keyframes shineText {
-    0% {
-      background-position: 0% center;
-    }
-    50% {
-      background-position: 100% center;
-    }
-    100% {
-      background-position: 0% center;
-    }
+
+  .site-footer {
+    font-size: 0.85rem;
   }
-  
+}
+.hero-section.new-layout {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  padding: 100px 40px;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.left-column {
+  flex: 1;
+  max-width: 600px;
+}
+
+.feature-list {
+  margin: 30px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.feature-item h3 {
+  color: #9333ea;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.feature-item p {
+  margin: 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.right-image {
+  flex: 1;
+  max-width: 500px;
+  text-align: center;
+}
+
+.right-image img {
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
