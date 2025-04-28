@@ -37,6 +37,7 @@ const AppContent = () => {
   location.pathname.startsWith("/modules/") ||
   location.pathname.startsWith("/quizes") ||
   location.pathname.startsWith("/performance");
+  location.pathname.startsWith("/StudentProfessors");
 
 
   return (

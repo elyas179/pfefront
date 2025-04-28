@@ -23,7 +23,7 @@ const Register = () => {
 
   const token = localStorage.getItem("accessToken"); // ⬅️ Récupère le token
 
-  useEffect(() => {
+  /*useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/courses/levels/', {
       headers: {
         Authorization: `Bearer ${token}`, // ⬅️ Ajoute le token ici
@@ -41,7 +41,21 @@ const Register = () => {
     })
       .then(res => setSpecialities(res.data))
       .catch(err => console.error('Erreur spécialités:', err));
+  }, []);*/
+
+  
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/api/courses/levels/')
+      .then(res => setLevels(res.data))
+      .catch(err => console.error('Erreur niveaux:', err));
+  
+    axios.get('http://127.0.0.1:8000/api/courses/specialities/')
+      .then(res => setSpecialities(res.data))
+      .catch(err => console.error('Erreur spécialités:', err));
   }, []);
+  
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
