@@ -69,3 +69,4 @@ const UploadCustomCourseForm = ({ onUpload }) => {
 };
 
 export default UploadCustomCourseForm;
+
