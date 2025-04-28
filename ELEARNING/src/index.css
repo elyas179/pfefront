@@ -583,16 +583,3 @@ body.dark-mode footer.footer {
   margin: 0 0.5rem;
   color: #888;
 }
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.app-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}

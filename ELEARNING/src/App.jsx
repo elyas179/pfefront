@@ -20,6 +20,7 @@ import StudentFAQ from "./StudentFAQ";
 import ModuleDetail from "./ModuleDetail"; 
 import StudentQuizzes from "./StudentQuizzes"; 
 import StudentPerformance from "./StudentPerformance";
+import ResourceDetail from './ResourceDetail';
 
 const AppContent = () => {
   const location = useLocation();
@@ -34,6 +35,7 @@ const AppContent = () => {
   location.pathname.startsWith("/faq") ||
   location.pathname.startsWith("/modules/") ||
   location.pathname.startsWith("/quizes") ||
+  location.pathname.startsWith("/notification") ||
   location.pathname.startsWith("/performance");
 
 
@@ -60,7 +62,7 @@ const AppContent = () => {
           <Route path="/quizes" element={<StudentQuizzes />} />
 
           <Route path="/performance" element={<StudentPerformance />} />
-
+          <Route path="/resources/:id" element={<ResourceDetail />} />
 
 
         </Routes>
