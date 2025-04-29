@@ -563,3 +563,22 @@ body.dark-mode .delete-button:hover {
 .delete-button:hover {
   background-color: #dc2626;
 }
+.profile-button {
+  background-color: #9333ea;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  margin-left: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 1rem;
+}
+
+.profile-button:hover {
+  background-color: #7e22ce;
+}
+.user-search-bar {
+  width: 220px;
+  margin: 0 1rem;
+}

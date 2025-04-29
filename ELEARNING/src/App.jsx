@@ -23,7 +23,8 @@ import StudentQuizzes from "./StudentQuizzes";
 import StudentPerformance from "./StudentPerformance";
 import StudentProfessors from './StudentProfessors';
 import ResourceDetail from './ResourceDetail';
-
+import UserProfile from "./UserProfile";
+import StudentQuizPlay from "./StudentQuizPlay";
 const AppContent = () => {
   const location = useLocation();
 
@@ -37,7 +38,9 @@ const AppContent = () => {
   location.pathname.startsWith("/faq") ||
   location.pathname.startsWith("/modules/") ||
   location.pathname.startsWith("/quizes") ||
+  location.pathname.startsWith("/quiz/") ||
   location.pathname.startsWith("/notification") ||
+  location.pathname.startsWith("/profile") ||
   location.pathname.startsWith("/performance");
   location.pathname.startsWith("/StudentProfessors");
 
@@ -55,6 +58,9 @@ const AppContent = () => {
           <Route path="/chat" element={<Chat />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/my-modules" element={<MyModules />} />
+
+          <Route path="/quiz/:id" element={<StudentQuizPlay />} />
+
           <Route path="/notification" element={<Notification />} />
           <Route path="/StudentProfessors" element={<StudentProfessors />} />
           <Route path="/studentsettings" element={<StudentSettings />} />
@@ -188,6 +194,7 @@ const AppContent = () => {
           
           <Route path="/resources/:id" element={<ResourceDetail />} />
 
+          <Route path="/profile/:id" element={<UserProfile />} />
 
         </Routes>
       </AnimatePresence>
