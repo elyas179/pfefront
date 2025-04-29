@@ -117,6 +117,10 @@ import AddCourse from "./PAGES/AddCourse";
 import TeacherResources from "./PAGES/TeacherResources";
 import TeacherStudents from "./PAGES/TeacherStudents";
 
+import ResourceDetail from './ResourceDetail';
+
+import UserProfile from "./UserProfile";
+import StudentQuizPlay from "./StudentQuizPlay";
 
 // Nouveaux imports pour le professeur
 import CreateQuiz from "./PAGES/CreateQuiz";
