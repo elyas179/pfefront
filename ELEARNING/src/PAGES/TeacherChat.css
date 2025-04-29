@@ -1,0 +1,15 @@
+.teacher-chat {
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+  }
+  
+  .teacher-chat h1 {
+    font-size: 2.5rem;
+    color: #333;
+  }
+  
+  .teacher-chat p {
+    font-size: 1.2rem;
+    color: #555;
+  }

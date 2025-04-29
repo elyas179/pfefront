@@ -1,0 +1,57 @@
+/* TeacherDashboard.css */
+.teacher-dashboard-page {
+    padding: 20px;
+    background-color: #f5f5f5;
+  }
+  
+  .teacher-dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .dashboard-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .dashboard-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .dashboard-subtext {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  
+  .dashboard-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s;
+  }
+  
+  .dashboard-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-icon {
+    font-size: 2rem;
+    color: #007bff;
+  }
+  
+  .dashboard-card p {
+    margin-top: 10px;
+    font-size: 16px;
+  }
+  

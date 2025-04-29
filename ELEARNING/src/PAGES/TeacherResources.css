@@ -1,0 +1,15 @@
+.teacher-resources {
+    padding: 20px;
+    background-color: #fafafa;
+    min-height: 100vh;
+  }
+  
+  .teacher-resources h1 {
+    font-size: 2.5rem;
+    color: #333;
+  }
+  
+  .teacher-resources p {
+    font-size: 1.2rem;
+    color: #555;
+  }
