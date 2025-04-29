@@ -22,6 +22,7 @@ import TeacherDashboard from './PAGES/TeacherDashboard';
 import StudentQuizzes from "./StudentQuizzes"; 
 import StudentPerformance from "./StudentPerformance";
 import StudentProfessors from './StudentProfessors';
+import ResourceDetail from './ResourceDetail';
 
 const AppContent = () => {
   const location = useLocation();
@@ -36,6 +37,7 @@ const AppContent = () => {
   location.pathname.startsWith("/faq") ||
   location.pathname.startsWith("/modules/") ||
   location.pathname.startsWith("/quizes") ||
+  location.pathname.startsWith("/notification") ||
   location.pathname.startsWith("/performance");
   location.pathname.startsWith("/StudentProfessors");
 
@@ -184,6 +186,9 @@ const AppContent = () => {
           <Route path="/teacher-resources" element={<TeacherResources />} />
           <Route path="/teacher-students" element={<TeacherStudents />} />
           
+          <Route path="/resources/:id" element={<ResourceDetail />} />
+
+
         </Routes>
       </AnimatePresence>
 

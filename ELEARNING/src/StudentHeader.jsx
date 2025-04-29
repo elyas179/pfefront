@@ -12,18 +12,22 @@ const StudentHeader = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [language, setLanguage] = useState("fr");
   const [user, setUser] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalPhotoVisible, setModalPhotoVisible] = useState(false);
+  const [modalProfileVisible, setModalProfileVisible] = useState(false);
+  const [editForm, setEditForm] = useState({ bio: "", background: "" });
   const navigate = useNavigate();
 
   const languages = [
-    { name: "\ud83c\uddeb\ud83c\uddf7 Fran\u00e7ais", code: "fr" },
-    { name: "\ud83c\uddec\ud83c\udde7 English", code: "en" },
+    { name: "🇫🇷 Français", code: "fr" },
+    { name: "🇬🇧 English", code: "en" },
   ];
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
     if (userData) {
-      setUser(JSON.parse(userData));
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      setEditForm({ bio: parsedUser.bio || "", background: parsedUser.background || "" });
     }
   }, []);
 
@@ -31,8 +35,14 @@ const StudentHeader = () => {
     document.body.className = darkMode ? "dark-mode" : "light-mode";
   }, [darkMode]);
 
+  const getAccessToken = () => {
+    return localStorage.getItem("access_token");
+  };
+
   const refreshUserProfile = async () => {
-    const token = localStorage.getItem("accessToken");
+    const token = getAccessToken();
+    if (!token) return;
+
     try {
       const res = await axios.get("http://127.0.0.1:8000/api/users/me/", {
         headers: { Authorization: `Bearer ${token}` },
@@ -40,16 +50,18 @@ const StudentHeader = () => {
       localStorage.setItem("user", JSON.stringify(res.data));
       setUser(res.data);
     } catch (err) {
-      console.error("\u274c Erreur de rafr\u00e2ichissement:", err);
+      console.error("❌ Erreur rafraîchissement profil:", err);
     }
   };
 
   const handleUpload = async (e) => {
+    const token = getAccessToken();
+    if (!token) return alert("❌ Connectez-vous.");
+
     const file = e.files[0];
     const formData = new FormData();
     formData.append("profile_photo", file);
 
-    const token = localStorage.getItem("accessToken");
     try {
       await axios.patch("http://127.0.0.1:8000/api/users/me/edit/", formData, {
         headers: {
@@ -58,16 +70,18 @@ const StudentHeader = () => {
         },
       });
       await refreshUserProfile();
-      alert("\u2705 Photo mise \u00e0 jour !");
-      setModalVisible(false);
+      alert("✅ Photo mise à jour !");
+      setModalPhotoVisible(false);
     } catch (err) {
-      alert("\u274c Erreur lors de l'upload");
+      alert("❌ Erreur upload photo.");
       console.error(err);
     }
   };
 
   const handleDeletePhoto = async () => {
-    const token = localStorage.getItem("accessToken");
+    const token = getAccessToken();
+    if (!token) return alert("❌ Connectez-vous.");
+
     try {
       await axios.patch(
         "http://127.0.0.1:8000/api/users/me/edit/",
@@ -80,10 +94,42 @@ const StudentHeader = () => {
         }
       );
       await refreshUserProfile();
-      alert("\ud83d\uddd1\ufe0f Photo supprim\u00e9e avec succ\u00e8s !");
-      setModalVisible(false);
+      alert("🗑️ Photo supprimée !");
+      setModalPhotoVisible(false);
     } catch (err) {
-      alert("\u274c Erreur lors de la suppression de la photo.");
+      alert("❌ Erreur suppression photo.");
+      console.error(err);
+    }
+  };
+
+  const handleProfileChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm({ ...editForm, [name]: value });
+  };
+
+  const handleSaveProfile = async () => {
+    const token = getAccessToken();
+    if (!token) return alert("❌ Connectez-vous.");
+
+    try {
+      await axios.patch(
+        "http://127.0.0.1:8000/api/users/me/edit/",
+        {
+          bio: editForm.bio,
+          background: editForm.background,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      await refreshUserProfile();
+      alert("✅ Profil mis à jour !");
+      setModalProfileVisible(false);
+    } catch (err) {
+      alert("❌ Erreur modification profil.");
       console.error(err);
     }
   };
@@ -102,40 +148,48 @@ const StudentHeader = () => {
           onChange={(e) => setLanguage(e.value)}
           optionLabel="name"
           className="language-dropdown"
-          placeholder="\ud83c\udf10 Langue"
+          placeholder="🌐 Langue"
         />
 
         <button onClick={() => setDarkMode(!darkMode)} className="theme-toggle-icon">
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
 
-        <button className="notif-icon" onClick={() => navigate("/notification")}> 
+        <button className="notif-icon" onClick={() => navigate("/notification")}>
           <FaBell size={20} />
           <span className="notif-dot">3</span>
         </button>
 
-        <div className="profile-area" onClick={() => setModalVisible(true)}>
+        <div className="profile-area">
           {user?.profile_photo ? (
             <img
               src={`http://127.0.0.1:8000${user.profile_photo}`}
               alt="Profil"
               className="profile-preview-small"
+              onClick={() => setModalPhotoVisible(true)}
             />
           ) : (
-            <div className="student-icon"></div>
+            <div className="student-icon" onClick={() => setModalPhotoVisible(true)}></div>
           )}
+
           <div className="profile-info">
-            <span className="student-name">{user?.username || "Utilisateur"}</span>
-            <span className="student-role"></span>
+            <span
+              className="student-name"
+              onClick={() => setModalProfileVisible(true)}
+              style={{ cursor: "pointer", textDecoration: "underline" }}
+            >
+              {user?.username || "Utilisateur"}
+            </span>
           </div>
         </div>
       </div>
 
+      {/* Popup Changer photo */}
       <Dialog
         header="Changer la photo de profil"
-        visible={modalVisible}
+        visible={modalPhotoVisible}
         style={{ width: "30vw" }}
-        onHide={() => setModalVisible(false)}
+        onHide={() => setModalPhotoVisible(false)}
       >
         {user?.profile_photo && (
           <div className="photo-preview-container">
@@ -149,7 +203,6 @@ const StudentHeader = () => {
             </button>
           </div>
         )}
-
         <FileUpload
           name="profile_photo"
           customUpload
@@ -157,8 +210,38 @@ const StudentHeader = () => {
           accept="image/*"
           mode="basic"
           auto
-          chooseLabel="Télécharger une photo"
+          chooseLabel="Téléverser une photo"
         />
+      </Dialog>
+
+      {/* Popup Modifier bio / background */}
+      <Dialog
+        header="Modifier mon profil"
+        visible={modalProfileVisible}
+        style={{ width: "30vw" }}
+        onHide={() => setModalProfileVisible(false)}
+      >
+        <div className="edit-profile-form">
+          <label>Bio</label>
+          <textarea
+            name="bio"
+            value={editForm.bio}
+            onChange={handleProfileChange}
+            rows={3}
+            style={{ width: "100%", marginBottom: "1rem" }}
+          />
+          <label>Background</label>
+          <textarea
+            name="background"
+            value={editForm.background}
+            onChange={handleProfileChange}
+            rows={3}
+            style={{ width: "100%", marginBottom: "1rem" }}
+          />
+          <button onClick={handleSaveProfile} className="auth-button-filled">
+            Sauvegarder
+          </button>
+        </div>
       </Dialog>
     </header>
   );

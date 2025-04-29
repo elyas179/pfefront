@@ -32,6 +32,9 @@ const Register = () => {
       .then(res => {
         setLevels(res.data);
       })
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/api/courses/levels/')
+      .then(res => setLevels(res.data))
       .catch(err => console.error('Erreur niveaux:', err));
 
     axios.get('http://127.0.0.1:8000/api/courses/specialities/',{
@@ -59,8 +62,8 @@ const Register = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "level") {
-      setFormData({ ...formData, [name]: value, speciality: '' });
+    if (name === "speciality") {
+      setFormData({ ...formData, [name]: value, level: '' }); // reset level when speciality changes
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -80,8 +83,8 @@ const Register = () => {
       email: formData.email,
       password: formData.password,
       user_type: formData.role === "etudiant" ? "student" : "professor",
-      level: formData.level,
-      speciality: formData.speciality === "tronc" ? null : formData.speciality,
+      level: formData.role === "etudiant" ? formData.level : null,
+      speciality: formData.role === "etudiant" ? formData.speciality : null,
     };
 
     try {
@@ -94,13 +97,12 @@ const Register = () => {
     }
   };
 
-  const selectedLevel = levels.find(l => String(l.id) === formData.level);
-  const showSpeciality = !!selectedLevel;
+  const selectedSpeciality = specialities.find(s => String(s.id) === formData.speciality);
+  const showStudentFields = formData.role === 'etudiant';
 
-  const filteredSpecialities =
-    selectedLevel?.name === "L1"
-      ? [{ id: "tronc", name: "Tronc Commun" }]
-      : specialities.filter(spec => spec.name === 'ISIL' || spec.name === 'ACAD');
+  const filteredLevels = showStudentFields
+    ? levels.filter(level => level.speciality === Number(formData.speciality))
+    : [];
 
   return (
     <motion.div
@@ -128,22 +130,6 @@ const Register = () => {
           <input type="password" name="password" placeholder="Mot de passe" value={formData.password} onChange={handleChange} required />
           <input type="password" name="confirmPassword" placeholder="Confirmer le mot de passe" value={formData.confirmPassword} onChange={handleChange} required />
 
-          <select name="level" value={formData.level} onChange={handleChange} required>
-            <option value="">Choisir un niveau</option>
-            {levels.map(level => (
-              <option key={level.id} value={level.id}>{level.name}</option>
-            ))}
-          </select>
-
-          {showSpeciality && (
-            <select name="speciality" value={formData.speciality} onChange={handleChange} required>
-              <option value="">Choisir une spécialité</option>
-              {filteredSpecialities.map(spec => (
-                <option key={spec.id} value={spec.id}>{spec.name}</option>
-              ))}
-            </select>
-          )}
-
           <div className="role-select">
             <label>
               <input type="radio" name="role" value="etudiant" checked={formData.role === 'etudiant'} onChange={handleChange} />
@@ -155,6 +141,26 @@ const Register = () => {
             </label>
           </div>
 
+          {showStudentFields && (
+            <>
+              <select name="speciality" value={formData.speciality} onChange={handleChange} required>
+                <option value="">Choisir une spécialité</option>
+                {specialities.map(spec => (
+                  <option key={spec.id} value={spec.id}>{spec.name}</option>
+                ))}
+              </select>
+
+              {formData.speciality && (
+                <select name="level" value={formData.level} onChange={handleChange} required>
+                  <option value="">Choisir un niveau</option>
+                  {filteredLevels.map(level => (
+                    <option key={level.id} value={level.id}>{level.name}</option>
+                  ))}
+                </select>
+              )}
+            </>
+          )}
+
           <button className="auth-button-filled" type="submit">S'inscrire</button>
         </form>
       </div>
@@ -162,4 +168,4 @@ const Register = () => {
   );
 };
 
-export default Register; 
+export default Register;

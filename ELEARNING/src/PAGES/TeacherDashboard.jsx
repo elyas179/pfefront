@@ -37,7 +37,7 @@ import React, { useEffect, useState } from "react";
 import { Card } from "primereact/card";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import "./TeacherDashboard.css";  // Crée ce fichier pour le style spécifique du tableau de bord des profs
+import "./TeacherDashboard.css";  
 import { Link } from "react-router-dom";
 
 const dashboardItems = [

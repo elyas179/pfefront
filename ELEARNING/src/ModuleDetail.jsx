@@ -14,16 +14,18 @@ const ModuleDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`http://127.0.0.1:8000/api/users/modules/${id}/`)
-      .then((res) => {
-        setModule(res.data);
+    const fetchModule = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/users/modules/${id}/`);
+        setModule(response.data);
+      } catch (error) {
+        console.error("Erreur de chargement du module:", error);
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Erreur de chargement du module:", err);
-        setLoading(false);
-      });
+      }
+    };
+
+    fetchModule();
   }, [id]);
 
   if (loading) {
@@ -35,7 +37,15 @@ const ModuleDetail = () => {
   }
 
   if (!module) {
-    return <div className="module-error">🚫 Module introuvable</div>;
+    return (
+      <motion.div
+        className="module-error"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        🚫 Module introuvable
+      </motion.div>
+    );
   }
 
   return (
@@ -46,34 +56,52 @@ const ModuleDetail = () => {
       transition={{ duration: 0.5 }}
     >
       <h1 className="module-title">📘 {module.name}</h1>
-      <p className="module-description">{module.description}</p>
+      {module.description && (
+        <p className="module-description">{module.description}</p>
+      )}
 
       <h2 className="module-section-title">📂 Chapitres</h2>
+
       <div className="chapters-grid">
         {module.chapters.length > 0 ? (
           module.chapters.map((chapter) => (
             <motion.div
-              className="chapter-card"
               key={chapter.id}
-              whileHover={{ scale: 1.04 }}
+              className="chapter-card"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
             >
-              <h3 className="chapter-title">{chapter.name}</h3>
-              {chapter.resources.length > 0 ? (
-                <ul className="resource-list">
-                  {chapter.resources.map((res) => (
-                    <li key={res.id} className="resource-item">
-                      <Tag
-                        value={res.resource_type}
-                        severity="info"
-                        style={{ marginRight: "0.5rem" }}
-                      />
-                      {res.name}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="no-resources">Aucune ressource disponible.</p>
-              )}
+              <h3 className="chapter-title">📖 {chapter.name}</h3>
+
+              <div className="resources-grid">
+                {chapter.resources.length > 0 ? (
+                  chapter.resources.map((res) => (
+                    <a
+                      href={res.link}
+                      key={res.id}
+                      className="resource-card-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <motion.div
+                        className="resource-card"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Tag
+                          value={res.resource_type.replace("-", " ").toUpperCase()}
+                          severity="info"
+                          style={{ marginBottom: "1rem" }}
+                        />
+                        <h4 className="resource-title">{res.name}</h4>
+                      </motion.div>
+                    </a>
+                  ))
+                ) : (
+                  <p className="no-resources">Aucune ressource disponible.</p>
+                )}
+              </div>
             </motion.div>
           ))
         ) : (
