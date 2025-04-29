@@ -1,0 +1,26 @@
+.student-professors {
+    padding: 2rem;
+  }
+  
+  .title {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #6a00ff;
+  }
+  
+  .professors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+  
+  .prof-card {
+    box-shadow: 0 4px 8px rgba(106, 0, 255, 0.1);
+  }
+  
+  .access-button {
+    background-color: #6a00ff;
+    border: none;
+    margin-top: 1rem;
+  }
+  

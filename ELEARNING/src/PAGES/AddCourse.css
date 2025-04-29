@@ -1,0 +1,15 @@
+.add-course {
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+  }
+  
+  .add-course h1 {
+    font-size: 2.5rem;
+    color: #333;
+  }
+  
+  .add-course p {
+    font-size: 1.2rem;
+    color: #555;
+  }

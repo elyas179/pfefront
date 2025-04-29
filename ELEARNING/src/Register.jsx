@@ -21,15 +21,44 @@ const Register = () => {
   const [levels, setLevels] = useState([]);
   const [specialities, setSpecialities] = useState([]);
 
+  const token = localStorage.getItem("accessToken"); // ⬅️ Récupère le token
+
+  /*useEffect(() => {
+    axios.get('http://127.0.0.1:8000/api/courses/levels/', {
+      headers: {
+        Authorization: `Bearer ${token}`, // ⬅️ Ajoute le token ici
+      },
+    })
+      .then(res => {
+        setLevels(res.data);
+      })
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/courses/levels/')
       .then(res => setLevels(res.data))
       .catch(err => console.error('Erreur niveaux:', err));
 
+    axios.get('http://127.0.0.1:8000/api/courses/specialities/',{
+      headers: {
+        Authorization: `Bearer ${token}`, // ⬅️ Ajoute le token ici
+      },
+    })
+      .then(res => setSpecialities(res.data))
+      .catch(err => console.error('Erreur spécialités:', err));
+  }, []);*/
+
+  
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/api/courses/levels/')
+      .then(res => setLevels(res.data))
+      .catch(err => console.error('Erreur niveaux:', err));
+  
     axios.get('http://127.0.0.1:8000/api/courses/specialities/')
       .then(res => setSpecialities(res.data))
       .catch(err => console.error('Erreur spécialités:', err));
   }, []);
+  
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
