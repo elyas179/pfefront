@@ -5,11 +5,13 @@ import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom"; // ✅ Ajout
 import "./StudentQuizzes.css";
 
 const StudentQuizzes = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // ✅ Ajout
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -26,6 +28,10 @@ const StudentQuizzes = () => {
         setLoading(false);
       });
   }, []);
+
+  const handleStartQuiz = (quizId) => {
+    navigate(`/quiz/${quizId}`); // ✅ Navigation vers la page du quiz
+  };
 
   if (loading) {
     return (
@@ -52,7 +58,12 @@ const StudentQuizzes = () => {
             >
               <h3 className="quiz-name">{quiz.title}</h3>
               <p className="quiz-description">{quiz.description}</p>
-              <Button label="Commencer" className="quiz-button" icon="pi pi-play" />
+              <Button 
+                label="Commencer" 
+                className="quiz-button" 
+                icon="pi pi-play"
+                onClick={() => handleStartQuiz(quiz.id)} // ✅ onClick pour démarrer
+              />
             </motion.div>
           ))}
         </div>

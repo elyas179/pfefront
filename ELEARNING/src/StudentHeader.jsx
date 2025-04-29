@@ -1,9 +1,11 @@
 // File: StudentHeader.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaSun, FaMoon, FaBell } from "react-icons/fa";
 import { Dropdown } from "primereact/dropdown";
 import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
+import { Toast } from "primereact/toast";
+import { AutoComplete } from "primereact/autocomplete";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./StudentHeader.css";
@@ -15,7 +17,12 @@ const StudentHeader = () => {
   const [modalPhotoVisible, setModalPhotoVisible] = useState(false);
   const [modalProfileVisible, setModalProfileVisible] = useState(false);
   const [editForm, setEditForm] = useState({ bio: "", background: "" });
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
   const navigate = useNavigate();
+  const toast = useRef(null);
 
   const languages = [
     { name: "🇫🇷 Français", code: "fr" },
@@ -36,13 +43,12 @@ const StudentHeader = () => {
   }, [darkMode]);
 
   const getAccessToken = () => {
-    return localStorage.getItem("access_token");
+    return localStorage.getItem("accessToken"); // ✅ correct ici
   };
 
   const refreshUserProfile = async () => {
     const token = getAccessToken();
     if (!token) return;
-
     try {
       const res = await axios.get("http://127.0.0.1:8000/api/users/me/", {
         headers: { Authorization: `Bearer ${token}` },
@@ -56,13 +62,13 @@ const StudentHeader = () => {
 
   const handleUpload = async (e) => {
     const token = getAccessToken();
-    if (!token) return alert("❌ Connectez-vous.");
-
+    if (!token) return showError("Connectez-vous.");
     const file = e.files[0];
     const formData = new FormData();
     formData.append("profile_photo", file);
 
     try {
+      setLoading(true);
       await axios.patch("http://127.0.0.1:8000/api/users/me/edit/", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -70,19 +76,21 @@ const StudentHeader = () => {
         },
       });
       await refreshUserProfile();
-      alert("✅ Photo mise à jour !");
+      showSuccess("✅ Photo mise à jour !");
       setModalPhotoVisible(false);
     } catch (err) {
-      alert("❌ Erreur upload photo.");
+      showError("❌ Erreur upload photo.");
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDeletePhoto = async () => {
     const token = getAccessToken();
-    if (!token) return alert("❌ Connectez-vous.");
-
+    if (!token) return showError("Connectez-vous.");
     try {
+      setLoading(true);
       await axios.patch(
         "http://127.0.0.1:8000/api/users/me/edit/",
         { profile_photo: null },
@@ -94,11 +102,13 @@ const StudentHeader = () => {
         }
       );
       await refreshUserProfile();
-      alert("🗑️ Photo supprimée !");
+      showSuccess("🗑️ Photo supprimée !");
       setModalPhotoVisible(false);
     } catch (err) {
-      alert("❌ Erreur suppression photo.");
+      showError("❌ Erreur suppression photo.");
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -109,9 +119,9 @@ const StudentHeader = () => {
 
   const handleSaveProfile = async () => {
     const token = getAccessToken();
-    if (!token) return alert("❌ Connectez-vous.");
-
+    if (!token) return showError("Connectez-vous.");
     try {
+      setLoading(true);
       await axios.patch(
         "http://127.0.0.1:8000/api/users/me/edit/",
         {
@@ -126,16 +136,41 @@ const StudentHeader = () => {
         }
       );
       await refreshUserProfile();
-      alert("✅ Profil mis à jour !");
+      showSuccess("✅ Profil mis à jour !");
       setModalProfileVisible(false);
     } catch (err) {
-      alert("❌ Erreur modification profil.");
+      showError("❌ Erreur modification profil.");
       console.error(err);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleUserSearch = async (e) => {
+    const query = e.query;
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    try {
+      const res = await axios.get(`http://127.0.0.1:8000/api/users/search/?q=${query}`);
+      setSearchResults(res.data);
+    } catch (error) {
+      console.error("Erreur recherche:", error);
+    }
+  };
+
+  const showSuccess = (msg) => {
+    toast.current.show({ severity: 'success', summary: 'Succès', detail: msg, life: 3000 });
+  };
+
+  const showError = (msg) => {
+    toast.current.show({ severity: 'error', summary: 'Erreur', detail: msg, life: 3000 });
   };
 
   return (
     <header className="student-header">
+      <Toast ref={toast} />
       <div className="student-header-left">
         <img src="/logo.png" alt="Curio Logo" className="student-logo" />
         <span className="student-title">Curio</span>
@@ -150,6 +185,25 @@ const StudentHeader = () => {
           className="language-dropdown"
           placeholder="🌐 Langue"
         />
+
+        {/* 🔥 Barre de recherche AutoComplete */}
+        <AutoComplete
+          value={searchQuery}
+          suggestions={searchResults}
+          completeMethod={handleUserSearch}
+          field="username"
+          placeholder="🔍 Rechercher un utilisateur"
+          className="user-search-bar"
+          onChange={(e) => setSearchQuery(e.value)}
+          onSelect={(e) => navigate(`/profile/${e.value.id}`)}
+          dropdown
+        />
+
+        {user && (
+          <button className="profile-button" onClick={() => navigate(`/profile/${user.id}`)}>
+            Mon Profil
+          </button>
+        )}
 
         <button onClick={() => setDarkMode(!darkMode)} className="theme-toggle-icon">
           {darkMode ? <FaSun /> : <FaMoon />}
@@ -171,7 +225,6 @@ const StudentHeader = () => {
           ) : (
             <div className="student-icon" onClick={() => setModalPhotoVisible(true)}></div>
           )}
-
           <div className="profile-info">
             <span
               className="student-name"
@@ -184,7 +237,7 @@ const StudentHeader = () => {
         </div>
       </div>
 
-      {/* Popup Changer photo */}
+      {/* Popups */}
       <Dialog
         header="Changer la photo de profil"
         visible={modalPhotoVisible}
@@ -210,11 +263,11 @@ const StudentHeader = () => {
           accept="image/*"
           mode="basic"
           auto
-          chooseLabel="Téléverser une photo"
+          chooseLabel={loading ? "Chargement..." : "Téléverser une photo"}
+          disabled={loading}
         />
       </Dialog>
 
-      {/* Popup Modifier bio / background */}
       <Dialog
         header="Modifier mon profil"
         visible={modalProfileVisible}
@@ -229,6 +282,7 @@ const StudentHeader = () => {
             onChange={handleProfileChange}
             rows={3}
             style={{ width: "100%", marginBottom: "1rem" }}
+            disabled={loading}
           />
           <label>Background</label>
           <textarea
@@ -237,9 +291,14 @@ const StudentHeader = () => {
             onChange={handleProfileChange}
             rows={3}
             style={{ width: "100%", marginBottom: "1rem" }}
+            disabled={loading}
           />
-          <button onClick={handleSaveProfile} className="auth-button-filled">
-            Sauvegarder
+          <button
+            onClick={handleSaveProfile}
+            className="auth-button-filled"
+            disabled={loading}
+          >
+            {loading ? "Sauvegarde..." : "Sauvegarder"}
           </button>
         </div>
       </Dialog>
