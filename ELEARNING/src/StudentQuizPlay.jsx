@@ -60,8 +60,10 @@ const StudentQuizPlay = () => {
     setSubmitting(true);
 
     try {
+        const user = JSON.parse(localStorage.getItem("user"));
       const payload = {
         quiz: id,
+        student:user.id,
         selected_answers: selectedAnswers.map(a => a.answerId),
       };
 

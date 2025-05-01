@@ -1,36 +1,62 @@
 // File: src/pages/UserProfile.jsx
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Button } from "primereact/button";
 import { motion } from "framer-motion";
 import "./UserProfile.css";
 
 const UserProfile = () => {
-  const { id } = useParams();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [editForm, setEditForm] = useState({ bio: "", background: "" });
+
+  const getAccessToken = () => localStorage.getItem("accessToken");
+
+  const fetchUserProfile = async () => {
+    try {
+      const token = getAccessToken();
+      const response = await axios.get("http://127.0.0.1:8000/api/users/me/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser(response.data);
+      setEditForm({
+        bio: response.data.bio || "",
+        background: response.data.background || "",
+      });
+    } catch (error) {
+      console.error("❌ Erreur récupération profil:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        const response = await axios.get(`http://127.0.0.1:8000/api/users/${id}/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUser(response.data);
-      } catch (error) {
-        console.error("❌ Erreur récupération profil:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserProfile();
-  }, [id]);
+  }, []);
+
+  const handleChange = (e) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const handleSave = async () => {
+    try {
+      const token = getAccessToken();
+      await axios.patch("http://127.0.0.1:8000/api/users/me/edit/", editForm, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      fetchUserProfile();
+      setEditing(false);
+    } catch (error) {
+      console.error("❌ Erreur mise à jour:", error);
+    }
+  };
 
   if (loading) {
     return (
@@ -67,11 +93,40 @@ const UserProfile = () => {
         </div>
 
         <div className="profile-info">
-          <h3>Bio</h3>
-          <p>{user.bio || "Aucune bio renseignée."}</p>
+          {editing ? (
+            <>
+              <label>Bio</label>
+              <InputTextarea
+                name="bio"
+                value={editForm.bio}
+                onChange={handleChange}
+                rows={3}
+                style={{ width: "100%", marginBottom: "1rem" }}
+              />
+              <label>Background</label>
+              <InputTextarea
+                name="background"
+                value={editForm.background}
+                onChange={handleChange}
+                rows={3}
+                style={{ width: "100%", marginBottom: "1rem" }}
+              />
+              <div style={{ display: "flex", gap: "1rem" }}>
+                <Button label="✅ Sauvegarder" onClick={handleSave} className="p-button-success" />
+                <Button label="❌ Annuler" onClick={() => setEditing(false)} className="p-button-secondary" />
+              </div>
+            </>
+          ) : (
+            <>
+              <h3>Bio</h3>
+              <p>{user.bio || "Aucune bio renseignée."}</p>
 
-          <h3>Background</h3>
-          <p>{user.background || "Aucun background renseigné."}</p>
+              <h3>Background</h3>
+              <p>{user.background || "Aucun background renseigné."}</p>
+
+              <Button label="✏️ Modifier" onClick={() => setEditing(true)} className="p-button-warning" />
+            </>
+          )}
         </div>
       </Card>
     </motion.div>

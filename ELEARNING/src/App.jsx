@@ -142,7 +142,9 @@ const AppContent = () => {
     location.pathname.startsWith("/faq") ||
     location.pathname.startsWith("/modules/") ||
     location.pathname.startsWith("/quizes") ||
-    location.pathname.startsWith("/performance") ||  // ✅ ici
+    location.pathname.startsWith("/quiz/") ||
+    location.pathname.startsWith("/performance") ||
+    location.pathname.startsWith("/profile") ||
     location.pathname.startsWith("/StudentProfessors")
   );
 
@@ -183,6 +185,7 @@ const AppContent = () => {
           <Route path="/modules/:id" element={<ModuleDetail />} />
           <Route path="/quizes" element={<StudentQuizzes />} />
           <Route path="/performance" element={<StudentPerformance />} />
+          <Route path="/quiz/:id" element={<StudentQuizPlay />} />
 
           {/* Routes professeur */}
           <Route path="/teacher" element={<TeacherDashboard />} />
