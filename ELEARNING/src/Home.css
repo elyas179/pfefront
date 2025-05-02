@@ -125,7 +125,7 @@
 
 .stat-card {
   text-align: center;
-  background-color: #1e1e2f;
+
   color: white;
   border-radius: 12px;
   width: 180px;
@@ -166,7 +166,7 @@
 }
 .features-section {
   padding: 80px 20px;
-  background-color: #f9f9ff;
+
   text-align: center;
 }
 
@@ -184,7 +184,7 @@
 }
 
 .feature-card {
-  background-color: white;
+
   border-radius: 12px;
   padding: 30px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
@@ -338,4 +338,264 @@
   width: 100%;
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+/* 🎨 Banniere animée de fond */
+.animated-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 40%, #9333ea40, transparent),
+              radial-gradient(circle at 80% 60%, #3b82f640, transparent);
+  z-index: 0;
+  pointer-events: none;
+  animation: pulse 10s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.05); opacity: 0.8; }
+}
+
+/* 🧠 Pourquoi Curio */
+.why-curio-section {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: white;
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.why-card {
+  background: #3b82f6;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  box-shadow: 0 0 10px #9333ea;
+}
+
+/* 🪜 Étapes */
+.steps-section {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: white;
+}
+
+.steps-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.step-card {
+  background: #a6a6ed;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 280px;
+  box-shadow: 0 0 15px #3b82f6aa;
+  transition: transform 0.3s ease;
+}
+
+.step-card:hover {
+  transform: scale(1.05);
+}
+
+/* 🎥 Vidéo Démo */
+.video-section {
+  text-align: center;
+  padding: 4rem 1rem;
+
+  color: white;
+}
+
+.video-wrapper {
+  margin-top: 2rem;
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px #3b82f6;
+}
+/* 🟣 Pourquoi Curio */
+.why-curio-section {
+  padding: 4rem 2rem;
+  text-align: center;
+
+  color: white;
+}
+
+.why-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.why-card {
+
+  padding: 1.5rem 2rem;
+  border-radius: 1rem;
+  font-size: 1.2rem;
+  box-shadow: 0 0 15px #3b82f6aa;
+  min-width: 220px;
+  transition: transform 0.3s ease;
+}
+
+.why-card:hover {
+  transform: translateY(-5px);
+}
+
+/* 🧠 Étapes */
+.steps-section {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: #fff;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.step-card {
+
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px #9333ea80;
+  transition: transform 0.3s;
+}
+
+.step-card:hover {
+  transform: scale(1.03);
+}
+
+/* 🎥 Vidéo */
+.video-section {
+  padding: 4rem 2rem;
+
+  text-align: center;
+  color: white;
+}
+
+.video-wrapper {
+  margin-top: 2rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 0 20px #9333ea88;
+}
+/* 🔻 Pied de page stylisé */
+.site-footer {
+  background-color: #121221;
+  color: #ccc;
+  text-align: center;
+  padding: 2rem 1rem;
+  border-top: 1px solid #333;
+  margin-top: 3rem;
+  font-size: 0.95rem;
+}
+
+.site-footer .footer-content p {
+  margin: 0.5rem 0;
+}
+
+/* 📱 Responsive (mobile) */
+@media (max-width: 768px) {
+  .hero-section,
+  .two-column-section,
+  .steps-grid,
+  .why-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-text h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-text p,
+  .section-title,
+  .step-card p {
+    font-size: 1rem;
+  }
+
+  .start-btn {
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+  }
+
+  .stat-card {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card,
+  .why-card {
+    width: 100%;
+  }
+}
+.announcement-banner {
+
+  color: rgb(142, 74, 238);
+  padding: 0.6rem 1rem;
+  font-weight: bold;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  position: relative;
+}
+.hero-section {
+  display: flex;
+  flex-direction: row; /* ⬅️ remet le texte et l'image côte à côte */
+  align-items: center;
+  justify-content: space-between;
+  padding: 4rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-text {
+  flex: 1;
+  padding-right: 2rem;
+  z-index: 2;
+}
+
+.hero-image {
+  flex: 1;
+  text-align: center;
+  z-index: 2;
+}
+
+.hero-img {
+  max-width: 90%;
+  height: auto;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
