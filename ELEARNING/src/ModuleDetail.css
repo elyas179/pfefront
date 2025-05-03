@@ -178,121 +178,269 @@
     font-size: 1.2rem;
     color: #ffffff;
   }
-  /* File: ModuleDetail.css */
-
-.module-detail-container {
-  max-width: 1200px;
-  margin: 2rem auto;
+  
+  
+  .drive-page-container {
+    padding: 2rem;
+    max-width: 1100px;
+    margin: auto;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  .drive-title {
+    font-size: 2.3rem;
+    color: #3b82f6;
+    margin-bottom: 0.3rem;
+  }
+  
+  .drive-subtitle {
+    font-size: 1rem;
+    color: #aaa;
+    margin-bottom: 2rem;
+  }
+  
+  .drive-header-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr; /* Nom | Date | Chapitre | Type */
+    padding: 0.75rem 1rem;
+    font-weight: bold;
+    background-color: #2a2a3d;
+    color: #9333ea;
+    border-radius: 0.6rem 0.6rem 0 0;
+    font-size: 0.95rem;
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  .drive-resource-list {
+    display: flex;
+    flex-direction: column;
+    border-radius: 0 0 0.6rem 0.6rem;
+    overflow: hidden;
+  }
+  
+  .drive-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    align-items: center;
+    padding: 1rem;
+    background-color: #1e1e2f;
+    border-bottom: 1px solid #333;
+    color: white;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  
+  .drive-row:hover {
+    background-color: #2e2e4d;
+  }
+  
+  .drive-col {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .name-col span {
+    font-weight: 500;
+  }
+  
+  .no-resources {
+    color: #999;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  /* 🌓 LIGHT MODE => BODY avec .light */
+  body.light .drive-page-container {
+    background-color: white;
+    color: #1f2937;
+  }
+  
+  body.light .drive-title {
+    color: #3b82f6;
+  }
+  
+  body.light .drive-subtitle {
+    color: #6b7280;
+  }
+  
+  body.light .drive-header-row {
+    background-color: #f9fafb;
+    color: #7c3aed;
+  }
+  
+  body.light .drive-row {
+    background-color: #ffffff;
+    color: #1f2937;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  body.light .drive-row:hover {
+    background-color: #f3f4f6;
+  }
+  /* 📦 Container principal */
+.drive-page-container {
   padding: 2rem;
-  background: linear-gradient(145deg, #1e1e2f, #25253d);
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  color: #ffffff;
+  max-width: 1100px;
+  margin: auto;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+  transition: background 0.3s, color 0.3s;
 }
 
-.module-title {
-  font-size: 2.5rem;
-  font-weight: bold;
+/* 🎓 Titre du module */
+.drive-title {
+  font-size: 2.3rem;
   color: #3b82f6;
-  margin-bottom: 1rem;
+  margin-bottom: 0.3rem;
   text-align: center;
 }
 
-.module-description {
-  font-size: 1.2rem;
+/* 📝 Description */
+.drive-subtitle {
+  font-size: 1rem;
+  color: #aaa;
   margin-bottom: 2rem;
   text-align: center;
-  color: #d1d5db;
 }
 
-.module-section-title {
-  font-size: 2rem;
-  margin-top: 3rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 2px solid #9333ea;
-  padding-bottom: 0.5rem;
-  text-align: center;
-  color: #9333ea;
-}
-
-.chapters-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.chapter-card {
-  background: #2a2a40;
-  border-radius: 15px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease;
-}
-
-.chapter-card:hover {
-  transform: translateY(-5px);
-}
-
-.chapter-title {
-  font-size: 1.8rem;
-  color: #8b5cf6;
-  margin-bottom: 1.2rem;
-  text-align: center;
-}
-
-.resources-grid {
+/* 🧾 En-tête du tableau */
+.drive-header-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  padding: 0.75rem 1rem;
+  font-weight: bold;
+  background-color: #2a2a3d;
+  color: #9333ea;
+  border-radius: 0.6rem 0.6rem 0 0;
+  font-size: 0.95rem;
+  transition: background 0.3s, color 0.3s;
 }
 
-.resource-card-link {
-  text-decoration: none;
-}
-
-.resource-card {
-  background: #1f1f35;
-  border-radius: 12px;
-  padding: 1.2rem;
-  text-align: center;
-  transition: all 0.3s ease;
-  height: 180px;
+/* 📂 Liste des ressources */
+.drive-resource-list {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  border-radius: 0 0 0.6rem 0.6rem;
+  overflow: hidden;
 }
 
-.resource-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(147, 51, 234, 0.5);
-}
-
-.resource-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #ffffff;
-  margin-top: 0.8rem;
-}
-
-.module-detail-loading {
-  display: flex;
-  justify-content: center;
+/* 📄 Ligne de ressource */
+.drive-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
   align-items: center;
-  height: 60vh;
+  padding: 1rem;
+  background-color: #1e1e2f;
+  border-bottom: 1px solid #333;
+  color: white;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-.module-error {
-  text-align: center;
-  margin-top: 4rem;
-  font-size: 1.5rem;
-  color: #ef4444;
+.drive-row:hover {
+  background-color: #2e2e4d;
 }
 
-.no-chapters,
+/* 🧩 Colonnes */
+.drive-col {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.name-col span {
+  font-weight: 500;
+}
+
+/* 🚫 Message si aucune ressource */
 .no-resources {
+  color: #999;
+  padding: 2rem;
   text-align: center;
-  color: #9ca3af;
-  font-size: 1.2rem;
-  margin-top: 1rem;
+}
+
+/* 🌞 Light mode */
+body.light .drive-page-container {
+  background-color: white;
+  color: #1f2937;
+}
+
+body.light .drive-title {
+  color: #3b82f6;
+}
+
+body.light .drive-subtitle {
+  color: #6b7280;
+}
+
+body.light .drive-header-row {
+  background-color: #f9fafb;
+  color: #7c3aed;
+}
+
+body.light .drive-row {
+  background-color: #ffffff;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+body.light .drive-row:hover {
+  background-color: #f3f4f6;
+}
+.drive-page-container {
+  padding: 2rem 4rem;
+  width: 100%;
+  max-width: none;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+}
+
+.drive-fake-table,
+.drive-resource-list {
+  width: 100%;
+}
+
+
+.drive-row {
+  padding: 1.5rem 2rem;
+  font-size: 1rem;
+  background-color: #1e1e2f;
+  border-bottom: 1px solid #333;
+  color: white;
+  display: grid;
+  grid-template-columns: 2.5fr 1fr 1fr 1fr;
+  transition: background 0.2s ease;
+}
+
+.drive-row:hover {
+  background-color: #2a2a3d;
+}
+body.light .drive-row {
+  background-color: #fff;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1.5rem 2rem;
+}
+
+body.light .drive-row:hover {
+  background-color: #f3f4f6;
+}
+body.light .drive-row {
+  background-color: #ffffff;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+body.light .drive-header-row {
+  background-color: #f9fafb;
+  color: #7c3aed;
+}
+
+body.light .drive-fake-table {
+  background-color: white;
 }
