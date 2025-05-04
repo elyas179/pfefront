@@ -107,7 +107,7 @@ const Student = () => {
           ))}
         </div>
 
-        {/* Popup de modification */}
+        
         <Dialog
           header="Modifier mon profil"
           visible={editVisible}
@@ -144,3 +144,4 @@ const Student = () => {
 };
 
 export default Student;
+

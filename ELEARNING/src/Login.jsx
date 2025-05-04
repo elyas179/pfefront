@@ -1,23 +1,36 @@
-import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./AuthForm.css";
 import { motion } from "framer-motion";
+import axios from "axios";
+import "./AuthForm.css";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ username: "", password: "" });
-  const [role, setRole] = useState("etudiant");
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+
+  // Nettoyage token au montage
+  useEffect(() => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+  }, []);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // 1. Authentifier et récupérer le token
+      // 🔐 Étape 1 : Authentification
       const res = await axios.post("http://127.0.0.1:8000/api/token/", {
         username: formData.username,
         password: formData.password,
@@ -27,7 +40,7 @@ const Login = () => {
       localStorage.setItem("accessToken", token);
       console.log("✅ TOKEN reçu :", token);
 
-      // 2. Récupérer l'utilisateur connecté
+      // 👤 Étape 2 : Récupération utilisateur
       const userRes = await axios.get("http://127.0.0.1:8000/api/users/me/", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -35,22 +48,19 @@ const Login = () => {
       });
 
       const user = userRes.data;
+      localStorage.setItem("user", JSON.stringify(user));
       console.log("👤 Utilisateur connecté :", user);
 
-      localStorage.setItem("user", JSON.stringify(user));
-
-      // 3. Redirection
-      if (role === "etudiant") {
-        navigate("/student");
+      // 🔀 Étape 3 : Redirection selon rôle
+      if (user.user_type === "professor") {
+        navigate("/teacher");
       } else {
-        navigate("/prof");
+        navigate("/student");
       }
     } catch (error) {
-      console.error("❌ ERREUR :", error);
+      console.error("❌ Erreur de connexion :", error);
       if (error.response) {
-        console.error("Status :", error.response.status);
-        console.error("Détails :", error.response.data);
-        alert("Erreur : " + (error.response.data.detail || "Connexion impossible."));
+        alert("Erreur : " + (error.response.data.detail || "Connexion échouée."));
       } else {
         alert("Erreur inconnue, vérifie ton serveur.");
       }
@@ -66,13 +76,13 @@ const Login = () => {
       transition={{ duration: 0.5 }}
     >
       <div className="auth-left">
-        <h1>Hello, Friend!</h1>
-        <p>Connecte-toi avec ton compte</p>
+        <h1>Content de te revoir !</h1>
+        <p>Pas encore de compte ?</p>
         <button
           className="auth-button-outlined"
           onClick={() => navigate("/register")}
         >
-          SIGN UP
+          S'inscrire
         </button>
       </div>
 
@@ -96,12 +106,12 @@ const Login = () => {
             required
           />
 
-          
           <a href="#" className="forgot">
             Mot de passe oublié ?
           </a>
+
           <button className="auth-button-filled" type="submit">
-            LOGIN
+            Connexion
           </button>
         </form>
       </div>

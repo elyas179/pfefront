@@ -23,13 +23,11 @@ const Register = () => {
   const [specialities, setSpecialities] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
 
-  // 🧼 Nettoyage token au montage
   useEffect(() => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
   }, []);
 
-  // 📥 Charger spécialités et niveaux
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/courses/levels/')
       .then(res => setLevels(res.data))
@@ -59,6 +57,11 @@ const Register = () => {
       return;
     }
 
+    if (!formData.speciality || !formData.level) {
+      alert("Veuillez sélectionner la spécialité et le niveau.");
+      return;
+    }
+
     const payload = {
       first_name: formData.first_name,
       last_name: formData.last_name,
@@ -67,8 +70,8 @@ const Register = () => {
       password: formData.password,
       confirmPassword: formData.confirmPassword,
       user_type: formData.role === "etudiant" ? "student" : "professor",
-      speciality: formData.role === "etudiant" ? formData.speciality : null,
-      level: formData.role === "etudiant" ? formData.level : null,
+      speciality: formData.speciality,
+      level: formData.level,
     };
 
     try {
@@ -118,26 +121,6 @@ const Register = () => {
           <input type="password" name="password" placeholder="Mot de passe" value={formData.password} onChange={handleChange} required />
           <input type="password" name="confirmPassword" placeholder="Confirmer le mot de passe" value={formData.confirmPassword} onChange={handleChange} required />
 
-          {formData.role === "etudiant" && (
-            <>
-              <select name="speciality" value={formData.speciality} onChange={handleChange} required>
-                <option value="">Choisir une spécialité</option>
-                {specialities.map(spec => (
-                  <option key={spec.id} value={spec.id}>{spec.name}</option>
-                ))}
-              </select>
-
-              {formData.speciality && (
-                <select name="level" value={formData.level} onChange={handleChange} required>
-                  <option value="">Choisir un niveau</option>
-                  {availableLevels.map(level => (
-                    <option key={level.id} value={level.id}>{level.name}</option>
-                  ))}
-                </select>
-              )}
-            </>
-          )}
-
           <div className="role-select">
             <label>
               <input type="radio" name="role" value="etudiant" checked={formData.role === 'etudiant'} onChange={handleChange} />
@@ -148,6 +131,23 @@ const Register = () => {
               Professeur
             </label>
           </div>
+
+          {/* Affichage pour les deux rôles */}
+          <select name="speciality" value={formData.speciality} onChange={handleChange} required>
+            <option value="">Choisir une spécialité</option>
+            {specialities.map(spec => (
+              <option key={spec.id} value={spec.id}>{spec.name}</option>
+            ))}
+          </select>
+
+          {formData.speciality && (
+            <select name="level" value={formData.level} onChange={handleChange} required>
+              <option value="">Choisir un niveau</option>
+              {availableLevels.map(level => (
+                <option key={level.id} value={level.id}>{level.name}</option>
+              ))}
+            </select>
+          )}
 
           <button className="auth-button-filled" type="submit">S'inscrire</button>
         </form>
