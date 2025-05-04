@@ -1,11 +1,8 @@
-// File: ModuleDetail.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { Tag } from "primereact/tag";
-import { motion } from "framer-motion";
+import { FaFilePdf, FaVideo } from "react-icons/fa";
 import "./ModuleDetail.css";
 
 const ModuleDetail = () => {
@@ -28,6 +25,26 @@ const ModuleDetail = () => {
     fetchModule();
   }, [id]);
 
+  const getIcon = (type) => {
+    if (type.includes("pdf")) return <FaFilePdf color="#ef4444" size={18} />;
+    if (type.includes("video")) return <FaVideo color="#22d3ee" size={18} />;
+    return <FaFilePdf size={18} />;
+  };
+
+  const getLabel = (type) => {
+    if (type.includes("cours")) return "Cours";
+    if (type.includes("tp")) return "TP";
+    if (type.includes("td")) return "TD";
+    return "Autre";
+  };
+
+  const allResources = module?.chapters.flatMap((chapter) =>
+    chapter.resources.map((res) => ({
+      ...res,
+      chapterName: chapter.name,
+    }))
+  ) || [];
+
   if (loading) {
     return (
       <div className="module-detail-loading">
@@ -36,79 +53,42 @@ const ModuleDetail = () => {
     );
   }
 
-  if (!module) {
-    return (
-      <motion.div
-        className="module-error"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        🚫 Module introuvable
-      </motion.div>
-    );
-  }
-
   return (
-    <motion.div
-      className="module-detail-container"
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <h1 className="module-title">📘 {module.name}</h1>
-      {module.description && (
-        <p className="module-description">{module.description}</p>
-      )}
+    <div className="drive-page-container">
+      <h1 className="drive-title">{module?.name}</h1>
+      <p className="drive-subtitle">{module?.description}</p>
 
-      <h2 className="module-section-title">📂 Chapitres</h2>
+      <div className="drive-header-row">
+        <span className="drive-col">Nom</span>
+        <span className="drive-col">Ajouté le</span>
+        <span className="drive-col">Chapitre</span>
+        <span className="drive-col">Type</span>
+      </div>
 
-      <div className="chapters-grid">
-        {module.chapters.length > 0 ? (
-          module.chapters.map((chapter) => (
-            <motion.div
-              key={chapter.id}
-              className="chapter-card"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <h3 className="chapter-title">📖 {chapter.name}</h3>
-
-              <div className="resources-grid">
-                {chapter.resources.length > 0 ? (
-                  chapter.resources.map((res) => (
-                    <a
-                      href={res.link}
-                      key={res.id}
-                      className="resource-card-link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <motion.div
-                        className="resource-card"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Tag
-                          value={res.resource_type.replace("-", " ").toUpperCase()}
-                          severity="info"
-                          style={{ marginBottom: "1rem" }}
-                        />
-                        <h4 className="resource-title">{res.name}</h4>
-                      </motion.div>
-                    </a>
-                  ))
-                ) : (
-                  <p className="no-resources">Aucune ressource disponible.</p>
-                )}
-              </div>
-            </motion.div>
-          ))
-        ) : (
-          <p className="no-chapters">Aucun chapitre disponible.</p>
+      <div className="drive-resource-list">
+        {allResources.map((res) => (
+          <a
+            key={res.id}
+            href={res.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="drive-row"
+          >
+            <span className="drive-col name-col">
+              {getIcon(res.resource_type)} {res.name}
+            </span>
+            <span className="drive-col">
+              {new Date(res.created_at).toLocaleDateString()}
+            </span>
+            <span className="drive-col">{res.chapterName}</span>
+            <span className="drive-col">{getLabel(res.resource_type)}</span>
+          </a>
+        ))}
+        {allResources.length === 0 && (
+          <div className="no-resources">Aucune ressource trouvée</div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 };
 

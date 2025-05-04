@@ -39,7 +39,7 @@ import AccessRequests from "./PAGES/AccessRequests";
 import TeacherSettings from "./PAGES/TeacherSettings";
 import TeacherChat from "./PAGES/TeacherChat";
 import TeacherFAQ from "./PAGES/TeacherFAQ";
-
+import GeneratedQuizDetail from "./GeneratedQuizDetail";
 const AppContent = () => {
   const location = useLocation();
 
@@ -55,6 +55,7 @@ const AppContent = () => {
     location.pathname.startsWith("/quizes") ||
     location.pathname.startsWith("/quiz/") ||
     location.pathname.startsWith("/performance") ||
+    location.pathname.startsWith("/generated-quizzes")  ||
     location.pathname.startsWith("/profile") ||
     location.pathname.startsWith("/StudentProfessors")
   );
@@ -97,6 +98,7 @@ const AppContent = () => {
           <Route path="/quizes" element={<StudentQuizzes />} />
           <Route path="/performance" element={<StudentPerformance />} />
           <Route path="/quiz/:id" element={<StudentQuizPlay />} />
+          <Route path="/generated-quizzes/:id" element={<GeneratedQuizDetail />} />
 
           
           <Route path="/teacher" element={<TeacherDashboard />} />

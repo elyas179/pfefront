@@ -1,77 +1,119 @@
-// File: StudentQuizzes.jsx
+// File: GenerateQuizForm.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card } from "primereact/card";
+import { Dropdown } from "primereact/dropdown";
+import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
-import { ProgressSpinner } from "primereact/progressspinner";
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom"; // ✅ Ajout
+import { Toast } from "primereact/toast";
+import { useRef } from "react";
 import "./StudentQuizzes.css";
 
-const StudentQuizzes = () => {
-  const [quizzes, setQuizzes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // ✅ Ajout
+const GenerateQuizForm = () => {
+  const [modules, setModules] = useState([]);
+  const [chapters, setChapters] = useState([]);
+  const [selectedModule, setSelectedModule] = useState(null);
+  const [selectedChapter, setSelectedChapter] = useState(null);
+  const [difficulty, setDifficulty] = useState(3);
+  const [quizType, setQuizType] = useState("standard");
+  const toast = useRef(null);
+
+  const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
     axios
-      .get("http://127.0.0.1:8000/api/quizzes/", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setQuizzes(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Erreur chargement quizzes:", err);
-        setLoading(false);
-      });
+      .get("http://127.0.0.1:8000/api/courses/modules/")
+      .then((res) => setModules(res.data))
+      .catch((err) => console.error("Erreur chargement modules:", err));
   }, []);
 
-  const handleStartQuiz = (quizId) => {
-    navigate(`/quiz/${quizId}`); // ✅ Navigation vers la page du quiz
+  useEffect(() => {
+    if (selectedModule) {
+      axios
+        .get(`http://127.0.0.1:8000/api/courses/chapters/?module=${selectedModule}`)
+        .then((res) => setChapters(res.data))
+        .catch((err) => console.error("Erreur chargement chapitres:", err));
+    }
+  }, [selectedModule]);
+
+  const handleSubmit = () => {
+    if (!selectedModule || !selectedChapter || !difficulty || !quizType) {
+      toast.current.show({ severity: "warn", summary: "Champs manquants", detail: "Veuillez remplir tous les champs." });
+      return;
+    }
+
+    axios
+      .post(
+        "http://127.0.0.1:8000/api/ai/genquizzes/",
+        {
+          module: selectedModule,
+          chapters: [selectedChapter],
+          difficulty: difficulty,
+          quiz_type: quizType,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((res) => {
+        toast.current.show({ severity: "success", summary: "Succès", detail: "Quiz généré avec succès!" });
+      })
+      .catch((err) => {
+        toast.current.show({ severity: "error", summary: "Erreur", detail: "La génération a échoué." });
+        console.error("Erreur lors de la génération:", err);
+      });
   };
 
-  if (loading) {
-    return (
-      <div className="quiz-loading">
-        <ProgressSpinner />
-      </div>
-    );
-  }
-
   return (
-    <div className="quiz-container">
-      <h1 className="quiz-title">📝 Quizzes Disponibles</h1>
+    <div className="generate-quiz-form">
+      <Toast ref={toast} />
+      <h2>Générer un Quiz par IA</h2>
 
-      {quizzes.length > 0 ? (
-        <div className="quiz-grid">
-          {quizzes.map((quiz) => (
-            <motion.div
-              key={quiz.id}
-              className="quiz-card"
-              whileHover={{ scale: 1.05 }}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <h3 className="quiz-name">{quiz.title}</h3>
-              <p className="quiz-description">{quiz.description}</p>
-              <Button 
-                label="Commencer" 
-                className="quiz-button" 
-                icon="pi pi-play"
-                onClick={() => handleStartQuiz(quiz.id)} // ✅ onClick pour démarrer
-              />
-            </motion.div>
-          ))}
-        </div>
-      ) : (
-        <p className="no-quizzes">Aucun quiz n'est disponible pour le moment.</p>
-      )}
+      <div className="form-field">
+        <label>Module:</label>
+        <Dropdown
+          value={selectedModule}
+          options={modules.map((m) => ({ label: m.name, value: m.id }))}
+          onChange={(e) => setSelectedModule(e.value)}
+          placeholder="Choisissez un module"
+        />
+      </div>
+
+      <div className="form-field">
+        <label>Chapitre:</label>
+        <Dropdown
+          value={selectedChapter}
+          options={chapters.map((c) => ({ label: c.name, value: c.id }))}
+          onChange={(e) => setSelectedChapter(e.value)}
+          placeholder="Choisissez un chapitre"
+          disabled={!selectedModule}
+        />
+      </div>
+
+      <div className="form-field">
+        <label>Difficulté (1-5):</label>
+        <InputNumber
+          value={difficulty}
+          onValueChange={(e) => setDifficulty(e.value)}
+          min={1}
+          max={5}
+        />
+      </div>
+
+      <div className="form-field">
+        <label>Type de Quiz:</label>
+        <Dropdown
+          value={quizType}
+          options={[
+            { label: "Standard", value: "standard" },
+            { label: "Challenge", value: "challenge" },
+          ]}
+          onChange={(e) => setQuizType(e.value)}
+        />
+      </div>
+
+      <Button label="Générer le Quiz" className="quiz-button" onClick={handleSubmit} />
     </div>
   );
 };
 
-export default StudentQuizzes;
+export default GenerateQuizForm;
