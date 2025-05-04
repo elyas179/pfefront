@@ -67,8 +67,8 @@ const Register = () => {
       password: formData.password,
       confirmPassword: formData.confirmPassword,
       user_type: formData.role === "etudiant" ? "student" : "professor",
-      speciality: formData.role === "etudiant" ? formData.speciality : null,
-      level: formData.role === "etudiant" ? formData.level : null,
+      speciality: formData.speciality,
+      level: formData.level,
     };
 
     try {
@@ -118,26 +118,23 @@ const Register = () => {
           <input type="password" name="password" placeholder="Mot de passe" value={formData.password} onChange={handleChange} required />
           <input type="password" name="confirmPassword" placeholder="Confirmer le mot de passe" value={formData.confirmPassword} onChange={handleChange} required />
 
-          {formData.role === "etudiant" && (
-            <>
-              <select name="speciality" value={formData.speciality} onChange={handleChange} required>
-                <option value="">Choisir une spécialité</option>
-                {specialities.map(spec => (
-                  <option key={spec.id} value={spec.id}>{spec.name}</option>
-                ))}
-              </select>
+          <>
+  <select name="speciality" value={formData.speciality} onChange={handleChange} required>
+    <option value="">Choisir une spécialité</option>
+    {specialities.map(spec => (
+      <option key={spec.id} value={spec.id}>{spec.name}</option>
+    ))}
+  </select>
 
-              {formData.speciality && (
-                <select name="level" value={formData.level} onChange={handleChange} required>
-                  <option value="">Choisir un niveau</option>
-                  {availableLevels.map(level => (
-                    <option key={level.id} value={level.id}>{level.name}</option>
-                  ))}
-                </select>
-              )}
-            </>
-          )}
-
+  {formData.speciality && (
+    <select name="level" value={formData.level} onChange={handleChange} required>
+      <option value="">Choisir un niveau</option>
+      {availableLevels.map(level => (
+        <option key={level.id} value={level.id}>{level.name}</option>
+      ))}
+    </select>
+  )}
+</>
           <div className="role-select">
             <label>
               <input type="radio" name="role" value="etudiant" checked={formData.role === 'etudiant'} onChange={handleChange} />
