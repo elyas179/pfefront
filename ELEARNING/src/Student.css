@@ -1,35 +1,29 @@
-body.dark-mode .student-dashboard {
-  background-color: #1e1e2f;
+.student-page {
+  padding: 2rem;
+  background-color: #fafafa;
   color: white;
-}
-
-body.light-mode .student-dashboard {
-  background-color: #f9f9f9;
-  color: #111;
+  min-height: 100vh;
 }
 
 .student-dashboard {
-  padding: 5rem;
-  min-height: 100vh;
-  transition: background-color 0.3s ease;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
 .dashboard-title {
   font-size: 2.5rem;
-  font-weight: bold;
   color: #9333ea;
 }
 
-.dashboard-title span {
-  background: linear-gradient(to right, #9333ea, #3b82f6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 .dashboard-subtext {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  color: inherit;
+  color: #3f1e62;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
 }
 
 .dashboard-grid {
@@ -40,17 +34,17 @@ body.light-mode .student-dashboard {
 }
 
 .dashboard-card {
+  background: #0c0c4e;
+  padding: 2rem;
+  border-radius: 1rem;
   text-align: center;
-  padding: 2rem 1rem;
-  background-color: rgba(147, 51, 234, 0.05);
-  border: 1px solid rgba(147, 51, 234, 0.3);
-  border-radius: 12px;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
 }
 
 .dashboard-card:hover {
-  transform: translateY(-5px) scale(1.03);
-  box-shadow: 0 0 12px rgba(147, 51, 234, 0.5);
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(147, 51, 234, 0.4);
 }
 
 .card-icon {
@@ -58,18 +52,77 @@ body.light-mode .student-dashboard {
   color: #9333ea;
   margin-bottom: 1rem;
 }
-.student-dashboard {
-  padding: 2rem;
-  padding-bottom: 150px; /* espace pour le footer */
-  min-height: calc(100vh - 100px); /* s'ajuste selon la taille de ton footer */
-  background-color: var(--main-bg);
-  color: var(--main-text);
+
+.auth-button-filled {
+  background: linear-gradient(to right, #3b82f6, #9333ea);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
-.dashboard-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.auth-button-filled:hover {
+  filter: brightness(1.1);
 }
-.dashboard-card:hover {
-  transform: translateY(-5px) scale(1.03);
-  box-shadow: 0 8px 16px rgba(147, 51, 234, 0.2);
+
+/* Photo de profil + overlay */
+.profile-picture-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 1.5rem auto;
+  cursor: pointer;
+  box-shadow: 0 0 10px #9333ea55;
+}
+
+.profile-picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(36, 13, 118, 0.55);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profile-picture-container:hover .overlay {
+  opacity: 1;
+}
+
+.edit-icon {
+  color: white;
+  font-size: 2rem;
+  pointer-events: none;
+}
+
+/* Form modale */
+.edit-profile-form label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #f8fafc;
+}
+
+textarea {
+  background: #3f296c;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 0.7rem;
 }
