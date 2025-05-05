@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Carousel } from "primereact/carousel";
-import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -11,25 +10,33 @@ import "./MyModules.css";
 const MyModules = () => {
   const [modules, setModules] = useState([]);
   const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
+    const fetchModules = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        setError("Utilisateur non authentifié.");
+        setLoading(false);
+        return;
+      }
 
-    if (token) {
-      axios
-        .get("http://127.0.0.1:8000/api/users/my-modules", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          setModules(res.data);
-        })
-        .catch((err) => {
-          console.error("Erreur de récupération des modules", err);
+      try {
+        const res = await axios.get("http://127.0.0.1:8000/api/users/my-modules", {
+          headers: { Authorization: `Bearer ${token}` },
         });
-    }
+        setModules(res.data);
+      } catch (err) {
+        console.error("Erreur de récupération des modules :", err);
+        setError("Impossible de récupérer les modules.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchModules();
   }, []);
 
   const filteredModules = modules.filter((m) =>
@@ -38,6 +45,7 @@ const MyModules = () => {
 
   const moduleTemplate = (mod) => (
     <motion.div
+      key={mod.id}
       className="module-card"
       whileHover={{ scale: 1.05 }}
       initial={{ opacity: 0, y: 30 }}
@@ -66,7 +74,11 @@ const MyModules = () => {
         />
       </div>
 
-      {filteredModules.length > 0 ? (
+      {loading ? (
+        <p>Chargement des modules...</p>
+      ) : error ? (
+        <p className="error-message">{error}</p>
+      ) : filteredModules.length > 0 ? (
         <Carousel
           value={filteredModules}
           itemTemplate={moduleTemplate}
