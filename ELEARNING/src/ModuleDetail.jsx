@@ -54,13 +54,6 @@ const ModuleDetail = () => {
     return <FaFilePdf size={16} />;
   };
 
-  const getLabel = (type) => {
-    if (type.includes("cours")) return "Cours";
-    if (type.includes("tp")) return "TP";
-    if (type.includes("td")) return "TD";
-    return "Autre";
-  };
-
   const allResources =
     module?.chapters?.flatMap((chapter) =>
       (chapter.all_resources || []).map((res) => ({
@@ -108,13 +101,18 @@ const ModuleDetail = () => {
                   }}
                 >
                   <span className="drive-col name-col">
-                    {getIcon(res.resource_type)} {res.name}
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <span>
+                        {getIcon(res.resource_type)} {res.name}
+                      </span>
+                      <span style={{ fontSize: "0.8rem", color: "#999" }}>
+                        Auteur: {res.owner || "—"}
+                      </span>
+                    </div>
                   </span>
 
                   <span className="drive-col">
-                    {res.created_at
-                      ? new Date(res.created_at).toLocaleString("fr-FR")
-                      : "—"}
+                    {res.created_at || "—"}
                   </span>
 
                   <span className="drive-col">{res.chapterName}</span>
@@ -129,18 +127,10 @@ const ModuleDetail = () => {
                     ) : (
                       <button
                         onClick={(e) => {
-                          e.stopPropagation(); // prevent row click
+                          e.stopPropagation();
                           handleRequestAccess(res.id);
                         }}
                         className="request-access-btn"
-                        style={{
-                          background: "#9333ea",
-                          color: "white",
-                          border: "none",
-                          padding: "6px 12px",
-                          borderRadius: "6px",
-                          cursor: "pointer",
-                        }}
                       >
                         Demander l'accès
                       </button>
