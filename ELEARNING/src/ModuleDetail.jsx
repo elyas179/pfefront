@@ -5,6 +5,18 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { FaFilePdf, FaVideo } from "react-icons/fa";
 import "./ModuleDetail.css";
 
+// ✅ Fonction de formatage de date lisible
+const formatDate = (dateStr) => {
+  if (!dateStr) return "—";
+  return new Date(dateStr).toLocaleString("fr-FR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
 const ModuleDetail = () => {
   const { id } = useParams();
   const [module, setModule] = useState(null);
@@ -32,8 +44,8 @@ const ModuleDetail = () => {
     const token = localStorage.getItem("accessToken");
     try {
       await axios.post(
-        "http://127.0.0.1:8000/api/courses/resources/request/",
-        { resource: resourceId },
+        `http://127.0.0.1:8000/api/courses/resources/request/${resourceId}/`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -44,7 +56,7 @@ const ModuleDetail = () => {
       alert("✅ Demande d'accès envoyée !");
     } catch (err) {
       console.error("❌ Erreur demande d'accès:", err);
-      alert("Erreur lors de la demande d'accès.");
+      alert(err.response?.data?.detail || "Erreur lors de la demande d'accès.");
     }
   };
 
@@ -106,13 +118,14 @@ const ModuleDetail = () => {
                         {getIcon(res.resource_type)} {res.name}
                       </span>
                       <span style={{ fontSize: "0.8rem", color: "#999" }}>
-                        Auteur: {res.owner || "—"}
+                        Auteur: {res.owner_username || "—"}
                       </span>
                     </div>
                   </span>
 
+                  {/* ✅ Affichage date formatée */}
                   <span className="drive-col">
-                    {res.created_at || "—"}
+                    {formatDate(res.created_at)}
                   </span>
 
                   <span className="drive-col">{res.chapterName}</span>
