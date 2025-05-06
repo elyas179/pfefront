@@ -1,7 +1,7 @@
 // File: AddCourse.jsx
 import React, { useState } from "react";
 import './AddCourse.css';
-import { d } from '../'
+
 const AddCourse = () => {
   const [name, setName] = useState("");
   const [type, setType] = useState("cours-pdf");

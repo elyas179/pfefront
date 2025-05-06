@@ -1,188 +1,146 @@
-import React, { useState, useEffect, useRef } from "react";
-import { FaSun, FaMoon, FaBell } from "react-icons/fa";
-import { Dropdown } from "primereact/dropdown";
+import axios from "axios";
+import { AutoComplete } from "primereact/autocomplete";
 import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
+import { OverlayPanel } from "primereact/overlaypanel";
 import { Toast } from "primereact/toast";
-import { AutoComplete } from "primereact/autocomplete";
+import React, { useEffect, useRef, useState } from "react";
+import { FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import "./TeacherHeader.css"; 
+import "./TeacherHeader.css";
 
 const TeacherHeader = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [language, setLanguage] = useState("fr");
   const [user, setUser] = useState(null);
-  const [modalPhotoVisible, setModalPhotoVisible] = useState(false);
-  const [modalProfileVisible, setModalProfileVisible] = useState(false);
-  const [editForm, setEditForm] = useState({ bio: "", background: "" });
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [modalPhotoVisible, setModalPhotoVisible] = useState(false);
+  const [modalProfileVisible, setModalProfileVisible] = useState(false);
+  const [editForm, setEditForm] = useState({ bio: "", background: "" });
+  const [darkMode, setDarkMode] = useState(false);
 
-  const navigate = useNavigate();
+  const profileOp = useRef(null);
+  const notifOp = useRef(null);
   const toast = useRef(null);
-
-  const languages = [
-    { name: "🇫🇷 Français", code: "fr" },
-    { name: "🇬🇧 English", code: "en" },
-  ];
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      const parsedUser = JSON.parse(userData);
-      setUser(parsedUser);
-      setEditForm({ bio: parsedUser.bio || "", background: parsedUser.background || "" });
-    }
+    const token = localStorage.getItem("accessToken");
+    if (!token) return;
+
+    axios.get("http://127.0.0.1:8000/api/users/me/", {
+      headers: { Authorization: `Bearer ${token}` },
+    }).then((res) => {
+      setUser(res.data);
+      setEditForm({
+        bio: res.data.bio || "",
+        background: res.data.background || ""
+      });
+    });
+
+    axios.get("http://127.0.0.1:8000/api/notifications/", {
+      headers: { Authorization: `Bearer ${token}` },
+    }).then((res) => setNotifications(res.data));
   }, []);
 
   useEffect(() => {
     document.body.className = darkMode ? "dark-mode" : "light-mode";
   }, [darkMode]);
 
-  const getAccessToken = () => localStorage.getItem("accessToken");
+  const handleProfileChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm(prev => ({ ...prev, [name]: value }));
+  };
 
-  const refreshUserProfile = async () => {
-    const token = getAccessToken();
-    if (!token) return;
+  const handleSaveProfile = async () => {
     try {
+      setLoading(true);
+      const token = localStorage.getItem("accessToken");
+      await axios.patch("http://127.0.0.1:8000/api/users/me/edit/", editForm, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       const res = await axios.get("http://127.0.0.1:8000/api/users/me/", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      localStorage.setItem("user", JSON.stringify(res.data));
       setUser(res.data);
-    } catch (err) {
-      console.error("❌ Erreur rafraîchissement profil:", err);
+      toast.current.show({ severity: "success", summary: "Succès", detail: "Profil mis à jour !" });
+      setModalProfileVisible(false);
+    } catch {
+      toast.current.show({ severity: "error", summary: "Erreur", detail: "Échec modification." });
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleUpload = async (e) => {
-    const token = getAccessToken();
-    if (!token) return showError("Connectez-vous.");
     const file = e.files[0];
     const formData = new FormData();
     formData.append("profile_photo", file);
-
     try {
-      setLoading(true);
+      const token = localStorage.getItem("accessToken");
       await axios.patch("http://127.0.0.1:8000/api/users/me/edit/", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
-      await refreshUserProfile();
-      showSuccess("✅ Photo mise à jour !");
+      const res = await axios.get("http://127.0.0.1:8000/api/users/me/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser(res.data);
+      toast.current.show({ severity: "success", summary: "Succès", detail: "Photo mise à jour !" });
       setModalPhotoVisible(false);
-    } catch (err) {
-      showError("❌ Erreur upload photo.");
-      console.error(err);
-    } finally {
-      setLoading(false);
+    } catch {
+      toast.current.show({ severity: "error", summary: "Erreur", detail: "Échec envoi photo." });
     }
   };
 
   const handleDeletePhoto = async () => {
-    const token = getAccessToken();
-    if (!token) return showError("Connectez-vous.");
     try {
-      setLoading(true);
-      await axios.patch(
-        "http://127.0.0.1:8000/api/users/me/edit/",
-        { profile_photo: null },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      await refreshUserProfile();
-      showSuccess("🗑️ Photo supprimée !");
-      setModalPhotoVisible(false);
-    } catch (err) {
-      showError("❌ Erreur suppression photo.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleProfileChange = (e) => {
-    const { name, value } = e.target;
-    setEditForm({ ...editForm, [name]: value });
-  };
-
-  const handleSaveProfile = async () => {
-    const token = getAccessToken();
-    if (!token) return showError("Connectez-vous.");
-    try {
-      setLoading(true);
-      await axios.patch(
-        "http://127.0.0.1:8000/api/users/me/edit/",
-        {
-          bio: editForm.bio,
-          background: editForm.background,
+      const token = localStorage.getItem("accessToken");
+      await axios.patch("http://127.0.0.1:8000/api/users/me/edit/", {
+        profile_photo: null
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      await refreshUserProfile();
-      showSuccess("✅ Profil mis à jour !");
-      setModalProfileVisible(false);
-    } catch (err) {
-      showError("❌ Erreur modification profil.");
-      console.error(err);
-    } finally {
-      setLoading(false);
+      });
+      const res = await axios.get("http://127.0.0.1:8000/api/users/me/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser(res.data);
+      toast.current.show({ severity: "success", summary: "Supprimée", detail: "Photo supprimée." });
+      setModalPhotoVisible(false);
+    } catch {
+      toast.current.show({ severity: "error", summary: "Erreur", detail: "Erreur suppression." });
     }
   };
 
   const handleUserSearch = async (e) => {
     const query = e.query;
-    if (!query.trim()) {
-      setSearchResults([]);
-      return;
-    }
-    try {
-      const res = await axios.get(`http://127.0.0.1:8000/api/users/search/?q=${query}`);
-      setSearchResults(res.data);
-    } catch (error) {
-      console.error("Erreur recherche:", error);
-    }
+    if (!query.trim()) return setSearchResults([]);
+    const res = await axios.get(`http://127.0.0.1:8000/api/users/search/?q=${query}`);
+    setSearchResults(res.data);
   };
-
-  const showSuccess = (msg) => {
-    toast.current.show({ severity: 'success', summary: 'Succès', detail: msg, life: 3000 });
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+    navigate("/");
   };
-
-  const showError = (msg) => {
-    toast.current.show({ severity: 'error', summary: 'Erreur', detail: msg, life: 3000 });
-  };
-
   return (
     <header className="teacher-header">
       <Toast ref={toast} />
       <div className="teacher-header-left">
-        <img src="/logo.png" alt="Curio Logo" className="teacher-logo" />
+        <img src="/logo.png" alt="Logo" className="teacher-logo" />
         <span className="teacher-title">Curio Prof</span>
       </div>
 
       <div className="teacher-header-right">
-        <Dropdown
-          value={language}
-          options={languages}
-          onChange={(e) => setLanguage(e.value)}
-          optionLabel="name"
-          className="language-dropdown"
-          placeholder="🌐 Langue"
-        />
-
         <AutoComplete
           value={searchQuery}
           suggestions={searchResults}
@@ -195,60 +153,56 @@ const TeacherHeader = () => {
           dropdown
         />
 
+        <div className="notif-wrapper">
+          <div className="notif-icon" onClick={(e) => notifOp.current.toggle(e)}>
+            <FaBell />
+            {notifications.length > 0 && <span className="notif-dot">{notifications.length}</span>}
+          </div>
+          <OverlayPanel ref={notifOp} className="overlay-panel-custom">
+            <ul className="overlay-options">
+              {notifications.length > 0 ? notifications.map((notif, i) => (
+                <li key={i}>{notif.message}</li>
+              )) : <li>Aucune notification</li>}
+            </ul>
+          </OverlayPanel>
+        </div>
+
         {user && (
-          <button className="profile-button" onClick={() => navigate(`/profile/${user.id}`)}>
-            Mon Profil
-          </button>
-        )}
-
-        <button onClick={() => setDarkMode(!darkMode)} className="theme-toggle-icon">
-          {darkMode ? <FaSun /> : <FaMoon />}
-        </button>
-
-        <button className="notif-icon" onClick={() => navigate("/notification")}>
-          <FaBell size={20} />
-          <span className="notif-dot">5</span>
-        </button>
-
-        <div className="profile-area">
-          {user?.profile_photo ? (
+          <div className="profile-container" onClick={(e) => profileOp.current.toggle(e)}>
             <img
               src={`http://127.0.0.1:8000${user.profile_photo}`}
               alt="Profil"
               className="profile-preview-small"
-              onClick={() => setModalPhotoVisible(true)}
             />
-          ) : (
-            <div className="teacher-icon" onClick={() => setModalPhotoVisible(true)}></div>
-          )}
-          <div className="profile-info">
-            <span
-              className="teacher-name"
-              onClick={() => setModalProfileVisible(true)}
-              style={{ cursor: "pointer", textDecoration: "underline" }}
-            >
-              {user?.username || "Professeur"}
-            </span>
+            <span className="profile-username">{user.username}</span>
           </div>
-        </div>
+        )}
+
+        <OverlayPanel ref={profileOp} className="overlay-panel-custom">
+          {user && (
+            <div>
+              <div className="overlay-user-info">
+                <img src={`http://127.0.0.1:8000${user.profile_photo}`} alt="Profil" className="overlay-profile-img" />
+                <strong>{user.username}</strong>
+                <small>{user.speciality?.name || "Professeur"}</small>
+              </div>
+              <ul className="overlay-links">
+                <li onClick={() => navigate(`/profile/${user.id}`)}>📋 Mon Profil</li>
+                <li onClick={() => setModalProfileVisible(true)}>⚙️ Modifier Profil</li>
+                <li onClick={() => setModalPhotoVisible(true)}>🖼️ Changer Photo</li>
+                <li onClick={() => setDarkMode(!darkMode)}>{darkMode ? "☀️ Mode clair" : "🌙 Mode sombre"}</li>
+                <li onClick={handleLogout}>🚪 Déconnexion</li>
+              </ul>
+            </div>
+          )}
+        </OverlayPanel>
       </div>
 
-      <Dialog
-        header="Changer la photo de profil"
-        visible={modalPhotoVisible}
-        style={{ width: "30vw" }}
-        onHide={() => setModalPhotoVisible(false)}
-      >
+      <Dialog header="Changer la photo" visible={modalPhotoVisible} style={{ width: "30vw" }} onHide={() => setModalPhotoVisible(false)}>
         {user?.profile_photo && (
           <div className="photo-preview-container">
-            <img
-              src={`http://127.0.0.1:8000${user.profile_photo}`}
-              alt="Preview"
-              className="profile-preview"
-            />
-            <button className="delete-button" onClick={handleDeletePhoto}>
-              Supprimer la photo
-            </button>
+            <img src={`http://127.0.0.1:8000${user.profile_photo}`} alt="Preview" className="profile-preview" />
+            <button className="delete-button" onClick={handleDeletePhoto}>Supprimer</button>
           </div>
         )}
         <FileUpload
@@ -258,41 +212,18 @@ const TeacherHeader = () => {
           accept="image/*"
           mode="basic"
           auto
-          chooseLabel={loading ? "Chargement..." : "Téléverser une photo"}
+          chooseLabel={loading ? "Chargement..." : "Téléverser"}
           disabled={loading}
         />
       </Dialog>
 
-      <Dialog
-        header="Modifier mon profil"
-        visible={modalProfileVisible}
-        style={{ width: "30vw" }}
-        onHide={() => setModalProfileVisible(false)}
-      >
+      <Dialog header="Modifier mon profil" visible={modalProfileVisible} style={{ width: "30vw" }} onHide={() => setModalProfileVisible(false)}>
         <div className="edit-profile-form">
           <label>Bio</label>
-          <textarea
-            name="bio"
-            value={editForm.bio}
-            onChange={handleProfileChange}
-            rows={3}
-            style={{ width: "100%", marginBottom: "1rem" }}
-            disabled={loading}
-          />
+          <textarea name="bio" value={editForm.bio} onChange={handleProfileChange} rows={3} />
           <label>Background</label>
-          <textarea
-            name="background"
-            value={editForm.background}
-            onChange={handleProfileChange}
-            rows={3}
-            style={{ width: "100%", marginBottom: "1rem" }}
-            disabled={loading}
-          />
-          <button
-            onClick={handleSaveProfile}
-            className="auth-button-filled"
-            disabled={loading}
-          >
+          <textarea name="background" value={editForm.background} onChange={handleProfileChange} rows={3} />
+          <button onClick={handleSaveProfile} className="auth-button-filled" disabled={loading}>
             {loading ? "Sauvegarde..." : "Sauvegarder"}
           </button>
         </div>
