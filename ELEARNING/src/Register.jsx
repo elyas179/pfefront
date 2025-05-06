@@ -30,11 +30,19 @@ const Register = () => {
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/courses/levels/')
-      .then(res => setLevels(res.data))
+      .then(res => {
+        const data = Array.isArray(res.data) ? res.data : res.data.results || [];
+        console.log("Levels:", data);
+        setLevels(data);
+      })
       .catch(err => console.error('Erreur niveaux:', err));
 
     axios.get('http://127.0.0.1:8000/api/courses/specialities/')
-      .then(res => setSpecialities(res.data))
+      .then(res => {
+        const data = Array.isArray(res.data) ? res.data : res.data.results || [];
+        console.log("Specialities:", data);
+        setSpecialities(data);
+      })
       .catch(err => console.error('Erreur spécialités:', err));
   }, []);
 
@@ -86,13 +94,9 @@ const Register = () => {
 
   const selectedSpeciality = specialities.find(s => String(s.id) === formData.speciality);
   const specialityName = selectedSpeciality?.name.toLowerCase() || '';
-  const availableLevels = levels.filter(level => {
-    if (specialityName.includes("tronc")) {
-      return level.name.startsWith("L1");
-    } else {
-      return level.name.startsWith("L2");
-    }
-  });
+  const availableLevels = levels.filter(level =>
+    specialityName.includes("tronc") ? level.name.startsWith("L1") : level.name.startsWith("L2")
+  );
 
   return (
     <motion.div
@@ -132,7 +136,6 @@ const Register = () => {
             </label>
           </div>
 
-          {/* Affichage pour les deux rôles */}
           <select name="speciality" value={formData.speciality} onChange={handleChange} required>
             <option value="">Choisir une spécialité</option>
             {specialities.map(spec => (

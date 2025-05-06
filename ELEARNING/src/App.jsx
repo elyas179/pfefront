@@ -207,7 +207,7 @@ const AppContent = () => {
   );
 
   return (
-    <>
+    <div className="app-container">
       {
         isStudentHeader ? <StudentHeader />
         : isTeacherHeader ? <TeacherHeader />
@@ -235,7 +235,7 @@ const AppContent = () => {
           <Route path="/quizes" element={<StudentQuizzes />} />
           <Route path="/performance" element={<StudentPerformance />} />
           <Route path="/quiz/:id" element={<StudentQuizPlay />} />
-
+          <Route path="/resources/:id" element={<ResourceDetail />} />
           {/* Professeur */}
           <Route path="/teacher" element={<TeacherDashboard />} />
           <Route path="/create-quiz" element={<CreateQuiz />} />
@@ -258,7 +258,8 @@ const AppContent = () => {
       </AnimatePresence>
 
       <Footer />
-    </>
+      </div>
+   
   );
 };
 

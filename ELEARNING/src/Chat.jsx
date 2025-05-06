@@ -3,9 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { Card } from "primereact/card";
 import { motion } from "framer-motion";
-import "./Chat.css"; // ton css custom pour styliser
+import "./Chat.css";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -13,27 +12,27 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const chatEndRef = useRef(null);
 
-  // Scroll to bottom when new message
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(scrollToBottom, [messages]);
 
-  // Fetch previous chatbot messages
   const fetchMessages = async () => {
     try {
       const token = localStorage.getItem("accessToken");
       const res = await axios.get("http://127.0.0.1:8000/api/ai/chatbot/", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const formattedMessages = res.data.map((m) => [
+
+      const formatted = res.data.map((m) => [
         { sender: "user", text: m.user_message },
         { sender: "bot", text: m.bot_response },
       ]).flat();
-      setMessages(formattedMessages);
+
+      setMessages(formatted);
     } catch (err) {
-      console.error("Erreur lors du fetch des messages:", err);
+      console.error("Erreur lors du chargement:", err);
     }
   };
 
@@ -41,7 +40,6 @@ const Chat = () => {
     fetchMessages();
   }, []);
 
-  // Send a message to the backend
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
 
@@ -53,17 +51,27 @@ const Chat = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/ai/chatbot/", userMessage, {
+      const res = await axios.post(
+        "http://127.0.0.1:8000/api/ai/chatbot/",
+        userMessage,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-        headers: { Authorization: `Bearer ${token}` },
-        'Content-Type': 'application/json',
-      });
-
-      const botReply = res.data.bot_response;
-      setMessages((prev) => [...prev, { sender: "bot", text: botReply }]);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: res.data.bot_response },
+      ]);
     } catch (err) {
       console.error("Erreur chatbot:", err);
-      setMessages((prev) => [...prev, { sender: "bot", text: "❌ Erreur serveur, réessaye plus tard." }]);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "❌ Erreur serveur. Réessaie." },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -85,17 +93,11 @@ const Chat = () => {
 
       <div className="chat-box">
         {messages.map((msg, index) => (
-          <motion.div
-            key={index}
-            className={`chat-message ${msg.sender}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-          >
-            <Card className="message-card">
-              <span>{msg.text}</span>
-            </Card>
-          </motion.div>
+          <div key={index} className={`chat-message ${msg.sender}`}>
+            <div className="chat-bubble" style={{ whiteSpace: "pre-wrap" }}>
+              {msg.text}
+            </div>
+          </div>
         ))}
         <div ref={chatEndRef} />
       </div>
