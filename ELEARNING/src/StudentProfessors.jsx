@@ -1,62 +1,74 @@
-import React, { useEffect, useState } from "react";
-import { Card } from "primereact/card";
-import { Button } from "primereact/button";
-import { useNavigate } from "react-router-dom";
-import "./StudentProfessors.css"; // Crée ce fichier pour le style
-
-
-const mockProfessors = [
-  {
-    id: 1,
-    name: "Mme Dupont",
-    speciality: "Réseaux",
-    courses: [
-      { title: "Réseaux avancés", type: "PDF", link: "https://example.com/pdf1" },
-      { title: "Sécurité réseau", type: "Vidéo", link: "https://youtube.com/video1" },
-    ],
-  },
-  {
-    id: 2,
-    name: "Mr Ahmed",
-    speciality: "IA",
-    courses: [
-      { title: "Machine Learning", type: "PDF", link: "https://example.com/pdf2" },
-      { title: "Réseaux de neurones", type: "Vidéo", link: "https://youtube.com/video2" },
-    ],
-  },
-];
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import './StudentProfessors.css'
 
 const StudentProfessors = () => {
-  const [professors, setProfessors] = useState([]);
+  const [professors, setProfessors] = useState([])
+  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
+  const token = localStorage.getItem('accessToken')
+
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` }
+  }
 
   useEffect(() => {
-    // Ici on simule des données, tu peux remplacer ça par un appel à une API plus tard
-    setProfessors(mockProfessors);
-  }, []);
+    axios.get('http://127.0.0.1:8000/api/users/professors/', headers)
+      .then(res => setProfessors(res.data))
+      .catch(err => console.error('Erreur chargement:', err))
+      .finally(() => setLoading(false))
+  }, [])
+
+  const goToProfile = (id) => {
+    navigate(`/profile/${id}`)
+  }
+
+  if (loading) {
+    return (
+      <div className="professors-page">
+        <h1 className="professors-title">👩‍🏫 Nos Professeurs</h1>
+        <p className="professors-loading">Chargement...</p>
+      </div>
+    )
+  }
+
+  if (!professors.length) {
+    return (
+      <div className="professors-page">
+        <h1 className="professors-title">👩‍🏫 Nos Professeurs</h1>
+        <p className="professors-empty">Aucun professeur trouvé.</p>
+      </div>
+    )
+  }
 
   return (
-    <div className="student-professors">
-      <h2 className="title">👨‍🏫 Liste des professeurs</h2>
-      <div className="professors-grid">
-        {professors.map((prof) => (
-          <Card key={prof.id} className="prof-card" title={prof.name} subTitle={`Spécialité : ${prof.speciality}`}>
-            <div>
-              <h4>Cours disponibles :</h4>
-              <ul>
-                {prof.courses.map((course, idx) => (
-                  <li key={idx}>
-                    {course.title} ({course.type}) -{" "}
-                    <a href={course.link} target="_blank" rel="noopener noreferrer">Voir</a>
-                  </li>
-                ))}
-              </ul>
+    <div className="professors-page">
+      <h1 className="professors-title">👩‍🏫 Nos Professeurs</h1>
+      <div className="professor-grid">
+        {professors.map(prof => (
+          <div
+            key={prof.id}
+            className="professor-card"
+            onClick={() => goToProfile(prof.id)}
+          >
+            <img
+              src={prof.profile_photo ? `http://127.0.0.1:8000${prof.profile_photo}` : '/fallback-avatar.png'}
+              alt="Professeur"
+              className="professor-avatar"
+              onError={(e) => {
+                e.target.src = '/fallback-avatar.png'
+              }}
+            />
+            <div className="professor-info">
+              <strong>{prof.username}</strong>
+              <span>{prof.speciality?.name || 'Spécialité inconnue'}</span>
             </div>
-            <Button label="Demander l'accès" className="access-button" />
-          </Card>
+          </div>
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default StudentProfessors;
+export default StudentProfessors
