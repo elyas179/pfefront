@@ -1,140 +1,101 @@
-.performance-container {
-    padding: 2rem;
-    min-height: 100vh;
-    background-color: #1e1e2f;
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .performance-container h1 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    color: #9333ea; /* violet néon */
-    text-shadow: 0 0 10px #9333ea;
-  }
-  
-  .performance-card {
-    background-color: #2c2c3e;
-    border-radius: 1.5rem;
-    box-shadow: 0 0 20px #9333ea66;
-    padding: 2rem;
-    max-width: 600px;
-    width: 100%;
-    animation: fadeInUp 0.6s ease;
-  }
-  
-  .performance-card p {
-    margin: 1rem 0;
-    font-size: 1.1rem;
-    line-height: 1.6;
-  }
-  
-  .p-progressbar {
-    margin-top: 1rem;
-    height: 1.5rem;
-    border-radius: 1rem;
-    background-color: #3f3f55;
-  }
-  
-  .p-progressbar-value {
-    background: linear-gradient(90deg, #3b82f6, #9333ea);
-    border-radius: 1rem;
-    box-shadow: 0 0 10px #9333ea;
-  }
-  
-  @keyframes fadeInUp {
-    0% {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  /* Container principal */
-.performance-container {
-    padding: 2rem;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  /* Titre */
-  .performance-container h1 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    text-align: center;
-    transition: color 0.3s ease;
-  }
-  
-  /* Carte */
-  .performance-card {
-    padding: 2rem;
-    max-width: 600px;
-    width: 100%;
-    border-radius: 1.5rem;
-    box-shadow: 0 0 20px rgba(147, 51, 234, 0.4);
-    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  /* Textes dans la carte */
-  .performance-card p {
-    margin: 1rem 0;
-    font-size: 1.2rem;
-    line-height: 1.6;
-    transition: color 0.3s ease;
-  }
-  
-  /* ProgressBar PrimeReact */
-  .p-progressbar {
-    margin-top: 1rem;
-    height: 1.5rem;
-    border-radius: 1rem;
-    background-color: var(--progressbar-background);
-  }
-  
-  .p-progressbar-value {
-    background: linear-gradient(90deg, #3b82f6, #9333ea);
-    border-radius: 1rem;
-    box-shadow: 0 0 10px #9333ea;
-  }
-  
-  /* Animation d'apparition */
-  @keyframes fadeInUp {
-    0% {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Dark Mode (background sombre) */
-  body.dark-mode .performance-container {
-    background-color: #1e1e2f;
-    color: #ffffff;
-  }
-  
-  body.dark-mode .performance-card {
-    background-color: #2c2c3e;
-    color: #ffffff;
-  }
-  
-  /* Light Mode (background clair) */
-  body.light-mode .performance-container {
-    background-color: #f5f5f5;
-    color: #1e1e2f;
-  }
-  
-  body.light-mode .performance-card {
-    background-color: #ffffff;
-    color: #1e1e2f;
-  }
-  
+/* 🌌 StudentPerformance.css - Dark & Light mode support */
+
+.student-performance-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+  font-family: 'Segoe UI', sans-serif;
+  transition: background 0.3s, color 0.3s;
+}
+
+.title {
+  font-size: 2.4rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--text-color, white);
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  width: 220px;
+  text-align: center;
+  background: var(--surface-card, #1e1e2f);
+  color: var(--text-color, white);
+  box-shadow: 0 0 12px rgba(147, 51, 234, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: transform 0.3s;
+}
+
+.stat-card:hover {
+  transform: scale(1.03);
+}
+
+.value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #3b82f6;
+}
+
+.chart-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.chart-card {
+  padding: 1rem;
+  background-color: var(--surface-card, #1e1e2f);
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+  color: var(--text-color, white);
+  transition: box-shadow 0.3s;
+}
+
+.chart-card:hover {
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.4);
+}
+
+.feedback-card {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: var(--surface-card, #1e1e2f);
+  border-left: 5px solid #9333ea;
+  border-radius: 10px;
+  color: var(--text-color, white);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.performance-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+/* 🌞 Light Mode */
+body.light .student-performance-container {
+  background-color: white;
+  color: #1f2937;
+}
+
+body.light .stat-card,
+body.light .chart-card,
+body.light .feedback-card {
+  background-color: #f9fafb;
+  color: #1f2937;
+}
+
+body.light .value {
+  color: #2563eb;
+}
