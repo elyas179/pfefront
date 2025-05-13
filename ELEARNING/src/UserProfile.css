@@ -1,0 +1,78 @@
+.profile-page {
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+    color: #1a1a1a;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #8e44ad;
+  }
+  
+  .profile-info h2 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  
+  .profile-info p {
+    margin: 0.25rem 0;
+  }
+  
+  .follow-btn {
+    margin-top: 1rem;
+    background-color: #8e44ad;
+    color: white;
+    padding: 0.5rem 1.2rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+  
+  .follow-btn:hover {
+    background-color: #732d91;
+  }
+  
+  .profile-body {
+    margin-top: 2rem;
+  }
+  
+  .profile-body h3 {
+    margin-top: 1.5rem;
+    color: #8e44ad;
+  }
+  
+  .card {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .card-body h5 {
+    margin: 0;
+    color: #333;
+  }
+  
+  .badge {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.2rem 0.6rem;
+    background-color: #8e44ad;
+    color: white;
+    border-radius: 12px;
+    font-size: 0.75rem;
+  }
+  

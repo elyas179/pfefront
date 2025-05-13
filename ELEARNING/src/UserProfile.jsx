@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import './UserProfile.css'
+import "./UserProfile.css";
+import ProfessorAnnouncementList from './components/ProfessorAnnouncementList';
 
 const UserProfile = () => {
   const { id } = useParams()
-  const navigate = useNavigate()
   const [profile, setProfile] = useState(null)
   const [isFollowing, setIsFollowing] = useState(false)
   const [error, setError] = useState('')
@@ -22,25 +22,29 @@ const UserProfile = () => {
 
   useEffect(() => {
     if (!id || !token) {
-      setError('ID ou token manquant')
-      return
+      setError('ID ou token manquant');
+      setLoading(false); // ✅ FIX: don't forget this
+      return;
     }
-
+  
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://127.0.0.1:8000/api/users/profile/${id}/`, headers)
-        setProfile(res.data.user)
-        setIsFollowing(res.data.is_following)
+        const res = await axios.get(`http://127.0.0.1:8000/api/users/profile/${id}/`, headers);
+        console.log("✅ API response:", res.data);
+        const userData = res.data.user ? res.data.user : res.data;
+        setProfile(userData);
+        setIsFollowing(res.data.is_following ?? false);
       } catch (err) {
-        console.error('API error:', err)
-        setError("Erreur lors du chargement du profil.")
+        console.error('❌ API error:', err);
+        setError("Erreur lors du chargement du profil.");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-
-    fetchData()
-  }, [id])
+    };
+  
+    fetchData();
+  }, [id]);
+  
 
   const handleFollow = async () => {
     try {
@@ -92,6 +96,14 @@ const UserProfile = () => {
             <h3>🎓 Parcours</h3>
             <p>{profile.background}</p>
           </>
+        )}
+
+        {/* 🔥 Show professor announcements */}
+        {profile.user_type === 'professor' && (
+          <div style={{ marginTop: '2rem' }}>
+            <h3>📢 Annonces du Professeur</h3>
+            <ProfessorAnnouncementList professorId={profile.id} />
+          </div>
         )}
       </div>
     </div>
