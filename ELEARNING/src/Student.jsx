@@ -14,6 +14,7 @@ const dashboardItems = [
   { icon: "pi pi-comments", label: "Chat Bot", to: "/chat" },
   { icon: "pi pi-question-circle", label: "FAQ", to: "/faq" },
   { icon: "pi pi-chart-line", label: "performance-AI", to: "/performance" },
+  { icon: "pi pi-graduation-cap", label: "Program with AI", to: "/Program"},
   { icon: "pi pi-users", label: "Professeurs", to: "/StudentProfessors" },
 ];
 

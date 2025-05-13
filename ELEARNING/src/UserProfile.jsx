@@ -48,7 +48,7 @@ const UserProfile = () => {
 
   const handleFollow = async () => {
     try {
-      await axios.post(`http://127.0.0.1:8000/api/users/${id}/follow/`, {}, headers)
+      await axios.post(`http://127.0.0.1:8000/api/users/follow/`, {}, headers)
       setIsFollowing(prev => !prev)
     } catch (err) {
       console.error('Erreur follow:', err)

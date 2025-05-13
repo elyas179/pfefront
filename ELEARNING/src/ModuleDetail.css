@@ -444,3 +444,32 @@ body.light .drive-header-row {
 body.light .drive-fake-table {
   background-color: white;
 }
+
+/* 🎯 Styles spécifiques pour colonne date et auteur */
+.drive-col:nth-child(2) {
+  font-weight: 500;
+  color: #3b82f6;
+}
+
+.drive-col:nth-child(5) {
+  font-style: italic;
+  color: #fbbf24;
+}
+
+/* 🌞 Mode clair */
+body.light .drive-col:nth-child(2) {
+  color: #2563eb;
+}
+
+body.light .drive-col:nth-child(5) {
+  color: #d97706;
+}
+/* 🌞 Fix: Texte invisible des chapitres (AccordionTab) en light mode */
+body.light .p-accordion .p-accordion-header-text {
+  color: #1f2937 !important; /* gris foncé / bleu nuit */
+}
+
+/* 🌚 Et on garde une belle couleur en dark mode aussi */
+body:not(.light) .p-accordion .p-accordion-header-text {
+  color: #1777e6 !important; /* bleu clair */
+}

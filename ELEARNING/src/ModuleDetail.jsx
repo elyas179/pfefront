@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { FaFilePdf, FaVideo } from "react-icons/fa";
+import { Accordion, AccordionTab } from "primereact/accordion";
 import "./ModuleDetail.css";
 
-// ✅ Fonction de formatage de date lisible
 const formatDate = (dateStr) => {
   if (!dateStr) return "—";
   return new Date(dateStr).toLocaleString("fr-FR", {
@@ -41,6 +41,10 @@ const ModuleDetail = () => {
   }, [id]);
 
   const handleRequestAccess = async (resourceId) => {
+    if (!resourceId) {
+      alert("Ressource invalide.");
+      return;
+    }
     const token = localStorage.getItem("accessToken");
     try {
       await axios.post(
@@ -66,14 +70,6 @@ const ModuleDetail = () => {
     return <FaFilePdf size={16} />;
   };
 
-  const allResources =
-    module?.chapters?.flatMap((chapter) =>
-      (chapter.all_resources || []).map((res) => ({
-        ...res,
-        chapterName: chapter.name,
-      }))
-    ) || [];
-
   if (loading) {
     return (
       <div className="module-detail-loading">
@@ -87,77 +83,76 @@ const ModuleDetail = () => {
       <h1 className="drive-title">{module?.name}</h1>
       <p className="drive-subtitle">{module?.description}</p>
 
-      {allResources.length > 0 ? (
-        <>
-          <div className="drive-header-row">
-            <span className="drive-col">Nom</span>
-            <span className="drive-col">Ajouté le</span>
-            <span className="drive-col">Chapitre</span>
-            <span className="drive-col">Accès</span>
-            <span className="drive-col">Auteur</span>
-          </div>
-
-          <div className="drive-resource-list">
-            {allResources.map((res) => {
-              const isAccessible = Boolean(res.link);
-
-              return (
-                <div
-                  key={res.id}
-                  className="drive-row"
-                  style={{ cursor: isAccessible ? "pointer" : "default" }}
-                  onClick={() => {
-                    if (isAccessible) {
-                      window.open(res.link, "_blank");
-                    }
-                  }}
-                >
-                  <span className="drive-col name-col">
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <span>
-                        {getIcon(res.resource_type)} {res.name}
-                      </span>
-                      <span style={{ fontSize: "0.8rem", color: "#999" }}>
-                        Auteur: {res.owner_username || "—"}
-                      </span>
-                    </div>
-                  </span>
-
-                  {/* ✅ Affichage date formatée */}
-                  <span className="drive-col">
-                    {formatDate(res.created_at)}
-                  </span>
-
-                  <span className="drive-col">{res.chapterName}</span>
-
-                  <span className="drive-col">
-                    {res.link ? (
-                      res.access_type === "public" ? "🔓 Public" : "🔒 Privé (accepté)"
-                    ) : accessRequested[res.id] ? (
-                      <span style={{ color: "#aaa", fontStyle: "italic" }}>
-                        Demande envoyée
-                      </span>
-                    ) : (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRequestAccess(res.id);
-                        }}
-                        className="request-access-btn"
-                      >
-                        Demander l'accès
-                      </button>
-                    )}
-                  </span>
-
-                  <span className="drive-col">{res.owner || "—"}</span>
+      {module?.chapters?.length > 0 ? (
+        <Accordion multiple>
+          {module.chapters.map((chapter, index) => (
+            <AccordionTab key={index} header={chapter.name}>
+              {chapter.all_resources?.length > 0 ? (
+                <div className="drive-header-row">
+                  <span className="drive-col">Nom</span>
+                  <span className="drive-col">Ajouté le</span>
+                  <span className="drive-col">Accès</span>
+                  <span className="drive-col">Auteur</span>
                 </div>
-              );
-            })}
-          </div>
-        </>
+              ) : (
+                <p className="no-resources">Aucune ressource dans ce chapitre.</p>
+              )}
+
+              {chapter.all_resources?.map((res) => {
+                const isAccessible = Boolean(res.link);
+                return (
+                  <div
+                    key={res.id}
+                    className="drive-row"
+                    style={{ cursor: isAccessible ? "pointer" : "default" }}
+                    onClick={() => {
+                      if (isAccessible) {
+                        window.open(res.link, "_blank");
+                      }
+                    }}
+                  >
+                    <span className="drive-col name-col">
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <span>
+                          {getIcon(res.resource_type)} {res.name}
+                        </span>
+                        <span style={{ fontSize: "0.8rem", color: "#999" }}>
+                          Auteur: {res.owner_name || "—"}
+                        </span>
+                      </div>
+                    </span>
+
+                    <span className="drive-col">{formatDate(res.created_at)}</span>
+
+                    <span className="drive-col">
+                      {res.link ? (
+                        res.access_type === "public" ? "🔓 Public" : "🔒 Privé (accepté)"
+                      ) : accessRequested[res.id] ? (
+                        <span style={{ color: "#aaa", fontStyle: "italic" }}>
+                          Demande envoyée
+                        </span>
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRequestAccess(res.id);
+                          }}
+                          className="request-access-btn"
+                        >
+                          Demander l'accès
+                        </button>
+                      )}
+                    </span>
+
+                    <span className="drive-col">{res.owner_name || "—"}</span>
+                  </div>
+                );
+              })}
+            </AccordionTab>
+          ))}
+        </Accordion>
       ) : (
-        <p className="no-resources">Aucune ressource trouvée</p>
+        <p className="no-resources">Aucun chapitre trouvé pour ce module.</p>
       )}
     </div>
   );
