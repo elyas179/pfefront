@@ -1,26 +1,69 @@
-.student-professors {
-    padding: 2rem;
-  }
-  
-  .title {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: #6a00ff;
-  }
-  
-  .professors-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2rem;
-  }
-  
-  .prof-card {
-    box-shadow: 0 4px 8px rgba(106, 0, 255, 0.1);
-  }
-  
-  .access-button {
-    background-color: #6a00ff;
-    border: none;
-    margin-top: 1rem;
-  }
-  
+.professors-page {
+  padding: 2rem;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #1e1e2f, #111122);
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.professors-title {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: 2rem;
+  color: #9333ea;
+}
+
+.professor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  align-items: stretch;
+}
+
+.professor-card {
+  background-color: #2a2a3d;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(147, 51, 234, 0.2);
+  transition: background 0.3s ease, transform 0.2s ease;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.professor-card:hover {
+  background-color: #3b3b55;
+  transform: translateY(-4px);
+}
+
+.professor-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #9333ea;
+  margin-bottom: 1rem;
+}
+
+.professor-info strong {
+  display: block;
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.professor-info span {
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+.professors-loading,
+.professors-empty {
+  text-align: center;
+  color: #aaa;
+  font-size: 1.1rem;
+}
