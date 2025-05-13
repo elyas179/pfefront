@@ -1,4 +1,3 @@
-// ✅ StudentHeader.jsx (corrigé proprement)
 import axios from "axios";
 import { Avatar } from "primereact/avatar";
 import { OverlayPanel } from "primereact/overlaypanel";
@@ -14,12 +13,7 @@ const StudentHeader = () => {
   const notifOp = useRef(null);
   const navigate = useNavigate();
   const [language, setLanguage] = useState("fr");
-
-  const [notifications, setNotifications] = useState([
-    "📌 Nouveau cours disponible",
-    "🧪 Nouveau quiz publié",
-    "📣 Annonce du professeur"
-  ]);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -34,57 +28,90 @@ const StudentHeader = () => {
     const savedLang = localStorage.getItem("language");
     if (savedLang) setLanguage(savedLang);
   }, []);
+
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const token = localStorage.getItem("accessToken"); // ton JWT
+        const token = localStorage.getItem("accessToken");
         const res = await axios.get("http://127.0.0.1:8000/api/notifications/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-        setNotifications(res.data); // ← suppose que c'est un tableau d'objets
+        setNotifications(res.data);
       } catch (err) {
-        console.error("Erreur lors du chargement des notifications :", err);
+        console.error("Erreur notifications:", err);
       }
     };
-  
     fetchNotifications();
   }, []);
-  const markAsRead = async (id) => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      await axios.post(`http://127.0.0.1:8000/api/notifications/${id}/read/`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      // Tu peux aussi mettre à jour l’état pour supprimer la notif localement
-      setNotifications(notifications.filter((n) => n.id !== id));
-    } catch (err) {
-      console.error("Erreur lors du marquage comme lu :", err);
-    }
-  };
+
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
   };
-const toggleLanguage = () => {
-  const newLang = language === "fr" ? "en" : "fr";
-  setLanguage(newLang);
-  localStorage.setItem("language", newLang);
-  window.location.reload(); // recharge pour appliquer le changement (optionnel)
-};
+
+  const toggleLanguage = () => {
+    const newLang = language === "fr" ? "en" : "fr";
+    setLanguage(newLang);
+    localStorage.setItem("language", newLang);
+    window.location.reload();
+  };
+
   const handleNavigation = (path) => {
     navigate(path);
     profileOp.current.hide();
   };
 
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profile_photo", file);
+
+    try {
+      const token = localStorage.getItem("accessToken");
+
+      // PATCH pour upload
+      await axios.patch("http://127.0.0.1:8000/api/users/me/edit/", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      // GET pour récupérer user à jour
+      const res = await axios.get("http://127.0.0.1:8000/api/users/me/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const updatedUser = res.data;
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    } catch (err) {
+      console.error("Erreur upload photo:", err);
+    }
+  };
+
   return (
     <header className="student-header">
       <div className="student-header-left">
-        <img src="/logo.png" alt="Curio Logo" className="student-logo" />
-        <span className="student-title">Curio</span>
+        <img
+          src="/logo.png"
+          alt="Curio Logo"
+          className="student-logo"
+          onClick={() => navigate("/student")}
+          style={{ cursor: "pointer" }}
+        />
+        <span
+          className="student-title"
+          onClick={() => navigate("/student")}
+          style={{ cursor: "pointer" }}
+        >
+          Curio
+        </span>
+        <button className="home-button" onClick={() => navigate("/student")}>
+          🏠 Accueil
+        </button>
       </div>
 
       <div className="student-header-right">
@@ -99,18 +126,15 @@ const toggleLanguage = () => {
               <span className="notif-dot">{notifications.length}</span>
             )}
           </div>
-
           <OverlayPanel ref={notifOp} className="overlay-panel-custom">
-  <ul className="overlay-options">
-    {notifications.length > 0 ? (
-      notifications.map((notif, index) => (
-        <li key={index}>{notif.message}</li> // ← adapte ce champ selon ton modèle
-      ))
-    ) : (
-      <li>Aucune notification</li>
-    )}
-  </ul>
-</OverlayPanel>
+            <ul className="overlay-options">
+              {notifications.length > 0 ? (
+                notifications.map((notif, i) => <li key={i}>{notif.message}</li>)
+              ) : (
+                <li>Aucune notification</li>
+              )}
+            </ul>
+          </OverlayPanel>
         </div>
 
         <div
@@ -128,34 +152,41 @@ const toggleLanguage = () => {
         </div>
 
         <OverlayPanel ref={profileOp} className="overlay-panel-custom">
-  <div className="overlay-profile-header">
-    <Avatar
-      image={user?.profile_photo ? `http://127.0.0.1:8000${user.profile_photo}` : undefined}
-      icon={!user?.profile_photo && "pi pi-user"}
-      size="xlarge"
-      shape="circle"
-    />
-    <div className="overlay-user-info">
-      <strong>{user?.username || "Utilisateur"}</strong>
-      <small>{user?.speciality || "Spécialité inconnue"}</small>
-    </div>
-  </div>
+          <div className="overlay-profile-header">
+            <label htmlFor="photo-upload-overlay" style={{ cursor: "pointer" }}>
+              <Avatar
+                image={user?.profile_photo ? `http://127.0.0.1:8000${user.profile_photo}` : undefined}
+                icon={!user?.profile_photo && "pi pi-user"}
+                size="xlarge"
+                shape="circle"
+              />
+              <input
+                id="photo-upload-overlay"
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handlePhotoUpload}
+              />
+            </label>
+            <div className="overlay-user-info">
+              <strong>{user?.username || "Utilisateur"}</strong>
+              <small>{user?.speciality || "Spécialité inconnue"}</small>
+            </div>
+          </div>
 
-  <ul className="overlay-options">
-    <li onClick={() => handleNavigation("/profile")}>👤 Mon Profil</li>
-    <li onClick={() => handleNavigation("/settings")}>⚙️ Paramètres</li>
-    <li onClick={() => handleNavigation("/performance")}>📊 Statistiques</li>
-    <li onClick={toggleLanguage}>
-      🌐 Langue : {language === "fr" ? "Français 🇫🇷" : "English 🇬🇧"}
-    </li>
-    <li onClick={() => setDarkMode(!darkMode)}>
-      {darkMode ? "☀️ Mode clair" : "🌙 Mode sombre"}
-    </li>
-    <li onClick={handleLogout}>🚪 Déconnexion</li>
-  </ul>
-</OverlayPanel>
-
-
+          <ul className="overlay-options">
+            <li onClick={() => handleNavigation("/profile")}>👤 Mon Profil</li>
+            <li onClick={() => handleNavigation("/settings")}>⚙️ Paramètres</li>
+            <li onClick={() => handleNavigation("/performance")}>📊 Statistiques</li>
+            <li onClick={toggleLanguage}>
+              🌐 Langue : {language === "fr" ? "Français 🇫🇷" : "English 🇬🇧"}
+            </li>
+            <li onClick={() => setDarkMode(!darkMode)}>
+              {darkMode ? "☀️ Mode clair" : "🌙 Mode sombre"}
+            </li>
+            <li onClick={handleLogout}>🚪 Déconnexion</li>
+          </ul>
+        </OverlayPanel>
       </div>
     </header>
   );
