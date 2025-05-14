@@ -18,25 +18,27 @@ const Chat = () => {
 
   useEffect(scrollToBottom, [messages]);
 
-  const fetchMessages = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      const res = await axios.get("http://127.0.0.1:8000/api/ai/chatbot/", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const formatted = res.data.map((m) => [
-        { sender: "user", text: m.user_message },
-        { sender: "bot", text: m.bot_response },
-      ]).flat();
-
-      setMessages(formatted);
-    } catch (err) {
-      console.error("Erreur lors du chargement:", err);
-    }
-  };
-
   useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const res = await axios.get("http://127.0.0.1:8000/api/ai/chatbot/", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const formatted = res.data
+          .map((m) => [
+            { sender: "user", text: m.user_message },
+            { sender: "bot", text: m.bot_response },
+          ])
+          .flat();
+
+        setMessages(formatted);
+      } catch (err) {
+        console.error("Erreur lors du chargement:", err);
+      }
+    };
+
     fetchMessages();
   }, []);
 
@@ -49,6 +51,17 @@ const Chat = () => {
     setMessages((prev) => [...prev, { sender: "user", text: input }]);
     setInput("");
     setLoading(true);
+// Fonction pour couper le texte automatiquement tous les 5 mots
+const formatBotText = (text, wordsPerLine = 5) => {
+  const words = text.split(/\s+/); // divise en mots
+  const lines = [];
+
+  for (let i = 0; i < words.length; i += wordsPerLine) {
+    lines.push(words.slice(i, i + wordsPerLine).join(" "));
+  }
+
+  return lines.join("\n");
+};
 
     try {
       const res = await axios.post(
@@ -94,8 +107,8 @@ const Chat = () => {
       <div className="chat-box">
         {messages.map((msg, index) => (
           <div key={index} className={`chat-message ${msg.sender}`}>
-            <div className="chat-bubble" style={{ whiteSpace: "pre-wrap" }}>
-              {msg.text}
+            <div className="chat-bubble">
+              {msg.text.replace(/\n/g, " ")}
             </div>
           </div>
         ))}

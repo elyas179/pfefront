@@ -1,9 +1,9 @@
 import axios from "axios";
-import { AutoComplete } from "primereact/autocomplete";
 import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { Toast } from "primereact/toast";
+import { Button } from "primereact/button";
 import React, { useEffect, useRef, useState } from "react";
 import { FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ const TeacherHeader = () => {
 
   const profileOp = useRef(null);
   const notifOp = useRef(null);
+  const searchOp = useRef(null);
   const toast = useRef(null);
   const navigate = useNavigate();
 
@@ -127,31 +128,47 @@ const TeacherHeader = () => {
     const res = await axios.get(`http://127.0.0.1:8000/api/users/search/?q=${query}`);
     setSearchResults(res.data);
   };
+
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
     navigate("/");
   };
+
   return (
     <header className="teacher-header">
       <Toast ref={toast} />
       <div className="teacher-header-left">
         <img src="/logo.png" alt="Logo" className="teacher-logo" />
         <span className="teacher-title">Curio Prof</span>
+        <Button
+          icon="pi pi-home"
+          label="Accueil"
+          className="accueil-button"
+          onClick={() => navigate("/teacher")}
+        />
       </div>
 
       <div className="teacher-header-right">
-        <AutoComplete
-          value={searchQuery}
-          suggestions={searchResults}
-          completeMethod={handleUserSearch}
-          field="username"
-          placeholder="🔍 Rechercher un utilisateur"
-          className="user-search-bar"
-          onChange={(e) => setSearchQuery(e.value)}
-          onSelect={(e) => navigate(`/profile/${e.value.id}`)}
-          dropdown
+        <Button
+          icon="pi pi-search"
+          className="search-toggle-button"
+          onClick={(e) => searchOp.current.toggle(e)}
+          tooltip="Rechercher un utilisateur"
         />
+
+        <OverlayPanel ref={searchOp} className="overlay-panel-custom">
+          <input
+            type="text"
+            placeholder="🔍 Rechercher un utilisateur"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") navigate(`/profile/${searchQuery}`);
+            }}
+            className="user-search-bar"
+          />
+        </OverlayPanel>
 
         <div className="notif-wrapper">
           <div className="notif-icon" onClick={(e) => notifOp.current.toggle(e)}>
@@ -187,8 +204,9 @@ const TeacherHeader = () => {
                 <small>{user.speciality?.name || "Professeur"}</small>
               </div>
               <ul className="overlay-links">
-                <li onClick={() => navigate(`/profile/${user.id}`)}>📋 Mon Profil</li>
-                <li onClick={() => setModalProfileVisible(true)}>⚙️ Modifier Profil</li>
+                
+                <li onClick={() => navigate(`/profile/${user.id}/edit`)}>⚙️  Profil</li>
+
                 <li onClick={() => setModalPhotoVisible(true)}>🖼️ Changer Photo</li>
                 <li onClick={() => setDarkMode(!darkMode)}>{darkMode ? "☀️ Mode clair" : "🌙 Mode sombre"}</li>
                 <li onClick={handleLogout}>🚪 Déconnexion</li>

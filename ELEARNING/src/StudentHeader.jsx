@@ -175,9 +175,11 @@ const StudentHeader = () => {
           </div>
 
           <ul className="overlay-options">
-            <li onClick={() => handleNavigation("/profile")}>👤 Mon Profil</li>
+          <li onClick={() => navigate(`/profile/${user.id}/edit`)}>👤 Profil</li>
+
             <li onClick={() => handleNavigation("/settings")}>⚙️ Paramètres</li>
             <li onClick={() => handleNavigation("/performance")}>📊 Statistiques</li>
+    
             <li onClick={toggleLanguage}>
               🌐 Langue : {language === "fr" ? "Français 🇫🇷" : "English 🇬🇧"}
             </li>

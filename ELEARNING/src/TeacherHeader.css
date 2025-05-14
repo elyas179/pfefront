@@ -246,3 +246,40 @@ body.dark-mode .profile-dropdown-trigger img {
   color: #555;
   border-top: 1px solid #ddd;
 }
+/* Bouton violet Accueil */
+.accueil-button {
+  background: linear-gradient(to right, #9333ea, #3b82f6);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-left: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.accueil-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(147, 51, 234, 0.4);
+}
+
+/* Bouton de recherche avec icône */
+.search-toggle-button {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+/* Input dans le panneau de recherche */
+.user-search-bar {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--surface-border, #ccc);
+  width: 100%;
+  margin-top: 0.5rem;
+}

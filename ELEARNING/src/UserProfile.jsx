@@ -84,7 +84,7 @@ const UserProfile = () => {
           alt="Profil"
           className="profile-photo-large"
         />
-        <h2>{profile.username}</h2>
+        <h2 className="username-black">{profile.username}</h2>
         <p><strong>Type:</strong> {profile.user_type}</p>
         <p><strong>Spécialité:</strong> {profile.speciality?.name || 'Non renseignée'}</p>
 

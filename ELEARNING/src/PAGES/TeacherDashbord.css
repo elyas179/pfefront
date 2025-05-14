@@ -1,57 +1,76 @@
-/* TeacherDashboard.css */
 .teacher-dashboard-page {
-    padding: 20px;
-    background-color: #f5f5f5;
-  }
-  
-  .teacher-dashboard {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .dashboard-header {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  
-  .dashboard-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .dashboard-subtext {
-    font-size: 16px;
-    color: #555;
-  }
-  
-  .dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-  
-  .dashboard-card {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    text-align: center;
-    transition: transform 0.3s;
-  }
-  
-  .dashboard-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .card-icon {
-    font-size: 2rem;
-    color: #007bff;
-  }
-  
-  .dashboard-card p {
-    margin-top: 10px;
-    font-size: 16px;
-  }
-  
+  padding: 2rem;
+  background-color: var(--surface-ground, #f5f5f5);
+  min-height: 100vh;
+}
+
+.teacher-dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard-title-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.dashboard-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #9333ea;
+}
+
+.teacher-name-black {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #000;
+}
+
+.dashboard-subtext {
+  font-size: 1rem;
+  color: var(--text-color-secondary, #666);
+  margin-top: 0.5rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.dashboard-card {
+  background-color: var(--surface-card, #fff);
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.2);
+}
+
+.card-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color, #9333ea);
+}
+
+.dashboard-card p {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: var(--text-color, #111);
+}
