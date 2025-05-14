@@ -25,7 +25,7 @@ const TeacherDashboard = () => {
     const fetchProfessor = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-        const response = await axios.get("http://127.0.0.1:8000/api/users/professors/", {
+        const response = await axios.get("http://127.0.0.1:8000/api/users/professor/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
