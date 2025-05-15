@@ -22,6 +22,7 @@ const Register = () => {
   const [levels, setLevels] = useState([]);
   const [specialities, setSpecialities] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false); // 🆕 Added for submit state
 
   useEffect(() => {
     localStorage.removeItem("accessToken");
@@ -32,7 +33,6 @@ const Register = () => {
     axios.get('http://127.0.0.1:8000/api/courses/levels/')
       .then(res => {
         const data = Array.isArray(res.data) ? res.data : res.data.results || [];
-        console.log("Levels:", data);
         setLevels(data);
       })
       .catch(err => console.error('Erreur niveaux:', err));
@@ -40,7 +40,6 @@ const Register = () => {
     axios.get('http://127.0.0.1:8000/api/courses/specialities/')
       .then(res => {
         const data = Array.isArray(res.data) ? res.data : res.data.results || [];
-        console.log("Specialities:", data);
         setSpecialities(data);
       })
       .catch(err => console.error('Erreur spécialités:', err));
@@ -59,14 +58,17 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // 🆕 Start loading state
 
     if (formData.password !== formData.confirmPassword) {
       alert("Les mots de passe ne correspondent pas !");
+      setLoading(false);
       return;
     }
 
-    if (!formData.speciality || !formData.level) {
+    if (formData.role === 'etudiant' && (!formData.speciality || !formData.level)) {
       alert("Veuillez sélectionner la spécialité et le niveau.");
+      setLoading(false);
       return;
     }
 
@@ -78,17 +80,21 @@ const Register = () => {
       password: formData.password,
       confirmPassword: formData.confirmPassword,
       user_type: formData.role === "etudiant" ? "student" : "professor",
-      speciality: formData.speciality,
-      level: formData.level,
     };
+
+    if (formData.role === "etudiant") {
+      payload.speciality = formData.speciality;
+      payload.level = formData.level;
+    }
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/users/register/', payload);
-      console.log("✅ Inscription réussie :", response.data);
       setSuccessMessage("✅ Inscription réussie ! Connecte-toi maintenant.");
     } catch (error) {
       console.error("❌ Erreur d'inscription :", error.response?.data || error.message);
       alert("Erreur : " + JSON.stringify(error.response?.data));
+    } finally {
+      setLoading(false); // 🆕 End loading state
     }
   };
 
@@ -136,23 +142,33 @@ const Register = () => {
             </label>
           </div>
 
-          <select name="speciality" value={formData.speciality} onChange={handleChange} required>
-            <option value="">Choisir une spécialité</option>
-            {specialities.map(spec => (
-              <option key={spec.id} value={spec.id}>{spec.name}</option>
-            ))}
-          </select>
+          {formData.role === "etudiant" && (
+            <>
+              <select name="speciality" value={formData.speciality} onChange={handleChange} required>
+                <option value="">Choisir une spécialité</option>
+                {specialities.map(spec => (
+                  <option key={spec.id} value={spec.id}>{spec.name}</option>
+                ))}
+              </select>
 
-          {formData.speciality && (
-            <select name="level" value={formData.level} onChange={handleChange} required>
-              <option value="">Choisir un niveau</option>
-              {availableLevels.map(level => (
-                <option key={level.id} value={level.id}>{level.name}</option>
-              ))}
-            </select>
+              {formData.speciality && (
+                <select name="level" value={formData.level} onChange={handleChange} required>
+                  <option value="">Choisir un niveau</option>
+                  {availableLevels.map(level => (
+                    <option key={level.id} value={level.id}>{level.name}</option>
+                  ))}
+                </select>
+              )}
+            </>
           )}
 
-          <button className="auth-button-filled" type="submit">S'inscrire</button>
+          <button
+            className="auth-button-filled"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Création de votre profil..." : "S'inscrire"}
+          </button>
         </form>
       </div>
     </motion.div>

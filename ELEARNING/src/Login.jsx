@@ -11,7 +11,8 @@ const Login = () => {
     password: "",
   });
 
-  // Nettoyage token au montage
+  const [loading, setLoading] = useState(false); // 🆕 Loading state
+
   useEffect(() => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -28,9 +29,9 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // 🆕 Start loading
 
     try {
-      // 🔐 Étape 1 : Authentification
       const res = await axios.post("http://127.0.0.1:8000/api/token/", {
         username: formData.username,
         password: formData.password,
@@ -40,7 +41,6 @@ const Login = () => {
       localStorage.setItem("accessToken", token);
       console.log("✅ TOKEN reçu :", token);
 
-      // 👤 Étape 2 : Récupération utilisateur
       const userRes = await axios.get("http://127.0.0.1:8000/api/users/me/", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -51,7 +51,6 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(user));
       console.log("👤 Utilisateur connecté :", user);
 
-      // 🔀 Étape 3 : Redirection selon rôle
       if (user.user_type === "professor") {
         navigate("/teacher");
       } else {
@@ -64,6 +63,8 @@ const Login = () => {
       } else {
         alert("Erreur inconnue, vérifie ton serveur.");
       }
+    } finally {
+      setLoading(false); // 🆕 Stop loading
     }
   };
 
@@ -110,8 +111,12 @@ const Login = () => {
             Mot de passe oublié ?
           </a>
 
-          <button className="auth-button-filled" type="submit">
-            Connexion
+          <button
+            className="auth-button-filled"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Connexion en cours..." : "Connexion"}
           </button>
         </form>
       </div>

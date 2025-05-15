@@ -40,6 +40,7 @@ import ChaptersPage from "./PAGES/ChaptersPage";
 import ResourcesPage from "./PAGES/ResourcesPage";
 import Program from "./Program";
 import AnnouncementsPage from './PAGES/AnnouncementsPage';
+import ChooseModules from './PAGES/ChooseModules'; // ✅ NEW IMPORT
 
 // ✅ New quiz components
 import GenQuiz from "./GenQuiz";
@@ -57,7 +58,6 @@ const PrivateRoute = ({ element }) => {
 const AppContent = () => {
   const location = useLocation();
 
- 
   const isStudentHeader = [
     "/student", "/chat", "/courses", "/my-modules", "/studentsettings",
     "/faq", "/modules/", "/quizes", "/quiz/", "/performance", "/profile",
@@ -74,7 +74,8 @@ const AppContent = () => {
     location.pathname.startsWith("/teacher-courses") ||
     location.pathname.startsWith("/add-course") ||
     location.pathname.startsWith("/teacher-resources") ||
-    location.pathname.startsWith("/teacher-students")
+    location.pathname.startsWith("/teacher-students") ||
+    location.pathname.startsWith("/choose-modules") // ✅ NEW PATH
   );
 
   return (
@@ -125,6 +126,7 @@ const AppContent = () => {
           <Route path="/add-course" element={<PrivateRoute element={<AddCourse />} />} />
           <Route path="/teacher-resources" element={<PrivateRoute element={<TeacherResources />} />} />
           <Route path="/teacher-students" element={<PrivateRoute element={<TeacherStudents />} />} />
+          <Route path="/choose-modules" element={<PrivateRoute element={<ChooseModules />} />} /> {/* ✅ NEW ROUTE */}
 
           {/* Profile */}
           <Route path="/profile/:id" element={<PrivateRoute element={<UserProfile />} />} />

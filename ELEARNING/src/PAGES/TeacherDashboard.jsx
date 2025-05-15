@@ -10,6 +10,7 @@ import "./TeacherDashboard.css";
 const dashboardItems = [
   { icon: "pi pi-book", label: "Mes Cours", to: "/teacher-courses" },
   { icon: "pi pi-plus", label: "Ajouter un Cours", to: "/add-course" },
+  { icon: "pi pi-database", label: "Choisir mes Modules", to: "/choose-modules" }, // ✅ New item
   { icon: "pi pi-file", label: "Mes Ressources", to: "/teacher-resources" },
   { icon: "pi pi-users", label: "Étudiants", to: "/teacher-students" },
   { icon: "pi pi-pencil", label: "Créer un Quiz", to: "/create-quiz" },
@@ -18,6 +19,7 @@ const dashboardItems = [
   { icon: "pi pi-comments", label: "Chat Bot", to: "/chat" },
   { icon: "pi pi-question-circle", label: "FAQ", to: "/faq" },
 ];
+
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
