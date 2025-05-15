@@ -1,0 +1,121 @@
+.search-results-container {
+    padding: 2rem;
+    background-color: var(--bg-color, #1e1e2f);
+    min-height: 100vh;
+    color: var(--text-color, #fff);
+  }
+  
+  .search-results-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #9333ea;
+  }
+  
+  .results-card {
+    background-color: var(--card-bg, #26263a);
+    border-radius: 1rem;
+    box-shadow: 0 0 12px rgba(147, 51, 234, 0.3);
+    padding: 1rem;
+  }
+  
+  .p-accordion .p-accordion-header {
+    background-color: transparent;
+    color: var(--text-color, #fff);
+    border: none;
+    padding: 1rem;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  
+  .p-accordion .p-accordion-content {
+    background-color: #1e1e2f;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #3b82f6;
+    color: #ddd;
+  }
+  
+  .resource-item {
+    padding: 0.4rem 0;
+    margin-left: 1rem;
+    cursor: pointer;
+    color: #9333ea;
+    text-decoration: underline;
+    transition: transform 0.2s ease;
+  }
+  
+  .resource-item:hover {
+    transform: scale(1.02);
+    color: #c084fc;
+  }
+  
+  .no-results {
+    padding: 2rem;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #999;
+  }
+  .resource-table {
+    margin-top: 1rem;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #1e1e2f;
+    box-shadow: 0 0 10px rgba(147, 51, 234, 0.2);
+  }
+  
+  .resource-header-row,
+  .resource-data-row {
+    display: grid;
+    grid-template-columns: 35% 25% 20% 20%;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #333;
+    align-items: center;
+  }
+  
+  .resource-header-row {
+    background-color: #292946;
+    color: #a78bfa;
+    font-weight: bold;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+  }
+  
+  .resource-data-row {
+    color: #eee;
+    transition: background 0.2s ease;
+  }
+  
+  .resource-data-row:hover {
+    background-color: #2e2e46;
+  }
+  
+  .resource-col {
+    padding: 0.2rem;
+  }
+  
+  .access-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    background-color: #9333ea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .access-btn:hover {
+    transform: scale(1.03);
+  }
+  
+  @media (max-width: 768px) {
+    .resource-header-row,
+    .resource-data-row {
+      grid-template-columns: 1fr;
+      row-gap: 0.5rem;
+    }
+  
+    .resource-col {
+      padding: 0.4rem 0;
+    }
+  }
+  

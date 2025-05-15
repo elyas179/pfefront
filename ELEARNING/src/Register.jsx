@@ -22,27 +22,29 @@ const Register = () => {
   const [levels, setLevels] = useState([]);
   const [specialities, setSpecialities] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
-  const [loading, setLoading] = useState(false); // 🆕 Added for submit state
+  const [loading, setLoading] = useState(false);
 
+  // 🔁 Remove tokens just in case
   useEffect(() => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
   }, []);
 
+  // 🔁 Load levels & specialities
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/courses/levels/')
+    axios.get('http://127.0.0.1:8000/courses/levels/')
       .then(res => {
         const data = Array.isArray(res.data) ? res.data : res.data.results || [];
         setLevels(data);
       })
-      .catch(err => console.error('Erreur niveaux:', err));
+      .catch(err => console.error('❌ Erreur niveaux:', err));
 
-    axios.get('http://127.0.0.1:8000/api/courses/specialities/')
+    axios.get('http://127.0.0.1:8000/courses/specialities/')
       .then(res => {
         const data = Array.isArray(res.data) ? res.data : res.data.results || [];
         setSpecialities(data);
       })
-      .catch(err => console.error('Erreur spécialités:', err));
+      .catch(err => console.error('❌ Erreur spécialités:', err));
   }, []);
 
   const handleChange = (e) => {
@@ -58,16 +60,16 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // 🆕 Start loading state
+    setLoading(true);
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Les mots de passe ne correspondent pas !");
+      alert("❗Les mots de passe ne correspondent pas !");
       setLoading(false);
       return;
     }
 
     if (formData.role === 'etudiant' && (!formData.speciality || !formData.level)) {
-      alert("Veuillez sélectionner la spécialité et le niveau.");
+      alert("❗Veuillez sélectionner la spécialité et le niveau.");
       setLoading(false);
       return;
     }
@@ -78,13 +80,12 @@ const Register = () => {
       username: formData.username,
       email: formData.email,
       password: formData.password,
-      confirmPassword: formData.confirmPassword,
-      user_type: formData.role === "etudiant" ? "student" : "professor",
+      user_type: formData.role === "etudiant" ? "student" : "professor"
     };
 
     if (formData.role === "etudiant") {
-      payload.speciality = formData.speciality;
-      payload.level = formData.level;
+      payload.speciality = parseInt(formData.speciality);
+      payload.level = parseInt(formData.level);
     }
 
     try {
@@ -94,7 +95,7 @@ const Register = () => {
       console.error("❌ Erreur d'inscription :", error.response?.data || error.message);
       alert("Erreur : " + JSON.stringify(error.response?.data));
     } finally {
-      setLoading(false); // 🆕 End loading state
+      setLoading(false);
     }
   };
 

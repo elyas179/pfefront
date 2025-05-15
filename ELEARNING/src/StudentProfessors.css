@@ -1,111 +1,153 @@
 .professors-page {
   padding: 2rem;
-  min-height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-[data-theme="dark"] .professors-page {
-  background: linear-gradient(to bottom, #1e1e2f, #111122);
-  color: #ffffff;
-}
-
-[data-theme="light"] .professors-page {
-  background: linear-gradient(to bottom, #f5f7fa, #e4e7ec);
-  color: #111111;
+  background-color: var(--background-color, #f9f9fb);
+  color: var(--text-color, #1e1e2f);
 }
 
 .professors-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #9333ea;
   text-align: center;
-  font-size: 2.4rem;
+}
+
+.search-followings-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
   margin-bottom: 2rem;
+}
+
+.professor-search {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  max-width: 300px;
+}
+
+.followings-list {
+  flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+}
+
+.followings-list h2 {
+  color: #3b82f6;
+  margin-bottom: 0.5rem;
+}
+
+.followings-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.followings-list li {
+  cursor: pointer;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+  transition: color 0.2s;
+}
+
+.followings-list li:hover {
   color: #9333ea;
 }
 
 .professor-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 2rem;
-  align-items: stretch;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
 }
 
 .professor-card {
-  padding: 1.5rem;
-  border-radius: 1rem;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 0 8px rgba(147, 51, 234, 0.2);
-  transition: background 0.3s ease, transform 0.2s ease;
-  min-height: 260px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
+  transition: transform 0.2s ease;
 }
 
-[data-theme="dark"] .professor-card {
-  background-color: #2a2a3d;
-}
-
-[data-theme="dark"] .professor-card:hover {
-  background-color: #3b3b55;
-}
-
-[data-theme="light"] .professor-card {
-  background-color: #ffffff;
-}
-
-[data-theme="light"] .professor-card:hover {
-  background-color: #f1f1f9;
+.professor-card:hover {
+  transform: translateY(-5px);
 }
 
 .professor-avatar {
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #9333ea;
   margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.professor-info {
+  text-align: center;
 }
 
 .professor-info strong {
   display: block;
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-}
-
-[data-theme="dark"] .professor-info strong {
-  color: #fff;
-}
-
-[data-theme="light"] .professor-info strong {
-  color: #111;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
 }
 
 .professor-info span {
-  font-size: 0.9rem;
-}
-
-[data-theme="dark"] .professor-info span {
-  color: #bbb;
-}
-
-[data-theme="light"] .professor-info span {
+  display: block;
+  font-size: 0.95rem;
   color: #555;
+  margin-bottom: 0.5rem;
 }
 
-.professors-loading,
-.professors-empty {
-  text-align: center;
-  font-size: 1.1rem;
+.follow-btn, .unfollow-btn {
+  padding: 0.4rem 0.9rem;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
-[data-theme="dark"] .professors-loading,
-[data-theme="dark"] .professors-empty {
-  color: #aaa;
+.follow-btn {
+  background-color: #9333ea;
+  color: #fff;
 }
 
-[data-theme="light"] .professors-loading,
-[data-theme="light"] .professors-empty {
+.unfollow-btn {
+  background-color: #e11d48;
+  color: #fff;
+}
+.followed-professor-item-simple {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.followed-text-block {
+  cursor: pointer;
+}
+
+.followed-text-block p {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
   color: #666;
+}
+
+.unfollow-btn.aligned {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: 20px;
+  background-color: #e11d48;
+  color: white;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
 }

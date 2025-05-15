@@ -9,6 +9,7 @@ import "./StudentHeader.css";
 const StudentHeader = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [user, setUser] = useState(null);
+  const [query, setQuery] = useState("");
   const profileOp = useRef(null);
   const notifOp = useRef(null);
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const StudentHeader = () => {
     };
     fetchNotifications();
   }, []);
- 
+
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
@@ -71,7 +72,6 @@ const StudentHeader = () => {
     try {
       const token = localStorage.getItem("accessToken");
 
-      // PATCH pour upload
       await axios.patch("http://127.0.0.1:8000/api/users/me/edit/", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -79,7 +79,6 @@ const StudentHeader = () => {
         },
       });
 
-      // GET pour récupérer user à jour
       const res = await axios.get("http://127.0.0.1:8000/api/users/me/", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -89,6 +88,32 @@ const StudentHeader = () => {
       localStorage.setItem("user", JSON.stringify(updatedUser));
     } catch (err) {
       console.error("Erreur upload photo:", err);
+    }
+  };
+
+  const handleSearch = async () => {
+    if (!query.trim()) return;
+
+    try {
+      const res = await axios.get(`http://127.0.0.1:8000/search/?q=${query}`);
+      const result = res.data;
+
+      if (
+        (!result.specialities || result.specialities.length === 0) &&
+        (!result.levels || result.levels.length === 0) &&
+        (!result.modules || result.modules.length === 0) &&
+        (!result.chapters || result.chapters.length === 0) &&
+        (!result.resources || result.resources.length === 0)
+      ) {
+        alert("Aucun résultat trouvé.");
+        return;
+      }
+      
+
+      navigate("/search-results", { state: { data: result, query } });
+    } catch (err) {
+      console.error("Erreur recherche:", err);
+      alert("Erreur lors de la recherche.");
     }
   };
 
@@ -102,16 +127,19 @@ const StudentHeader = () => {
           onClick={() => navigate("/student")}
           style={{ cursor: "pointer" }}
         />
-        <span
-          className="student-title"
-          onClick={() => navigate("/student")}
-          style={{ cursor: "pointer" }}
-        >
-          Curio
-        </span>
-        <button className="home-button" onClick={() => navigate("/student")}>
-          🏠 Accueil
-        </button>
+        <span className="student-title" onClick={() => navigate("/student")}>Curio</span>
+        <button className="home-button" onClick={() => navigate("/student")}>🏠 Accueil</button>
+      </div>
+
+      <div className="student-header-center">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="🔍 Rechercher..."
+          className="search-input"
+        />
+        <button className="search-button" onClick={handleSearch}>Rechercher</button>
       </div>
 
       <div className="student-header-right">
@@ -122,9 +150,7 @@ const StudentHeader = () => {
         <div className="notif-wrapper">
           <div className="notif-icon" onClick={(e) => notifOp.current.toggle(e)}>
             <FaBell />
-            {notifications.length > 0 && (
-              <span className="notif-dot">{notifications.length}</span>
-            )}
+            {notifications.length > 0 && <span className="notif-dot">{notifications.length}</span>}
           </div>
           <OverlayPanel ref={notifOp} className="overlay-panel-custom">
             <ul className="overlay-options">
@@ -175,17 +201,11 @@ const StudentHeader = () => {
           </div>
 
           <ul className="overlay-options">
-          <li onClick={() => navigate(`/profile/${user.id}/edit`)}>👤 Profil</li>
-
+            <li onClick={() => navigate(`/profile/${user.id}/edit`)}>👤 Profil</li>
             <li onClick={() => handleNavigation("/settings")}>⚙️ Paramètres</li>
             <li onClick={() => handleNavigation("/performance")}>📊 Statistiques</li>
-    
-            <li onClick={toggleLanguage}>
-              🌐 Langue : {language === "fr" ? "Français 🇫🇷" : "English 🇬🇧"}
-            </li>
-            <li onClick={() => setDarkMode(!darkMode)}>
-              {darkMode ? "☀️ Mode clair" : "🌙 Mode sombre"}
-            </li>
+            <li onClick={toggleLanguage}>🌐 Langue : {language === "fr" ? "Français 🇫🇷" : "English 🇬🇧"}</li>
+            <li onClick={() => setDarkMode(!darkMode)}>{darkMode ? "☀️ Mode clair" : "🌙 Mode sombre"}</li>
             <li onClick={handleLogout}>🚪 Déconnexion</li>
           </ul>
         </OverlayPanel>

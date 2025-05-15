@@ -2,6 +2,7 @@ import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from "react-router-dom";
 
+// Components
 import EditProfile from "./EditProfile";
 import Chat from "./Chat";
 import Courses from "./Courses";
@@ -18,7 +19,7 @@ import StudentSettings from "./StudentSettings";
 import StudentSettingsEdit from "./StudentSettingsEdit";
 import StudentFAQ from "./StudentFAQ";
 import ModuleDetail from "./ModuleDetail";
-import TeacherDashboard from './PAGES/TeacherDashboard';
+import TeacherDashboard from "./PAGES/TeacherDashboard";
 import StudentQuizzes from "./StudentQuizzes";
 import StudentPerformance from "./StudentPerformance";
 import StudentProfessors from "./StudentProfessors";
@@ -26,7 +27,7 @@ import TeacherCourses from "./PAGES/TeacherCourses";
 import AddCourse from "./PAGES/AddCourse";
 import TeacherResources from "./PAGES/TeacherResources";
 import TeacherStudents from "./PAGES/TeacherStudents";
-import ResourceDetail from './ResourceDetail';
+import ResourceDetail from "./ResourceDetail";
 import UserProfile from "./UserProfile";
 import StudentQuizPlay from "./StudentQuizPlay";
 import CreateQuiz from "./PAGES/CreateQuiz";
@@ -39,8 +40,9 @@ import ModulesPage from "./PAGES/ModulesPage";
 import ChaptersPage from "./PAGES/ChaptersPage";
 import ResourcesPage from "./PAGES/ResourcesPage";
 import Program from "./Program";
-import AnnouncementsPage from './PAGES/AnnouncementsPage';
-import ChooseModules from './PAGES/ChooseModules'; // ✅ NEW IMPORT
+import AnnouncementsPage from "./PAGES/AnnouncementsPage";
+import ChooseModules from "./PAGES/ChooseModules";
+import SearchResults from "./SearchResults";
 
 // ✅ New quiz components
 import GenQuiz from "./GenQuiz";
@@ -61,22 +63,14 @@ const AppContent = () => {
   const isStudentHeader = [
     "/student", "/chat", "/courses", "/my-modules", "/studentsettings",
     "/faq", "/modules/", "/quizes", "/quiz/", "/performance", "/profile",
-    "/StudentProfessors", "/Program" ,"/quizzes/gen" , "/quizzes/play"
+    "/StudentProfessors", "/Program", "/quizzes/gen", "/quizzes/play", "/search-results"
   ].some(path => location.pathname.startsWith(path));
 
-  const isTeacherHeader = (
-    location.pathname.startsWith("/teacher") ||
-    location.pathname.startsWith("/create-quiz") ||
-    location.pathname.startsWith("/access-requests") ||
-    location.pathname.startsWith("/teacher-settings") ||
-    location.pathname.startsWith("/teacher-chat") ||
-    location.pathname.startsWith("/teacher-faq") ||
-    location.pathname.startsWith("/teacher-courses") ||
-    location.pathname.startsWith("/add-course") ||
-    location.pathname.startsWith("/teacher-resources") ||
-    location.pathname.startsWith("/teacher-students") ||
-    location.pathname.startsWith("/choose-modules") // ✅ NEW PATH
-  );
+  const isTeacherHeader = [
+    "/teacher", "/create-quiz", "/access-requests", "/teacher-settings",
+    "/teacher-chat", "/teacher-faq", "/teacher-courses", "/add-course",
+    "/teacher-resources", "/teacher-students", "/choose-modules"
+  ].some(path => location.pathname.startsWith(path));
 
   return (
     <div className="app-container">
@@ -110,8 +104,7 @@ const AppContent = () => {
           <Route path="/quiz/:id" element={<PrivateRoute element={<StudentQuizPlay />} />} />
           <Route path="/resources/:id" element={<PrivateRoute element={<ResourceDetail />} />} />
           <Route path="/Program" element={<PrivateRoute element={<Program />} />} />
-
-          {/* ✅ New quiz subroutes */}
+          <Route path="/search-results" element={<SearchResults />} />
           <Route path="/quizzes/gen" element={<PrivateRoute element={<GenQuiz />} />} />
           <Route path="/quizzes/play" element={<PrivateRoute element={<PlayQuiz />} />} />
 
@@ -126,7 +119,7 @@ const AppContent = () => {
           <Route path="/add-course" element={<PrivateRoute element={<AddCourse />} />} />
           <Route path="/teacher-resources" element={<PrivateRoute element={<TeacherResources />} />} />
           <Route path="/teacher-students" element={<PrivateRoute element={<TeacherStudents />} />} />
-          <Route path="/choose-modules" element={<PrivateRoute element={<ChooseModules />} />} /> {/* ✅ NEW ROUTE */}
+          <Route path="/choose-modules" element={<PrivateRoute element={<ChooseModules />} />} />
 
           {/* Profile */}
           <Route path="/profile/:id" element={<PrivateRoute element={<UserProfile />} />} />
