@@ -41,6 +41,10 @@ import ResourcesPage from "./PAGES/ResourcesPage";
 import Program from "./Program";
 import AnnouncementsPage from './PAGES/AnnouncementsPage';
 
+// ✅ New quiz components
+import GenQuiz from "./GenQuiz";
+import PlayQuiz from "./PlayQuiz";
+
 const isAuthenticated = () => {
   const token = localStorage.getItem("accessToken");
   return !!token;
@@ -53,6 +57,7 @@ const PrivateRoute = ({ element }) => {
 const AppContent = () => {
   const location = useLocation();
 
+<<<<<<< Updated upstream
   const isStudentHeader = (
     location.pathname.startsWith("/student") ||
     location.pathname.startsWith("/chat") ||
@@ -69,6 +74,13 @@ const AppContent = () => {
     location.pathname.startsWith("/Program") ||
     location.pathname.startsWith("/announcements")
   );
+=======
+  const isStudentHeader = [
+    "/student", "/chat", "/courses", "/my-modules", "/studentsettings",
+    "/faq", "/modules/", "/quizes", "/quiz/", "/performance", "/profile",
+    "/StudentProfessors", "/Program" ,"/quizzes/gen" , "/quizzes/play"
+  ].some(path => location.pathname.startsWith(path));
+>>>>>>> Stashed changes
 
   const isTeacherHeader = (
     location.pathname.startsWith("/teacher") ||
@@ -115,6 +127,10 @@ const AppContent = () => {
           <Route path="/quiz/:id" element={<PrivateRoute element={<StudentQuizPlay />} />} />
           <Route path="/resources/:id" element={<PrivateRoute element={<ResourceDetail />} />} />
           <Route path="/Program" element={<PrivateRoute element={<Program />} />} />
+
+          {/* ✅ New quiz subroutes */}
+          <Route path="/quizzes/gen" element={<PrivateRoute element={<GenQuiz />} />} />
+          <Route path="/quizzes/play" element={<PrivateRoute element={<PlayQuiz />} />} />
 
           {/* Teacher */}
           <Route path="/teacher" element={<PrivateRoute element={<TeacherDashboard />} />} />

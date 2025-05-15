@@ -1,0 +1,87 @@
+/* GenQuiz.css */
+
+body.dark .genquiz-container {
+    background-color: #1e1e2f;
+    color: #ffffff;
+  }
+  
+  body.light .genquiz-container {
+    background-color: #f9f9f9;
+    color: #1e1e2f;
+  }
+  
+  .genquiz-container {
+    padding: 4rem 2rem;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .genquiz-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color, #9333ea);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .genquiz-form {
+    background-color: var(--surface-card, #fff);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .genquiz-form label {
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color, #333);
+  }
+  
+  .genquiz-form select,
+  .genquiz-form input {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+    background-color: var(--surface-input, #fff);
+    color: var(--text-color, #111);
+  }
+  
+  .chapter-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  
+  .genquiz-btn {
+    margin-top: 2rem;
+    width: 100%;
+    background-color: #9333ea;
+    border: none;
+    color: #fff;
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .genquiz-btn:disabled {
+    background-color: #a855f7;
+    cursor: not-allowed;
+  }
+  
+  .no-header header,
+  .no-header .header,
+  .no-header .student-header,
+  .no-header .teacher-header {
+    display: none !important;
+  }
+  

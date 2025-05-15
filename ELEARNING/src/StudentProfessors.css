@@ -1,9 +1,18 @@
 .professors-page {
   padding: 2rem;
   min-height: 100vh;
-  background: linear-gradient(to bottom, #1e1e2f, #111122);
-  color: white;
   font-family: 'Segoe UI', sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] .professors-page {
+  background: linear-gradient(to bottom, #1e1e2f, #111122);
+  color: #ffffff;
+}
+
+[data-theme="light"] .professors-page {
+  background: linear-gradient(to bottom, #f5f7fa, #e4e7ec);
+  color: #111111;
 }
 
 .professors-title {
@@ -21,7 +30,6 @@
 }
 
 .professor-card {
-  background-color: #2a2a3d;
   padding: 1.5rem;
   border-radius: 1rem;
   text-align: center;
@@ -35,9 +43,20 @@
   align-items: center;
 }
 
-.professor-card:hover {
+[data-theme="dark"] .professor-card {
+  background-color: #2a2a3d;
+}
+
+[data-theme="dark"] .professor-card:hover {
   background-color: #3b3b55;
-  transform: translateY(-4px);
+}
+
+[data-theme="light"] .professor-card {
+  background-color: #ffffff;
+}
+
+[data-theme="light"] .professor-card:hover {
+  background-color: #f1f1f9;
 }
 
 .professor-avatar {
@@ -52,18 +71,41 @@
 .professor-info strong {
   display: block;
   font-size: 1.2rem;
-  color: #fff;
   margin-bottom: 0.5rem;
+}
+
+[data-theme="dark"] .professor-info strong {
+  color: #fff;
+}
+
+[data-theme="light"] .professor-info strong {
+  color: #111;
 }
 
 .professor-info span {
   font-size: 0.9rem;
+}
+
+[data-theme="dark"] .professor-info span {
   color: #bbb;
+}
+
+[data-theme="light"] .professor-info span {
+  color: #555;
 }
 
 .professors-loading,
 .professors-empty {
   text-align: center;
-  color: #aaa;
   font-size: 1.1rem;
+}
+
+[data-theme="dark"] .professors-loading,
+[data-theme="dark"] .professors-empty {
+  color: #aaa;
+}
+
+[data-theme="light"] .professors-loading,
+[data-theme="light"] .professors-empty {
+  color: #666;
 }
