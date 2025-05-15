@@ -57,30 +57,12 @@ const PrivateRoute = ({ element }) => {
 const AppContent = () => {
   const location = useLocation();
 
-<<<<<<< Updated upstream
-  const isStudentHeader = (
-    location.pathname.startsWith("/student") ||
-    location.pathname.startsWith("/chat") ||
-    location.pathname.startsWith("/courses") ||
-    location.pathname.startsWith("/my-modules") ||
-    location.pathname.startsWith("/studentsettings") ||
-    location.pathname.startsWith("/faq") ||
-    location.pathname.startsWith("/modules/") ||
-    location.pathname.startsWith("/quizes") ||
-    location.pathname.startsWith("/quiz/") ||
-    location.pathname.startsWith("/performance") ||
-    location.pathname.startsWith("/profile") ||
-    location.pathname.startsWith("/StudentProfessors") ||
-    location.pathname.startsWith("/Program") ||
-    location.pathname.startsWith("/announcements")
-  );
-=======
+ 
   const isStudentHeader = [
     "/student", "/chat", "/courses", "/my-modules", "/studentsettings",
     "/faq", "/modules/", "/quizes", "/quiz/", "/performance", "/profile",
     "/StudentProfessors", "/Program" ,"/quizzes/gen" , "/quizzes/play"
   ].some(path => location.pathname.startsWith(path));
->>>>>>> Stashed changes
 
   const isTeacherHeader = (
     location.pathname.startsWith("/teacher") ||
