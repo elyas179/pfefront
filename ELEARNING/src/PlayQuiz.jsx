@@ -13,7 +13,7 @@ const PlayQuiz = () => {
   const [loadingModule, setLoadingModule] = useState(null);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
 
@@ -55,7 +55,7 @@ const PlayQuiz = () => {
       .then((res) => {
         setSelectedQuiz(res.data);
         setCurrentIndex(0);
-        setSelectedAnswer(null);
+        setSelectedAnswers({});
         setScore(0);
         setShowResults(false);
       });
@@ -64,37 +64,42 @@ const PlayQuiz = () => {
   const currentQuestion = selectedQuiz?.questions?.[currentIndex];
 
   const submitAnswer = async () => {
-    const correct = currentQuestion.answers.find((a) => a.is_correct);
-    if (selectedAnswer === correct.id) setScore(score + 1);
+    const newSelected = { ...selectedAnswers, [currentQuestion.id]: selectedAnswers[currentQuestion.id] };
+    setSelectedAnswers(newSelected);
+
+    const totalCorrect = selectedQuiz.questions.reduce((acc, q) => {
+      const correct = q.answers.filter((a) => a.is_correct).map((a) => a.id).sort().toString();
+      const selected = selectedAnswers[q.id] ? [selectedAnswers[q.id]].sort().toString() : "";
+      return correct === selected ? acc + 1 : acc;
+    }, 0);
 
     if (currentIndex + 1 < selectedQuiz.questions.length) {
       setCurrentIndex(currentIndex + 1);
-      setSelectedAnswer(null);
     } else {
       try {
+        const selectedAnswerIds = Object.values(selectedAnswers).filter((id) => typeof id === "number");
         await axios.post(
-          `http://127.0.0.1:8000/api/quizzes/submissions/`,
+          `http://127.0.0.1:8000/api/quizzes/submissions/create/`,
           {
             quiz: selectedQuiz.id,
-            selected_answers: selectedQuiz.questions.map((q) =>
-              q.answers.find((a) => a.id === selectedAnswer)?.id || null
-            ),
+            selected_answers: selectedAnswerIds,
           },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        setScore(totalCorrect);
+        setShowResults(true);
       } catch (err) {
-        console.error("Erreur de soumission:", err);
+        console.error("Erreur de soumission:", err.response?.data || err.message);
       }
-      setShowResults(true);
     }
   };
 
   const resetQuiz = () => {
     setSelectedQuiz(null);
     setCurrentIndex(0);
-    setSelectedAnswer(null);
+    setSelectedAnswers({});
     setScore(0);
     setShowResults(false);
   };
@@ -113,8 +118,10 @@ const PlayQuiz = () => {
               {currentQuestion.answers.map((ans) => (
                 <li
                   key={ans.id}
-                  className={`answer-option ${selectedAnswer === ans.id ? "selected" : ""}`}
-                  onClick={() => setSelectedAnswer(ans.id)}
+                  className={`answer-option ${selectedAnswers[currentQuestion.id] === ans.id ? "selected" : ""}`}
+                  onClick={() =>
+                    setSelectedAnswers((prev) => ({ ...prev, [currentQuestion.id]: ans.id }))
+                  }
                 >
                   {ans.text}
                 </li>
@@ -123,7 +130,7 @@ const PlayQuiz = () => {
             <button
               className="quiz-next-btn"
               onClick={submitAnswer}
-              disabled={selectedAnswer === null}
+              disabled={selectedAnswers[currentQuestion.id] == null}
             >
               {currentIndex + 1 < selectedQuiz.questions.length ? "Suivant" : "Terminer"}
             </button>
@@ -165,7 +172,11 @@ const PlayQuiz = () => {
                   <ul className="quiz-list">
                     {quizzesByModule[mod.id].map((quiz) => (
                       <li key={quiz.id} className="quiz-item">
-                        <span>{quiz.title}</span>
+                        <div className="quiz-info">
+                          <span className="quiz-title">{quiz.title}</span>
+                          <span className="quiz-chapter">📘 Chapitre: {quiz.chapter_name || "-"}</span>
+                          <span className="quiz-author">👤 Créé par: {quiz.created_by_username || "-"}</span>
+                        </div>
                         <button className="start-btn" onClick={() => startQuiz(quiz.id)}>
                           <FaPlay /> Commencer
                         </button>
