@@ -1,16 +1,24 @@
-.access-requests {
-    padding: 20px;
-    background-color: #fafafa;
-    min-height: 100vh;
-  }
-  
-  .access-requests h1 {
-    font-size: 2.5rem;
-    color: #333;
-  }
-  
-  .access-requests p {
-    font-size: 1.2rem;
-    color: #555;
-  }
-  
+.access-requests-page {
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+}
+
+.request-card {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+.request-info p {
+  margin: 0.3rem 0;
+  font-size: 1rem;
+}
+
+.request-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}

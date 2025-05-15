@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaUser, FaSun, FaMoon } from "react-icons/fa";
 import { Button } from "primereact/button";
+import { Link } from 'react-router-dom';
 
 function Header() {
   const [darkMode, setDarkMode] = useState(false);

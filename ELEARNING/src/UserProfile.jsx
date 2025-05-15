@@ -53,15 +53,32 @@ const UserProfile = () => {
   }, [id]);
 
   const handleFollow = async () => {
+    if (!profile?.username) {
+      alert("Nom d'utilisateur manquant.");
+      return;
+    }
+  
+    const endpoint = isFollowing
+      ? `http://127.0.0.1:8000/api/users/unfollow/`
+      : `http://127.0.0.1:8000/api/users/follow/`;
+  
     try {
-      await axios.post(`http://127.0.0.1:8000/api/users/follow/`, {}, headers);
+      console.log("➡️ Calling:", endpoint);
+      console.log("📦 Payload:", { professor_username: profile.username });
+  
+      await axios.post(
+        endpoint,
+        { professor_username: profile.username },
+        headers
+      );
+  
       setIsFollowing((prev) => !prev);
     } catch (err) {
-      console.error('Erreur follow:', err);
-      alert("Impossible de suivre/désabonner.");
+      console.error("❌ Follow/Unfollow Error:", err);
+      alert("Impossible d'effectuer cette action.");
     }
-  };
-
+  };  
+  
   const getIcon = (type) => {
     if (type.includes('pdf')) return <FaFilePdf color="#ef4444" />;
     if (type.includes('video')) return <FaVideo color="#3b82f6" />;
@@ -90,7 +107,7 @@ const UserProfile = () => {
 
         {!isOwn && profile.user_type === 'professor' && (
           <button className="follow-btn" onClick={handleFollow}>
-            {isFollowing ? '✅ Abonné' : '➕ Suivre'}
+            {isFollowing ? '❌ Désabonner' : '➕ Suivre'}
           </button>
         )}
       </section>

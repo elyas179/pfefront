@@ -125,23 +125,22 @@ const ModuleDetail = () => {
                     <span className="drive-col">{formatDate(res.created_at)}</span>
 
                     <span className="drive-col">
-                      {res.link ? (
-                        res.access_type === "public" ? "🔓 Public" : "🔒 Privé (accepté)"
-                      ) : accessRequested[res.id] ? (
-                        <span style={{ color: "#aaa", fontStyle: "italic" }}>
-                          Demande envoyée
-                        </span>
-                      ) : (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRequestAccess(res.id);
-                          }}
-                          className="request-access-btn"
-                        >
-                          Demander l'accès
-                        </button>
-                      )}
+                    {res.link || res.access_approved ? (
+  res.access_type === "public" ? "🔓 Public" : "🔒 Privé (accepté)"
+) : accessRequested[res.id] ? (
+  <span style={{ color: "#aaa", fontStyle: "italic" }}>Demande envoyée</span>
+) : (
+  <button
+    onClick={(e) => {
+      e.stopPropagation();
+      handleRequestAccess(res.id);
+    }}
+    className="request-access-btn"
+  >
+    Demander l'accès
+  </button>
+)}
+
                     </span>
 
                     <span className="drive-col">{res.owner_name || "—"}</span>

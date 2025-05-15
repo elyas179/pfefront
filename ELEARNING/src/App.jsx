@@ -39,6 +39,7 @@ import ModulesPage from "./PAGES/ModulesPage";
 import ChaptersPage from "./PAGES/ChaptersPage";
 import ResourcesPage from "./PAGES/ResourcesPage";
 import Program from "./Program";
+import AnnouncementsPage from './PAGES/AnnouncementsPage';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("accessToken");
@@ -52,17 +53,35 @@ const PrivateRoute = ({ element }) => {
 const AppContent = () => {
   const location = useLocation();
 
-  const isStudentHeader = [
-    "/student", "/chat", "/courses", "/my-modules", "/studentsettings",
-    "/faq", "/modules/", "/quizes", "/quiz/", "/performance", "/profile",
-    "/StudentProfessors", "/Program"
-  ].some(path => location.pathname.startsWith(path));
+  const isStudentHeader = (
+    location.pathname.startsWith("/student") ||
+    location.pathname.startsWith("/chat") ||
+    location.pathname.startsWith("/courses") ||
+    location.pathname.startsWith("/my-modules") ||
+    location.pathname.startsWith("/studentsettings") ||
+    location.pathname.startsWith("/faq") ||
+    location.pathname.startsWith("/modules/") ||
+    location.pathname.startsWith("/quizes") ||
+    location.pathname.startsWith("/quiz/") ||
+    location.pathname.startsWith("/performance") ||
+    location.pathname.startsWith("/profile") ||
+    location.pathname.startsWith("/StudentProfessors") ||
+    location.pathname.startsWith("/Program") ||
+    location.pathname.startsWith("/announcements")
+  );
 
-  const isTeacherHeader = [
-    "/teacher", "/create-quiz", "/access-requests", "/teacher-settings",
-    "/teacher-chat", "/teacher-faq", "/teacher-courses", "/add-course",
-    "/teacher-resources", "/teacher-students"
-  ].some(path => location.pathname.startsWith(path));
+  const isTeacherHeader = (
+    location.pathname.startsWith("/teacher") ||
+    location.pathname.startsWith("/create-quiz") ||
+    location.pathname.startsWith("/access-requests") ||
+    location.pathname.startsWith("/teacher-settings") ||
+    location.pathname.startsWith("/teacher-chat") ||
+    location.pathname.startsWith("/teacher-faq") ||
+    location.pathname.startsWith("/teacher-courses") ||
+    location.pathname.startsWith("/add-course") ||
+    location.pathname.startsWith("/teacher-resources") ||
+    location.pathname.startsWith("/teacher-students")
+  );
 
   return (
     <div className="app-container">
@@ -81,6 +100,7 @@ const AppContent = () => {
 
           {/* Student */}
           <Route path="/student" element={<PrivateRoute element={<Student />} />} />
+          <Route path="/announcements" element={<PrivateRoute element={<AnnouncementsPage />} />} />
           <Route path="/chat" element={<PrivateRoute element={<Chat />} />} />
           <Route path="/courses" element={<PrivateRoute element={<Courses />} />} />
           <Route path="/my-modules" element={<PrivateRoute element={<MyModules />} />} />

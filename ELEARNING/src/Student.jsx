@@ -10,11 +10,11 @@ import "./Student.css";
 const dashboardItems = [
   { icon: "pi pi-book", label: "mes Cours", to: "/courses" },
   { icon: "pi pi-pencil", label: "Quizzes", to: "/quizes" },
-,
+  ,
   { icon: "pi pi-comments", label: "Chat Bot", to: "/chat" },
   { icon: "pi pi-question-circle", label: "FAQ", to: "/faq" },
   { icon: "pi pi-chart-line", label: "performance-AI", to: "/performance" },
-  { icon: "pi pi-graduation-cap", label: "Program with AI", to: "/Program"},
+  { icon: "pi pi-graduation-cap", label: "Program with AI", to: "/Program" },
   { icon: "pi pi-users", label: "Professeurs", to: "/StudentProfessors" },
 ];
 
@@ -44,27 +44,27 @@ const Student = () => {
     const file = e.target.files[0];
     if (file) {
       const tempUrl = URL.createObjectURL(file);
-      setProfilePhotoUrl(tempUrl); // Preview only
+      setProfilePhotoUrl(tempUrl);
 
-      // TODO: upload to backend
       const token = localStorage.getItem("access_token");
       const formData = new FormData();
       formData.append("profile_photo", file);
 
-      axios.patch("http://127.0.0.1:8000/api/users/me/edit/", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        const updatedUser = { ...user, profile_photo: res.data.profile_photo };
-        setUser(updatedUser);
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-      })
-      .catch((err) => {
-        console.error("❌ Erreur upload photo:", err);
-      });
+      axios
+        .patch("http://127.0.0.1:8000/api/users/me/edit/", formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          const updatedUser = { ...user, profile_photo: res.data.profile_photo };
+          setUser(updatedUser);
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+        })
+        .catch((err) => {
+          console.error("❌ Erreur upload photo:", err);
+        });
     }
   };
 
@@ -91,6 +91,10 @@ const Student = () => {
     }
   };
 
+  const goToAnnouncements = () => {
+    navigate("/announcements");
+  };
+
   return (
     <div className="student-page">
       <motion.div
@@ -108,7 +112,8 @@ const Student = () => {
               onClick={() => setEditVisible(true)}
             >
               {user?.first_name || user?.username || "Étudiant"}
-            </span> 🎓
+            </span>{" "}
+            🎓
           </h1>
           <p className="dashboard-subtext">Voici votre tableau de bord personnalisé.</p>
         </div>
@@ -127,7 +132,12 @@ const Student = () => {
           ))}
         </div>
 
-        {/* Modale de modification du profil */}
+        <div style={{ textAlign: "center", marginTop: "2rem" }}>
+          <button onClick={goToAnnouncements} className="auth-button-filled">
+            📢 Announcements de vos professeurs
+          </button>
+        </div>
+
         <Dialog
           header="Modifier mon profil"
           visible={editVisible}
@@ -144,7 +154,6 @@ const Student = () => {
               style={{ width: "100%", marginBottom: "1rem" }}
             />
 
-            {/* Upload de photo */}
             <div className="profile-picture-container">
               <img src={profilePhotoUrl} alt="Profil étudiant" className="profile-picture" />
               <div className="overlay">
@@ -179,4 +188,3 @@ const Student = () => {
 };
 
 export default Student;
-

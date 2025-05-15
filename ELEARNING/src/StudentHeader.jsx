@@ -43,7 +43,7 @@ const StudentHeader = () => {
     };
     fetchNotifications();
   }, []);
-
+ 
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");

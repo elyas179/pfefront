@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Card } from "primereact/card";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { Dialog } from "primereact/dialog";
+import { InputTextarea } from "primereact/inputtextarea";
 import axios from "axios";
 import "./TeacherDashboard.css";
 
@@ -20,24 +22,63 @@ const dashboardItems = [
 const TeacherDashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [levels, setLevels] = useState([]);
+  const [specialities, setSpecialities] = useState([]);
+  const [showDialog, setShowDialog] = useState(false);
+  const [announcement, setAnnouncement] = useState({
+    title: "",
+    content: "",
+    level: "",
+    speciality: ""
+  });
 
   useEffect(() => {
-    const fetchProfessor = async () => {
+    const fetchInitialData = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-        const response = await axios.get("http://127.0.0.1:8000/api/users/professor/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUser(response.data);
+
+        const [profRes, levelRes, specRes] = await Promise.all([
+          axios.get("http://127.0.0.1:8000/api/users/professors/", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get("http://127.0.0.1:8000/courses/levels/", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get("http://127.0.0.1:8000/courses/specialities/", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        setUser(profRes.data);
+        setLevels(levelRes.data);
+        setSpecialities(specRes.data);
       } catch (error) {
-        console.error("Erreur de chargement du professeur :", error);
+        console.error("Erreur chargement données initiales :", error);
       }
     };
 
-    fetchProfessor();
+    fetchInitialData();
   }, []);
+
+  const handleSendAnnouncement = async () => {
+    const token = localStorage.getItem("accessToken");
+
+    try {
+      await axios.post("http://127.0.0.1:8000/notifications/announce-create/", announcement, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      setShowDialog(false);
+      setAnnouncement({ title: "", content: "", level: "", speciality: "" });
+      alert("✅ Annonce envoyée !");
+    } catch (error) {
+      console.error("Erreur envoi annonce:", error);
+      alert("❌ Échec de l'envoi.");
+    }
+  };
 
   return (
     <div className="teacher-dashboard-page">
@@ -51,7 +92,9 @@ const TeacherDashboard = () => {
         <div className="dashboard-header">
           <h1 className="dashboard-title-line">
             <span className="dashboard-title">Bienvenue </span>
-            <span className="teacher-name-black" style={{color: '#000'}}>{user?.first_name || user?.username}</span>
+            <span className="teacher-name-black" style={{ color: '#000' }}>
+              {user?.first_name || user?.username}
+            </span>
           </h1>
           <p className="dashboard-subtext">
             Voici votre tableau de bord pour gérer vos cours, ressources et étudiants.
@@ -71,7 +114,75 @@ const TeacherDashboard = () => {
             </Card>
           ))}
         </div>
+
+        {/* 📢 Create Announcement Button */}
+        <div style={{ textAlign: "center", marginTop: "2rem" }}>
+          <button className="auth-button-filled" onClick={() => setShowDialog(true)}>
+            📢 Créer une Annonce
+          </button>
+        </div>
       </motion.div>
+
+      {/* 📋 Announcement Dialog */}
+      <Dialog
+        header="Nouvelle Annonce"
+        visible={showDialog}
+        style={{ width: '500px' }}
+        onHide={() => setShowDialog(false)}
+      >
+        <div className="p-fluid">
+          <label>Titre</label>
+          <input
+            type="text"
+            value={announcement.title}
+            onChange={(e) => setAnnouncement({ ...announcement, title: e.target.value })}
+            className="p-inputtext"
+          />
+
+          <label>Message</label>
+          <InputTextarea
+            rows={4}
+            value={announcement.content}
+            onChange={(e) => setAnnouncement({ ...announcement, content: e.target.value })}
+          />
+
+          <label>Niveau</label>
+          <select
+            value={announcement.level}
+            onChange={(e) => setAnnouncement({ ...announcement, level: parseInt(e.target.value) })}
+            className="p-inputtext"
+          >
+            <option value="">-- Choisir --</option>
+            {levels.map((lvl) => (
+              <option key={lvl.id} value={lvl.id}>
+                {lvl.name}
+              </option>
+            ))}
+          </select>
+
+          <label>Spécialité</label>
+          <select
+            value={announcement.speciality}
+            onChange={(e) => setAnnouncement({ ...announcement, speciality: parseInt(e.target.value) })}
+            className="p-inputtext"
+          >
+            <option value="">-- Choisir --</option>
+            {specialities.map((spec) => (
+              <option key={spec.id} value={spec.id}>
+                {spec.name}
+              </option>
+            ))}
+          </select>
+
+          <button
+            className="auth-button-filled"
+            style={{ marginTop: "1rem" }}
+            onClick={handleSendAnnouncement}
+          >
+            🚀 Envoyer
+          </button>
+        </div>
+      </Dialog>
     </div>
   );
 };
