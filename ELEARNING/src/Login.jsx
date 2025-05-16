@@ -68,7 +68,17 @@ const Login = () => {
     }
   };
 
-  return (
+  return loading ? (
+    <motion.div
+      className="loading-screen"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      🔐 Connexion en cours...
+    </motion.div>
+  ) : (
     <motion.div
       className="auth-container"
       initial={{ opacity: 0, x: 100 }}
@@ -86,7 +96,7 @@ const Login = () => {
           S'inscrire
         </button>
       </div>
-
+  
       <div className="auth-right">
         <h2>Connexion</h2>
         <form onSubmit={handleSubmit}>
@@ -106,11 +116,9 @@ const Login = () => {
             onChange={handleChange}
             required
           />
-
           <a href="#" className="forgot">
             Mot de passe oublié ?
           </a>
-
           <button
             className="auth-button-filled"
             type="submit"
@@ -121,7 +129,7 @@ const Login = () => {
         </form>
       </div>
     </motion.div>
-  );
+  );  
 };
 
 export default Login;

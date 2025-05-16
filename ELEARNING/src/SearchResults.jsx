@@ -1,156 +1,175 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Card } from "primereact/card";
-import { Accordion, AccordionTab } from "primereact/accordion";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import "./SearchResults.css";
 
-const formatDate = (dateStr) => {
-  if (!dateStr) return "—";
-  return new Date(dateStr).toLocaleString("fr-FR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
-
 const SearchResults = () => {
-  const { state } = useLocation();
-  const { data, query } = state || {};
+  const [results, setResults] = useState(null);
+  const [query, setQuery] = useState("");
   const [accessRequested, setAccessRequested] = useState({});
 
-  if (!data) return <div className="no-results">Aucun résultat trouvé.</div>;
+  useEffect(() => {
+    const stored = localStorage.getItem("searchResults");
+    const storedQuery = localStorage.getItem("searchQuery");
+    const storedAccess = localStorage.getItem("accessRequested");
 
-  const openLink = (url) => {
-    if (url) window.open(url, "_blank");
-  };
+    if (stored) setResults(JSON.parse(stored));
+    if (storedQuery) setQuery(storedQuery);
+    if (storedAccess) setAccessRequested(JSON.parse(storedAccess));
+  }, []);
 
-  const requestAccess = async (resourceId) => {
-    const token = localStorage.getItem("accessToken");
+  const handleRequestAccess = async (resourceId) => {
     try {
-      await axios.post(
-        `http://127.0.0.1:8000/api/courses/resources/request/${resourceId}/`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setAccessRequested((prev) => ({ ...prev, [resourceId]: true }));
-      alert("Demande envoyée avec succès");
+      const token = localStorage.getItem("accessToken");
+      await fetch(`http://127.0.0.1:8000/api/courses/resources/request/${resourceId}/`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const updated = { ...accessRequested, [resourceId]: true };
+      setAccessRequested(updated);
+      localStorage.setItem("accessRequested", JSON.stringify(updated));
     } catch (err) {
-      if (err.response?.status === 400) {
-        alert("Demande déjà envoyée ou invalide.");
-      } else {
-        alert("Erreur lors de la demande d'accès");
-      }
+      console.error("Erreur lors de la demande d'accès:", err);
     }
   };
 
-  const renderResources = (resources) => (
-    <div className="resource-table">
-      <div className="resource-header-row">
-        <span className="resource-col">Nom</span>
-        <span className="resource-col">Ajouté le</span>
-        <span className="resource-col">Accès</span>
-        <span className="resource-col">Auteur</span>
+  const renderResources = (resources) =>
+    resources.map((res) => (
+      <div key={res.id} className="resource-card animated">
+        <div className="resource-header">
+          <a href={res.link} target="_blank" rel="noreferrer" className="resource-link">
+            🔗 {res.name}
+          </a>
+          <span className="type-tag">{res.resource_type}</span>
+        </div>
+        <div className="resource-meta">
+          <span>👤 {res.owner_name}</span>
+          <span>🕒 {new Date(res.created_at).toLocaleDateString()}</span>
+          <span className={`access-tag ${res.access_type}`}>
+            {res.access_type === "public" ? (
+              "🔓 Public"
+            ) : res.access_approved ? (
+              "🔒 Privé (accepté)"
+            ) : accessRequested[res.id] ? (
+              <span className="pending">🔒 Privé (en attente)</span>
+            ) : (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRequestAccess(res.id);
+                }}
+                className="request-access-btn"
+              >
+                Demander l'accès
+              </button>
+            )}
+          </span>
+        </div>
       </div>
-      {resources?.map((r) => {
-        const isAccessible = r.access_type === "public" || r.access_approved;
-        return (
-          <div
-            key={r.id}
-            className="resource-data-row"
-            onClick={() => isAccessible && openLink(r.link)}
-            style={{ cursor: isAccessible ? "pointer" : "default" }}
-          >
-            <span className="resource-col">
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <span>{r.name}</span>
-                <span style={{ fontSize: "0.8rem", color: "#999" }}>
-                  Auteur: {r.owner_name || "—"}
-                </span>
-              </div>
-            </span>
-
-            <span className="resource-col">{formatDate(r.created_at)}</span>
-
-            <span className="resource-col">
-              {isAccessible ? (
-                r.access_type === "public" ? (
-                  "🔓 Public"
-                ) : (
-                  "🔒 Privé (accepté)"
-                )
-              ) : accessRequested[r.id] ? (
-                <span style={{ color: "#aaa", fontStyle: "italic" }}>
-                  Demande envoyée
-                </span>
-              ) : (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    requestAccess(r.id);
-                  }}
-                  className="access-btn"
-                >
-                  Demander l'accès
-                </button>
-              )}
-            </span>
-
-            <span className="resource-col">{r.owner_name || "—"}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-
-  const renderChapters = (chapters) =>
-    chapters?.map((ch) => (
-      <AccordionTab key={ch.id} header={`📘 ${ch.name}`}>
-        {renderResources(ch.all_resources)}
-      </AccordionTab>
     ));
 
-  const renderModules = (modules) =>
-    modules?.map((mod) => (
-      <AccordionTab key={mod.id} header={`📗 ${mod.name}`}>
-        <Accordion multiple>{renderChapters(mod.chapters)}</Accordion>
-      </AccordionTab>
-    ));
-
-  const renderLevels = (levels) =>
-    levels?.map((lvl) => (
-      <AccordionTab key={lvl.id} header={`📙 ${lvl.name}`}>
-        <Accordion multiple>{renderModules(lvl.module_set)}</Accordion>
-      </AccordionTab>
-    ));
-
-  const renderSpecialities = (specialities) =>
-    specialities?.map((spec) => (
-      <AccordionTab key={spec.id} header={`🎓 ${spec.name}`}>
-        <Accordion multiple>{renderLevels(spec.levels)}</Accordion>
-      </AccordionTab>
-    ));
+  if (!results || Object.values(results).every((arr) => Array.isArray(arr) && arr.length === 0)) {
+    return <div className="no-results">❌ Aucun résultat trouvé.</div>;
+  }
 
   return (
     <div className="search-results-container">
-      <h2>Résultats pour : "{query}"</h2>
-      <Card className="results-card">
-        <Accordion multiple>
-          {renderSpecialities(data.specialities)}
-          {renderLevels(data.levels)}
-          {renderModules(data.modules)}
-          {renderChapters(data.chapters)}
-          {data.resources?.length > 0 && (
-            <AccordionTab header="📄 Ressources directes">
-              {renderResources(data.resources)}
-            </AccordionTab>
-          )}
-        </Accordion>
-      </Card>
+      <h2 className="results-title">
+        🔍 Résultats de recherche pour : <span className="query-highlight">{query}</span>
+      </h2>
+
+      <div className="results-box">
+        {results.specialities?.map((spec) => (
+          <details key={spec.id} className="level-drop">
+            <summary>🧠 Spécialité : {spec.name}</summary>
+            {spec.levels.map((lvl) => (
+              <details key={lvl.id} className="level-drop">
+                <summary>📘 Niveau : {lvl.name}</summary>
+                {lvl.module_set.map((mod) => (
+                  <details key={mod.id} className="level-drop">
+                    <summary>📗 Module : {mod.name}</summary>
+                    {mod.chapters.map((chap) => (
+                      <details key={chap.id} className="level-drop">
+                        <summary>📙 Chapitre : {chap.name}</summary>
+                        {renderResources(chap.all_resources)}
+                      </details>
+                    ))}
+                  </details>
+                ))}
+              </details>
+            ))}
+          </details>
+        ))}
+
+        {results.levels?.map((lvl) => (
+          <details key={lvl.id} className="level-drop">
+            <summary>📘 Niveau : {lvl.name}</summary>
+            {lvl.module_set.map((mod) => (
+              <details key={mod.id} className="level-drop">
+                <summary>📗 Module : {mod.name}</summary>
+                {mod.chapters.map((chap) => (
+                  <details key={chap.id} className="level-drop">
+                    <summary>📙 Chapitre : {chap.name}</summary>
+                    {renderResources(chap.all_resources)}
+                  </details>
+                ))}
+              </details>
+            ))}
+          </details>
+        ))}
+
+        {results.modules?.map((mod) => (
+          <details key={mod.id} className="level-drop">
+            <summary>📗 Module : {mod.name}</summary>
+            {mod.chapters.map((chap) => (
+              <details key={chap.id} className="level-drop">
+                <summary>📙 Chapitre : {chap.name}</summary>
+                {renderResources(chap.all_resources)}
+              </details>
+            ))}
+          </details>
+        ))}
+
+        {results.chapters?.map((chap) => (
+          <details key={chap.id} className="level-drop">
+            <summary>📙 Chapitre : {chap.name}</summary>
+            {renderResources(chap.all_resources)}
+          </details>
+        ))}
+
+        {results.resources?.map((res) => (
+          <div key={res.id} className="resource-card animated">
+            <div className="resource-header">
+              <a href={res.link} target="_blank" rel="noreferrer" className="resource-link">
+                🔗 {res.name}
+              </a>
+              <span className="type-tag">{res.resource_type}</span>
+            </div>
+            <div className="resource-meta">
+              <span>👤 {res.owner_name}</span>
+              <span>🕒 {new Date(res.created_at).toLocaleDateString()}</span>
+              <span className={`access-tag ${res.access_type}`}>
+                {res.access_type === "public" ? (
+                  "🔓 Public"
+                ) : res.access_approved ? (
+                  "🔒 Privé (accepté)"
+                ) : accessRequested[res.id] ? (
+                  <span className="pending">🔒 Privé (en attente)</span>
+                ) : (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRequestAccess(res.id);
+                    }}
+                    className="request-access-btn"
+                  >
+                    Demander l'accès
+                  </button>
+                )}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

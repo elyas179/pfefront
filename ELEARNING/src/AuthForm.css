@@ -624,6 +624,28 @@ body.dark-mode .role-select label {
     color: #1e1e2f;
   }
   
+  .loading-screen {
+    width: 100vw;
+    height: 100vh;
+    background-color: #1e1e2f;
+    color: #9333ea;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.6rem;
+    font-weight: bold;
+    animation: pulseText 1.2s infinite ease-in-out;
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  
+  @keyframes pulseText {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+  }
   
   
   

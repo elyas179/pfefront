@@ -15,6 +15,7 @@ const StudentHeader = () => {
   const navigate = useNavigate();
   const [language, setLanguage] = useState("fr");
   const [notifications, setNotifications] = useState([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -93,31 +94,33 @@ const StudentHeader = () => {
 
   const handleSearch = async () => {
     if (!query.trim()) return;
-
+  
+    setLoadingSearch(true); // ⏳ Start loading
+  
     try {
-      const res = await axios.get(`http://127.0.0.1:8000/search/?q=${query}`);
-      const result = res.data;
-
-      if (
-        (!result.specialities || result.specialities.length === 0) &&
-        (!result.levels || result.levels.length === 0) &&
-        (!result.modules || result.modules.length === 0) &&
-        (!result.chapters || result.chapters.length === 0) &&
-        (!result.resources || result.resources.length === 0)
-      ) {
-        alert("Aucun résultat trouvé.");
-        return;
-      }
-      
-
-      navigate("/search-results", { state: { data: result, query } });
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(`http://127.0.0.1:8000/search/?q=${query}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      localStorage.setItem("searchResults", JSON.stringify(response.data));
+      localStorage.setItem("searchQuery", query);
+  
+      // Wait a bit so the loading is visible
+      setTimeout(() => {
+        setLoadingSearch(false);
+        navigate("/search-results");
+      }, 1000);
     } catch (err) {
+      setLoadingSearch(false);
       console.error("Erreur recherche:", err);
-      alert("Erreur lors de la recherche.");
     }
   };
+  
 
-  return (
+  return loadingSearch ? (
+    <div className="search-loading-screen">⏳ Chargement des résultats...</div>
+  ) : (
     <header className="student-header">
       <div className="student-header-left">
         <img
@@ -130,7 +133,7 @@ const StudentHeader = () => {
         <span className="student-title" onClick={() => navigate("/student")}>Curio</span>
         <button className="home-button" onClick={() => navigate("/student")}>🏠 Accueil</button>
       </div>
-
+  
       <div className="student-header-center">
         <input
           type="text"
@@ -141,12 +144,12 @@ const StudentHeader = () => {
         />
         <button className="search-button" onClick={handleSearch}>Rechercher</button>
       </div>
-
+  
       <div className="student-header-right">
         <button onClick={() => setDarkMode(!darkMode)} className="theme-toggle-icon">
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
-
+  
         <div className="notif-wrapper">
           <div className="notif-icon" onClick={(e) => notifOp.current.toggle(e)}>
             <FaBell />
@@ -162,7 +165,7 @@ const StudentHeader = () => {
             </ul>
           </OverlayPanel>
         </div>
-
+  
         <div
           className="profile-area"
           onClick={(e) => profileOp.current.toggle(e)}
@@ -176,7 +179,7 @@ const StudentHeader = () => {
           />
           <span className="student-name">{user?.username || "Utilisateur"}</span>
         </div>
-
+  
         <OverlayPanel ref={profileOp} className="overlay-panel-custom">
           <div className="overlay-profile-header">
             <label htmlFor="photo-upload-overlay" style={{ cursor: "pointer" }}>
@@ -199,7 +202,7 @@ const StudentHeader = () => {
               <small>{user?.speciality || "Spécialité inconnue"}</small>
             </div>
           </div>
-
+  
           <ul className="overlay-options">
             <li onClick={() => navigate(`/profile/${user.id}/edit`)}>👤 Profil</li>
             <li onClick={() => handleNavigation("/settings")}>⚙️ Paramètres</li>
@@ -212,6 +215,7 @@ const StudentHeader = () => {
       </div>
     </header>
   );
+  
 };
 
 export default StudentHeader;
