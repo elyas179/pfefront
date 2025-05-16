@@ -104,7 +104,19 @@ const Register = () => {
   const availableLevels = levels.filter(level =>
     specialityName.includes("tronc") ? level.name.startsWith("L1") : level.name.startsWith("L2")
   );
-
+  if (loading) {
+    return (
+      <div className="loading-text" style={{
+        textAlign: 'center',
+        fontSize: '1.4rem',
+        marginTop: '6rem',
+        animation: 'pulse 1.5s infinite'
+      }}>
+        ⏳ Création de votre profil...
+      </div>
+    );
+  }
+  
   return (
     <motion.div
       className="auth-container"
