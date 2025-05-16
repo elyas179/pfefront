@@ -51,17 +51,9 @@ const Chat = () => {
     setMessages((prev) => [...prev, { sender: "user", text: input }]);
     setInput("");
     setLoading(true);
-// Fonction pour couper le texte automatiquement tous les 5 mots
-const formatBotText = (text, wordsPerLine = 5) => {
-  const words = text.split(/\s+/); // divise en mots
-  const lines = [];
 
-  for (let i = 0; i < words.length; i += wordsPerLine) {
-    lines.push(words.slice(i, i + wordsPerLine).join(" "));
-  }
-
-  return lines.join("\n");
-};
+    // 👇 Show typing indicator
+    setMessages((prev) => [...prev, { sender: "bot", text: "typing-indicator" }]);
 
     try {
       const res = await axios.post(
@@ -75,14 +67,14 @@ const formatBotText = (text, wordsPerLine = 5) => {
         }
       );
 
+      // ✅ Remove typing indicator and add real response
       setMessages((prev) => [
-        ...prev,
+        ...prev.filter((msg) => msg.text !== "typing-indicator"),
         { sender: "bot", text: res.data.bot_response },
       ]);
     } catch (err) {
-      console.error("Erreur chatbot:", err);
       setMessages((prev) => [
-        ...prev,
+        ...prev.filter((msg) => msg.text !== "typing-indicator"),
         { sender: "bot", text: "❌ Erreur serveur. Réessaie." },
       ]);
     } finally {
@@ -108,7 +100,15 @@ const formatBotText = (text, wordsPerLine = 5) => {
         {messages.map((msg, index) => (
           <div key={index} className={`chat-message ${msg.sender}`}>
             <div className="chat-bubble">
-              {msg.text.replace(/\n/g, " ")}
+              {msg.text === "typing-indicator" ? (
+                <span className="typing-animation">
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </span>
+              ) : (
+                msg.text.replace(/\n/g, " ")
+              )}
             </div>
           </div>
         ))}
