@@ -106,13 +106,9 @@ const Register = () => {
   );
   if (loading) {
     return (
-      <div className="loading-text" style={{
-        textAlign: 'center',
-        fontSize: '1.4rem',
-        marginTop: '6rem',
-        animation: 'pulse 1.5s infinite'
-      }}>
-        ⏳ Création de votre profil...
+      <div className="register-loading-screen">
+        <div className="spinner" />
+        <p>Création de votre profil en cours...</p>
       </div>
     );
   }

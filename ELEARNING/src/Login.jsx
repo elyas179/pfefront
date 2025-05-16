@@ -67,7 +67,15 @@ const Login = () => {
       setLoading(false); // 🆕 Stop loading
     }
   };
-
+  if (loading) {
+    return (
+      <div className="register-loading-screen">
+        <div className="spinner" />
+        <p>Connexion en cours...</p>
+      </div>
+    );
+  }
+  
   return loading ? (
     <motion.div
       className="loading-screen"
