@@ -139,14 +139,36 @@ const TeacherHeader = () => {
     <header className="teacher-header">
       <Toast ref={toast} />
       <div className="teacher-header-left">
-        <img src="/logo.png" alt="Logo" className="teacher-logo" />
+      <img
+  src="/logo.png"
+  alt="Logo"
+  className="teacher-logo"
+  style={{ cursor: "pointer" }}
+  onClick={() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user?.user_type === "professor") {
+      navigate("/teacher");
+    } else {
+      navigate("/student");
+    }
+  }}
+/>
+
         <span className="teacher-title">Curio Prof</span>
         <Button
-          icon="pi pi-home"
-          label="Accueil"
-          className="accueil-button"
-          onClick={() => navigate("/teacher")}
-        />
+  icon="pi pi-home"
+  label="Accueil"
+  className="accueil-button"
+  onClick={() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user?.user_type === "professor") {
+      navigate("/teacher");
+    } else {
+      navigate("/student");
+    }
+  }}
+/>
+
       </div>
 
       <div className="teacher-header-right">

@@ -1,43 +1,140 @@
-// File: TeacherChat.jsx
-import React, { useState } from "react";
-import './TeacherChat.css';
+// File: src/pages/TeacherChat.jsx
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+import { motion } from "framer-motion";
+import TeacherHeader from "..//TeacherHeader";
+import "./TeacherChat.css";
 
 const TeacherChat = () => {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([
-    { id: 1, from: "Sara", content: "Bonjour professeur !" },
-  ]);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const chatEndRef = useRef(null);
 
-  const handleSend = (e) => {
-    e.preventDefault();
-    if (message.trim() === "") return;
-    setMessages([...messages, { id: Date.now(), from: "Vous", content: message }]);
-    setMessage("");
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(scrollToBottom, [messages]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const res = await axios.get("http://127.0.0.1:8000/api/ai/chatbot/", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const formatted = res.data
+          .map((m) => [
+            { sender: "user", text: m.user_message },
+            { sender: "bot", text: m.bot_response },
+          ])
+          .flat();
+
+        setMessages(formatted);
+      } catch (err) {
+        console.error("Erreur lors du chargement:", err);
+      }
+    };
+
+    fetchMessages();
+  }, []);
+
+  const sendMessage = async () => {
+    if (!input.trim() || loading) return;
+
+    const token = localStorage.getItem("accessToken");
+    const userMessage = { user_message: input };
+
+    setMessages((prev) => [...prev, { sender: "user", text: input }]);
+    setInput("");
+    setLoading(true);
+
+    // 👇 Add typing animation
+    setMessages((prev) => [...prev, { sender: "bot", text: "typing-indicator" }]);
+
+    try {
+      const res = await axios.post(
+        "http://127.0.0.1:8000/api/ai/chatbot/",
+        userMessage,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Replace typing indicator with real message
+      setMessages((prev) => [
+        ...prev.filter((msg) => msg.text !== "typing-indicator"),
+        { sender: "bot", text: res.data.bot_response },
+      ]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev.filter((msg) => msg.text !== "typing-indicator"),
+        { sender: "bot", text: "❌ Erreur serveur. Réessaie." },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") sendMessage();
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Chat avec les Étudiants</h1>
-      <div className="border p-4 h-64 overflow-y-auto mb-4">
-        {messages.map((msg) => (
-          <div key={msg.id} className="mb-2">
-            <strong>{msg.from}:</strong> {msg.content}
-          </div>
-        ))}
-      </div>
-      <form onSubmit={handleSend} className="flex space-x-2">
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="flex-1 p-2 border rounded"
-          placeholder="Écrire un message..."
-        />
-        <button type="submit" className="bg-blue-500 text-white px-4 rounded">
-          Envoyer
-        </button>
-      </form>
-    </div>
+    <>
+      <motion.div
+        className="chat-container"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -50 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h2 className="chat-title">🤖 Curio Assistant</h2>
+
+        <div className="chat-box">
+          {messages.map((msg, index) => (
+            <div key={index} className={`chat-message ${msg.sender}`}>
+              <div className="chat-bubble">
+                {msg.text === "typing-indicator" ? (
+                  <span className="typing-animation">
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                  </span>
+                ) : (
+                  msg.text.replace(/\n/g, " ")
+                )}
+              </div>
+            </div>
+          ))}
+          <div ref={chatEndRef} />
+        </div>
+
+        <div className="chat-input-area">
+          <InputText
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="Pose ta question..."
+            className="chat-input"
+            disabled={loading}
+          />
+          <Button
+            label={loading ? "..." : "Envoyer"}
+            onClick={sendMessage}
+            className="send-button"
+            disabled={loading}
+          />
+        </div>
+      </motion.div>
+    </>
   );
 };
 
