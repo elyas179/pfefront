@@ -16,6 +16,9 @@ const PlayQuiz = () => {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
+  const [loadingResults, setLoadingResults] = useState(false);
+  const [results, setResults] = useState([]);
+  const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
 
   useEffect(() => {
     axios
@@ -58,6 +61,8 @@ const PlayQuiz = () => {
         setSelectedAnswers({});
         setScore(0);
         setShowResults(false);
+        setResults([]);
+        setShowCorrectAnswers(false);
       });
   };
 
@@ -67,15 +72,10 @@ const PlayQuiz = () => {
     const newSelected = { ...selectedAnswers, [currentQuestion.id]: selectedAnswers[currentQuestion.id] };
     setSelectedAnswers(newSelected);
 
-    const totalCorrect = selectedQuiz.questions.reduce((acc, q) => {
-      const correct = q.answers.filter((a) => a.is_correct).map((a) => a.id).sort().toString();
-      const selected = selectedAnswers[q.id] ? [selectedAnswers[q.id]].sort().toString() : "";
-      return correct === selected ? acc + 1 : acc;
-    }, 0);
-
     if (currentIndex + 1 < selectedQuiz.questions.length) {
       setCurrentIndex(currentIndex + 1);
     } else {
+      setLoadingResults(true);
       try {
         const selectedAnswerIds = Object.values(selectedAnswers).filter((id) => typeof id === "number");
         await axios.post(
@@ -88,11 +88,27 @@ const PlayQuiz = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+
+        const calculatedResults = selectedQuiz.questions.map((question) => {
+          const userAnswerId = selectedAnswers[question.id];
+          const correctAnswer = question.answers.find((a) => a.is_correct);
+          const isCorrect = userAnswerId === correctAnswer.id;
+          return {
+            question: question.text,
+            userAnswer: question.answers.find((a) => a.id === userAnswerId)?.text || "Aucune réponse",
+            correctAnswer: correctAnswer.text,
+            isCorrect,
+          };
+        });
+
+        const totalCorrect = calculatedResults.filter(r => r.isCorrect).length;
         setScore(totalCorrect);
+        setResults(calculatedResults);
         setShowResults(true);
       } catch (err) {
         console.error("Erreur de soumission:", err.response?.data || err.message);
       }
+      setLoadingResults(false);
     }
   };
 
@@ -102,6 +118,9 @@ const PlayQuiz = () => {
     setSelectedAnswers({});
     setScore(0);
     setShowResults(false);
+    setResults([]);
+    setLoadingResults(false);
+    setShowCorrectAnswers(false);
   };
 
   if (selectedQuiz) {
@@ -109,7 +128,9 @@ const PlayQuiz = () => {
       <div className="quiz-play-page full-quiz-mode">
         <h1 className="quiz-title">🎯 {selectedQuiz.title}</h1>
 
-        {currentQuestion && !showResults && (
+        {loadingResults && <p className="loading-results">⏳ Calcul du score...</p>}
+
+        {currentQuestion && !showResults && !loadingResults && (
           <div className="quiz-question-block">
             <h2 className="question-title">
               {currentIndex + 1}. {currentQuestion.text}
@@ -137,11 +158,25 @@ const PlayQuiz = () => {
           </div>
         )}
 
-        {showResults && (
+        {showResults && !loadingResults && (
           <div className="quiz-results">
             <FaCheckCircle className="result-icon" />
             <h2>✅ Quiz terminé !</h2>
             <p>Score : {score} / {selectedQuiz.questions.length}</p>
+            <button className="toggle-correct-btn" onClick={() => setShowCorrectAnswers(!showCorrectAnswers)}>
+              {showCorrectAnswers ? "Cacher les bonnes réponses" : "Afficher les bonnes réponses"}
+            </button>
+            <ul className="detailed-results">
+              {results.map((res, idx) => (
+                <li key={idx} className={`result-item ${res.isCorrect ? "correct" : "incorrect"}`}>
+                  <p><strong>Q{idx + 1}:</strong> {res.question}</p>
+                  <p><strong>Ta réponse:</strong> {res.userAnswer}</p>
+                  {showCorrectAnswers && <p><strong>Bonne réponse:</strong> {res.correctAnswer}</p>}
+                  <p>{res.isCorrect ? "✅ Correct" : "❌ Incorrect"}</p>
+                  <hr />
+                </li>
+              ))}
+            </ul>
             <button className="quiz-start-btn" onClick={resetQuiz}>Retour</button>
           </div>
         )}

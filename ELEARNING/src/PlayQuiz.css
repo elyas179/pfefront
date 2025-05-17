@@ -6,6 +6,9 @@
   --card-bg: #fff;
   --accent: #9333ea;
   --secondary: #3b82f6;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --neutral: #e5e7eb;
 }
 
 .dark {
@@ -48,7 +51,7 @@
   background: var(--card-bg);
   padding: 1.2rem;
   border-radius: 1rem;
-  box-shadow: 0 0 10px rgba(0,0,0,0.07);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.07);
   transition: all 0.3s ease;
 }
 
@@ -122,7 +125,7 @@
   background: var(--card-bg);
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .question-title {
@@ -198,4 +201,100 @@
 .no-quiz {
   font-style: italic;
   color: gray;
+}
+
+/* 🔄 Loading Screen */
+.calculating-screen {
+  text-align: center;
+  padding: 4rem 2rem;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.calculating-screen h2 {
+  font-size: 2rem;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.calculating-screen p {
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin-bottom: 2rem;
+}
+
+.spinner {
+  margin: 0 auto;
+  width: 48px;
+  height: 48px;
+  border: 5px solid var(--neutral);
+  border-top: 5px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 🧠 Review answers */
+.review-answers {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+  margin-top: 2rem;
+  animation: fadeIn 0.4s ease-in;
+}
+
+.review-answers h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--accent);
+  text-align: center;
+}
+
+.review-question {
+  margin-bottom: 1.5rem;
+}
+
+.review-question p {
+  margin: 0.3rem 0;
+}
+
+.correct-answer {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.wrong-answer {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.selected-answer {
+  color: var(--secondary);
+  font-weight: 500;
+}
+
+/* 🎞 Animations */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
