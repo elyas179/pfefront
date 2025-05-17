@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./GenQuiz.css";
 import { Button } from "primereact/button";
+import { useNavigate } from "react-router-dom";
 
 const GenQuiz = () => {
   const token = localStorage.getItem("accessToken");
+  const navigate = useNavigate();
 
   const [modules, setModules] = useState([]);
   const [chapters, setChapters] = useState([]);
@@ -59,6 +61,7 @@ const GenQuiz = () => {
         alert("✅ Quiz généré avec succès !");
         setFormData({ module: "", chapters: [], difficulty: 3, quiz_type: "qcm" });
         setChapters([]);
+        navigate("/quizzes/play");
       })
       .catch(() => alert("Erreur lors de la génération du quiz."))
       .finally(() => setLoading(false));

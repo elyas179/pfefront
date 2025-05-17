@@ -228,17 +228,25 @@ const Program = () => {
       <div className="new-program-form">
         <h2>✨ Nouveau Programme</h2>
         <div className="form-grid">
+          <label>⏱️ Heures d’étude par jour</label>
           <InputNumber value={studyHours} onValueChange={(e) => setStudyHours(e.value)} placeholder="Heures/jour" />
+
+          <label>📅 Nombre de jours jusqu'à l'examen</label>
           <InputNumber value={daysUntilExam} onValueChange={(e) => setDaysUntilExam(e.value)} placeholder="Jours restants" />
+
+          <label>🕒 Moment préféré pour étudier</label>
           <div>
             {["Matin", "Après-midi", "Soir"].map((time) => (
-              <span key={time}>
+              <span key={time} style={{ marginRight: "1rem" }}>
                 <RadioButton value={time} onChange={(e) => setPreferredTime(e.value)} checked={preferredTime === time} />
-                <label>{time}</label>
+                <label style={{ marginLeft: "0.25rem" }}>{time}</label>
               </span>
             ))}
           </div>
-          <InputTextarea value={goals} onChange={(e) => setGoals(e.target.value)} placeholder="Vos objectifs..." />
+
+          <label>🎯 Vos objectifs</label>
+          <InputTextarea value={goals} onChange={(e) => setGoals(e.target.value)} placeholder="Exemple : Obtenir une note de 18/20 en maths" />
+
           <Button label="Créer le programme" onClick={handleSubmit} disabled={loading} className="create-btn" />
           {loading && <ProgressSpinner />}
         </div>

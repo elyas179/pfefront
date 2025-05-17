@@ -16,11 +16,13 @@ const PlayQuiz = () => {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
-  const [loadingResults, setLoadingResults] = useState(false);
-  const [results, setResults] = useState([]);
-  const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [recentQuizId, setRecentQuizId] = useState(null);
 
   useEffect(() => {
+    const recent = localStorage.getItem("recentQuizId");
+    if (recent) setRecentQuizId(parseInt(recent));
+
     axios
       .get("http://127.0.0.1:8000/api/courses/modules/", {
         headers: { Authorization: `Bearer ${token}` },
@@ -61,8 +63,7 @@ const PlayQuiz = () => {
         setSelectedAnswers({});
         setScore(0);
         setShowResults(false);
-        setResults([]);
-        setShowCorrectAnswers(false);
+        setHasSubmitted(false);
       });
   };
 
@@ -75,40 +76,33 @@ const PlayQuiz = () => {
     if (currentIndex + 1 < selectedQuiz.questions.length) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      setLoadingResults(true);
-      try {
-        const selectedAnswerIds = Object.values(selectedAnswers).filter((id) => typeof id === "number");
-        await axios.post(
-          `http://127.0.0.1:8000/api/quizzes/submissions/create/`,
-          {
-            quiz: selectedQuiz.id,
-            selected_answers: selectedAnswerIds,
-          },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+      const totalCorrect = selectedQuiz.questions.reduce((acc, q) => {
+        const correct = q.answers.filter((a) => a.is_correct).map((a) => a.id).sort().toString();
+        const selected = selectedAnswers[q.id] ? [selectedAnswers[q.id]].sort().toString() : "";
+        return correct === selected ? acc + 1 : acc;
+      }, 0);
 
-        const calculatedResults = selectedQuiz.questions.map((question) => {
-          const userAnswerId = selectedAnswers[question.id];
-          const correctAnswer = question.answers.find((a) => a.is_correct);
-          const isCorrect = userAnswerId === correctAnswer.id;
-          return {
-            question: question.text,
-            userAnswer: question.answers.find((a) => a.id === userAnswerId)?.text || "Aucune réponse",
-            correctAnswer: correctAnswer.text,
-            isCorrect,
-          };
-        });
-
-        const totalCorrect = calculatedResults.filter(r => r.isCorrect).length;
-        setScore(totalCorrect);
-        setResults(calculatedResults);
-        setShowResults(true);
-      } catch (err) {
-        console.error("Erreur de soumission:", err.response?.data || err.message);
+      if (!hasSubmitted) {
+        try {
+          const selectedAnswerIds = Object.values(selectedAnswers).filter((id) => typeof id === "number");
+          await axios.post(
+            `http://127.0.0.1:8000/api/quizzes/submissions/create/`,
+            {
+              quiz: selectedQuiz.id,
+              selected_answers: selectedAnswerIds,
+            },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          setScore(totalCorrect);
+          setHasSubmitted(true);
+        } catch (err) {
+          console.error("Erreur de soumission:", err.response?.data || err.message);
+        }
       }
-      setLoadingResults(false);
+
+      setShowResults(true);
     }
   };
 
@@ -118,9 +112,7 @@ const PlayQuiz = () => {
     setSelectedAnswers({});
     setScore(0);
     setShowResults(false);
-    setResults([]);
-    setLoadingResults(false);
-    setShowCorrectAnswers(false);
+    setHasSubmitted(false);
   };
 
   if (selectedQuiz) {
@@ -128,9 +120,7 @@ const PlayQuiz = () => {
       <div className="quiz-play-page full-quiz-mode">
         <h1 className="quiz-title">🎯 {selectedQuiz.title}</h1>
 
-        {loadingResults && <p className="loading-results">⏳ Calcul du score...</p>}
-
-        {currentQuestion && !showResults && !loadingResults && (
+        {currentQuestion && !showResults && (
           <div className="quiz-question-block">
             <h2 className="question-title">
               {currentIndex + 1}. {currentQuestion.text}
@@ -158,24 +148,28 @@ const PlayQuiz = () => {
           </div>
         )}
 
-        {showResults && !loadingResults && (
+        {showResults && (
           <div className="quiz-results">
             <FaCheckCircle className="result-icon" />
             <h2>✅ Quiz terminé !</h2>
             <p>Score : {score} / {selectedQuiz.questions.length}</p>
-            <button className="toggle-correct-btn" onClick={() => setShowCorrectAnswers(!showCorrectAnswers)}>
-              {showCorrectAnswers ? "Cacher les bonnes réponses" : "Afficher les bonnes réponses"}
-            </button>
-            <ul className="detailed-results">
-              {results.map((res, idx) => (
-                <li key={idx} className={`result-item ${res.isCorrect ? "correct" : "incorrect"}`}>
-                  <p><strong>Q{idx + 1}:</strong> {res.question}</p>
-                  <p><strong>Ta réponse:</strong> {res.userAnswer}</p>
-                  {showCorrectAnswers && <p><strong>Bonne réponse:</strong> {res.correctAnswer}</p>}
-                  <p>{res.isCorrect ? "✅ Correct" : "❌ Incorrect"}</p>
-                  <hr />
-                </li>
-              ))}
+            <ul className="review-list">
+              {selectedQuiz.questions.map((q) => {
+                const correctIds = q.answers.filter((a) => a.is_correct).map((a) => a.id);
+                const userAnswerId = selectedAnswers[q.id];
+                return (
+                  <li key={q.id} className="review-item">
+                    <strong>{q.text}</strong>
+                    <ul>
+                      {q.answers.map((ans) => (
+                        <li key={ans.id} className={`review-answer ${ans.id === userAnswerId ? "selected-answer" : ""} ${ans.is_correct ? "correct-answer" : ""}`}>
+                          {ans.text}
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                );
+              })}
             </ul>
             <button className="quiz-start-btn" onClick={resetQuiz}>Retour</button>
           </div>
@@ -211,6 +205,7 @@ const PlayQuiz = () => {
                           <span className="quiz-title">{quiz.title}</span>
                           <span className="quiz-chapter">📘 Chapitre: {quiz.chapter_name || "-"}</span>
                           <span className="quiz-author">👤 Créé par: {quiz.created_by_username || "-"}</span>
+                          {recentQuizId === quiz.id && <span className="quiz-recent">🆕 Vous venez de générer ce quiz !</span>}
                         </div>
                         <button className="start-btn" onClick={() => startQuiz(quiz.id)}>
                           <FaPlay /> Commencer
