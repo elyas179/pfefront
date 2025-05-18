@@ -14,7 +14,6 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false);
 
-  // 🔄 Nettoyage des anciennes sessions
   useEffect(() => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -35,7 +34,6 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // 🔐 Authentification
       const res = await axios.post("http://127.0.0.1:8000/api/token/", {
         username: formData.username,
         password: formData.password,
@@ -44,7 +42,6 @@ const Login = () => {
       const token = res.data.access;
       localStorage.setItem("accessToken", token);
 
-      // 👤 Récupération des infos utilisateur
       const userRes = await axios.get("http://127.0.0.1:8000/api/users/me/", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -53,9 +50,8 @@ const Login = () => {
 
       const user = userRes.data;
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("userType", user.user_type); // <-- nécessaire pour les routes protégées
+      localStorage.setItem("userType", user.user_type);
 
-      // 🚀 Redirection selon le rôle
       if (user.user_type === "professor") {
         navigate("/teacher");
       } else if (user.user_type === "student") {
@@ -74,16 +70,10 @@ const Login = () => {
 
   if (loading) {
     return (
-      <motion.div
-        className="loading-screen"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <div className="register-loading-screen">
         <div className="spinner" />
         <p>Connexion en cours...</p>
-      </motion.div>
+      </div>
     );
   }
 
