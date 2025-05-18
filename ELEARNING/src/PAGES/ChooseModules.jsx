@@ -7,22 +7,33 @@ import { motion } from "framer-motion";
 import "./ChooseModules.css";
 
 const ChooseModules = () => {
-  const [modules, setModules] = useState([]);
+  const [allModules, setAllModules] = useState([]);
   const [selectedModules, setSelectedModules] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
+    if (!token) return;
+
+    // Fetch ALL modules
+    axios
+      .get("http://127.0.0.1:8000/api/courses/modules/", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setAllModules(res.data || []))
+      .catch((err) => console.error("Erreur chargement modules:", err));
+
+    // Fetch assigned modules
     axios
       .get("http://127.0.0.1:8000/api/users/choosemodules/", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        setModules(res.data.all_modules || []);
-        setSelectedModules(res.data.selected_module_ids || []);
+        const ids = Array.isArray(res.data) ? res.data.map((m) => m.id) : [];
+        setSelectedModules(ids);
       })
-      .catch((err) => console.error("Erreur chargement modules:", err));
+      .catch((err) => console.error("Erreur chargement modules affectés:", err));
   }, []);
 
   const handleToggle = (id) => {
@@ -55,9 +66,9 @@ const ChooseModules = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className="choose-title">Choisir les modules que vous enseignez</h2>
+      <h2 className="choose-title">📚 Choisir les modules que vous enseignez</h2>
       <div className="modules-grid">
-        {Array.isArray(modules) && modules.map((mod) => (
+        {allModules.map((mod) => (
           <Card key={mod.id} className="module-card">
             <div className="module-info">
               <Checkbox
@@ -65,8 +76,10 @@ const ChooseModules = () => {
                 checked={selectedModules.includes(mod.id)}
                 onChange={() => handleToggle(mod.id)}
               />
-              <label htmlFor={`mod-${mod.id}`}>{mod.name}</label>
-              <p className="module-description">{mod.description}</p>
+              <label htmlFor={`mod-${mod.id}`} className="module-label">{mod.name}</label>
+              {mod.description && (
+                <p className="module-description">{mod.description}</p>
+              )}
             </div>
           </Card>
         ))}
