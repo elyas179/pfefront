@@ -87,7 +87,7 @@ const Home = () => {
             ) : res.access_approved ? (
               "🔒 Privé"
             ) : accessRequested[res.id] ? (
-              <span className="pending">🔒 Privé (en attente)</span>
+              <span className="pending">🔒 Privé ( vous ne pouvez pas acceder ) </span>
             ) : (
               <button
                 onClick={(e) => {

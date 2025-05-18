@@ -61,22 +61,25 @@ const AnnouncementsPage = () => {
         <p>Aucune annonce à afficher.</p>
       ) : (
         <ul style={{ listStyle: "none", paddingLeft: 0 }}>
-          {announcements.map((announcement, index) => (
-            <li key={index} className="announcement-card">
-              {(() => {
+          {announcements.map((announcement, index) => {
   const parts = announcement.message?.split(":");
-  const title = parts?.[0]?.trim() || "Sans titre";
+  const header = parts?.[0]?.trim() || "";
   const content = parts?.slice(1).join(":").trim() || "Pas de contenu.";
+
+  // 🧠 Extraire le nom du prof et le titre
+  const ownerMatch = header.match(/👨‍🏫\s*([^\s]+)\s*📢/);
+  const owner = ownerMatch ? ownerMatch[1] : "Prof inconnu";
+  const title = header.replace(/👨‍🏫.*📢/, "").trim();
+
   return (
-    <>
+    <li key={index} className="announcement-card">
+      <div className="announcement-owner">👨‍🏫 {owner}</div>
       <div className="announcement-title">{title}</div>
       <div className="announcement-message">{content}</div>
-    </>
+    </li>
   );
-})()}
+})}
 
-            </li>
-          ))}
         </ul>
       )}
     </div>

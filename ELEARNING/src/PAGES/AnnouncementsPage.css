@@ -52,4 +52,11 @@
     background-color: #121212;
     color: #e2e2e2;
   }
+  .announcement-owner {
+    font-weight: bold;
+    color: #9333ea;
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+  }
+  
   

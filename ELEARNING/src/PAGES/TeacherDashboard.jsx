@@ -126,64 +126,86 @@ const TeacherDashboard = () => {
 
       {/* 📋 Announcement Dialog */}
       <Dialog
-        header="Nouvelle Annonce"
-        visible={showDialog}
-        style={{ width: '500px' }}
-        onHide={() => setShowDialog(false)}
-      >
-        <div className="p-fluid">
-          <label>Titre</label>
-          <input
-            type="text"
-            value={announcement.title}
-            onChange={(e) => setAnnouncement({ ...announcement, title: e.target.value })}
-            className="p-inputtext"
-          />
+  header="Nouvelle Annonce"
+  visible={showDialog}
+  style={{ width: '500px' }}
+  onHide={() => setShowDialog(false)}
+>
+  <div className="p-fluid">
+    <label>Titre</label>
+    <input
+      type="text"
+      value={announcement.title}
+      onChange={(e) => setAnnouncement({ ...announcement, title: e.target.value })}
+      className="p-inputtext"
+    />
 
-          <label>Message</label>
-          <InputTextarea
-            rows={4}
-            value={announcement.content}
-            onChange={(e) => setAnnouncement({ ...announcement, content: e.target.value })}
-          />
+    <label>Message</label>
+    <InputTextarea
+      rows={4}
+      value={announcement.content}
+      onChange={(e) => setAnnouncement({ ...announcement, content: e.target.value })}
+    />
 
-          <label>Niveau</label>
-          <select
-            value={announcement.level}
-            onChange={(e) => setAnnouncement({ ...announcement, level: parseInt(e.target.value) })}
-            className="p-inputtext"
-          >
-            <option value="">-- Choisir --</option>
-            {levels.map((lvl) => (
-              <option key={lvl.id} value={lvl.id}>
-                {lvl.name}
-              </option>
-            ))}
-          </select>
+    {/* 🔁 Spécialité d'abord */}
+    <label>Spécialité</label>
+    <select
+      value={announcement.speciality}
+      onChange={async (e) => {
+        const selectedId = parseInt(e.target.value);
+        setAnnouncement({ ...announcement, speciality: selectedId, level: "" });
 
-          <label>Spécialité</label>
-          <select
-            value={announcement.speciality}
-            onChange={(e) => setAnnouncement({ ...announcement, speciality: parseInt(e.target.value) })}
-            className="p-inputtext"
-          >
-            <option value="">-- Choisir --</option>
-            {specialities.map((spec) => (
-              <option key={spec.id} value={spec.id}>
-                {spec.name}
-              </option>
-            ))}
-          </select>
+        // Charger dynamiquement les niveaux liés à la spécialité
+        try {
+          const token = localStorage.getItem("accessToken");
+          const res = await axios.get(`http://127.0.0.1:8000/api/courses/speciality/${selectedId}/levels/`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setLevels(res.data.levels || []);
+        } catch (err) {
+          console.error("Erreur chargement niveaux:", err);
+          setLevels([]);
+        }
+      }}
+      className="p-inputtext"
+    >
+      <option value="">-- Choisir --</option>
+      {specialities.map((spec) => (
+        <option key={spec.id} value={spec.id}>
+          {spec.name}
+        </option>
+      ))}
+    </select>
 
-          <button
-            className="auth-button-filled"
-            style={{ marginTop: "1rem" }}
-            onClick={handleSendAnnouncement}
-          >
-            🚀 Envoyer
-          </button>
-        </div>
-      </Dialog>
+    {/* 🎯 Niveau ensuite, seulement si une spécialité est choisie */}
+    {announcement.speciality && (
+      <>
+        <label>Niveau</label>
+        <select
+          value={announcement.level}
+          onChange={(e) => setAnnouncement({ ...announcement, level: parseInt(e.target.value) })}
+          className="p-inputtext"
+        >
+          <option value="">-- Choisir --</option>
+          {levels.map((lvl) => (
+            <option key={lvl.id} value={lvl.id}>
+              {lvl.name}
+            </option>
+          ))}
+        </select>
+      </>
+    )}
+
+    <button
+      className="auth-button-filled"
+      style={{ marginTop: "1rem" }}
+      onClick={handleSendAnnouncement}
+    >
+      🚀 Envoyer
+    </button>
+  </div>
+</Dialog>
+
     </div>
   );
 };

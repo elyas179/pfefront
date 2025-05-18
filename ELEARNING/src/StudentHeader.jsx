@@ -204,7 +204,6 @@ const StudentHeader = () => {
 
           <ul className="overlay-options">
             <li onClick={() => navigate(`/profile/${user?.id}/edit`)}>👤 Profil</li>
-            <li onClick={() => handleNavigation("/settings")}>⚙️ Paramètres</li>
             <li onClick={() => handleNavigation("/performance")}>📊 Statistiques</li>
             <li onClick={toggleLanguage}>🌐 Langue : {language === "fr" ? "Français 🇫🇷" : "English 🇬🇧"}</li>
             <li onClick={() => setDarkMode(!darkMode)}>{darkMode ? "☀️ Mode clair" : "🌙 Mode sombre"}</li>
