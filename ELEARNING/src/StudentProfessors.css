@@ -151,3 +151,23 @@
   cursor: pointer;
   white-space: nowrap;
 }
+.search-followings-container {
+  display: flex;
+  flex-direction: column; /* 🔁 passe de horizontal à vertical */
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.search-bar-wrapper {
+  width: 100%;
+  text-align: center;
+}
+
+.professor-search {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}

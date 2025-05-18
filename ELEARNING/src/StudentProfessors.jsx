@@ -72,17 +72,6 @@ const StudentProfessors = () => {
       <h1 className="professors-title">👩‍🏫 Nos Professeurs</h1>
 
       <div className="search-followings-container">
-        <input
-          type="text"
-          placeholder="Rechercher un professeur..."
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            fetchProfessors(e.target.value);
-          }}
-          className="professor-search"
-        />
-
         <div className="followings-list">
           <h2>📌 Mes Professeurs Suivis</h2>
           {myFollowings.length > 0 ? (
@@ -109,6 +98,19 @@ const StudentProfessors = () => {
             <p>Aucun professeur suivi.</p>
           )}
         </div>
+
+        <div className="search-bar-wrapper">
+          <input
+            type="text"
+            placeholder="Rechercher un professeur..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              fetchProfessors(e.target.value);
+            }}
+            className="professor-search"
+          />
+        </div>
       </div>
 
       {loading ? (
@@ -116,10 +118,7 @@ const StudentProfessors = () => {
       ) : (
         <div className="professor-grid">
           {professors.map(prof => (
-            <div
-              key={prof.id}
-              className="professor-card"
-            >
+            <div key={prof.id} className="professor-card">
               <img
                 src={prof.profile_photo ? `http://127.0.0.1:8000${prof.profile_photo}` : '/fallback-avatar.png'}
                 alt="Professeur"
