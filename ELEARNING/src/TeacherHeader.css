@@ -263,23 +263,37 @@ body.dark-mode .profile-dropdown-trigger img {
   transform: scale(1.05);
   box-shadow: 0 0 10px rgba(147, 51, 234, 0.4);
 }
-
-/* Bouton de recherche avec icône */
-.search-toggle-button {
-  background: transparent;
-  border: none;
-  color: var(--text-color);
-  font-size: 1.5rem;
-  cursor: pointer;
-  margin-right: 1rem;
+/* Search input field */
+.search-input {
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  width: 250px;
+  font-size: 14px;
+  outline: none;
 }
 
-/* Input dans le panneau de recherche */
-.user-search-bar {
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  border-radius: 10px;
-  border: 1px solid var(--surface-border, #ccc);
-  width: 100%;
-  margin-top: 0.5rem;
+/* Search button */
+.search-button {
+  margin-left: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+/* Loading screen during search */
+.search-loading-screen {
+  font-size: 18px;
+  text-align: center;
+  padding: 20px;
+  color: #333;
 }

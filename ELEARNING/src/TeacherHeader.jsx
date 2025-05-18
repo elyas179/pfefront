@@ -13,16 +13,15 @@ const TeacherHeader = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [modalPhotoVisible, setModalPhotoVisible] = useState(false);
   const [modalProfileVisible, setModalProfileVisible] = useState(false);
   const [editForm, setEditForm] = useState({ bio: "", background: "" });
   const [darkMode, setDarkMode] = useState(false);
+  const [loadingSearch, setLoadingSearch] = useState(false);
 
   const profileOp = useRef(null);
   const notifOp = useRef(null);
-  const searchOp = useRef(null);
   const toast = useRef(null);
   const navigate = useNavigate();
 
@@ -122,11 +121,25 @@ const TeacherHeader = () => {
     }
   };
 
-  const handleUserSearch = async (e) => {
-    const query = e.query;
-    if (!query.trim()) return setSearchResults([]);
-    const res = await axios.get(`http://127.0.0.1:8000/api/users/search/?q=${query}`);
-    setSearchResults(res.data);
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    setLoadingSearch(true);
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(`http://127.0.0.1:8000/search/?q=${searchQuery}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      localStorage.setItem("searchResults", JSON.stringify(response.data));
+      localStorage.setItem("searchQuery", searchQuery);
+      setTimeout(() => {
+        setLoadingSearch(false);
+        navigate("/teacher-search-results");
+        navigate(0);
+      }, 1000);
+    } catch (err) {
+      setLoadingSearch(false);
+      console.error("Erreur recherche:", err);
+    }
   };
 
   const handleLogout = () => {
@@ -139,59 +152,48 @@ const TeacherHeader = () => {
     <header className="teacher-header">
       <Toast ref={toast} />
       <div className="teacher-header-left">
-      <img
-  src="/logo.png"
-  alt="Logo"
-  className="teacher-logo"
-  style={{ cursor: "pointer" }}
-  onClick={() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user?.user_type === "professor") {
-      navigate("/teacher");
-    } else {
-      navigate("/student");
-    }
-  }}
-/>
-
+        <img
+          src="/logo.png"
+          alt="Logo"
+          className="teacher-logo"
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (user?.user_type === "professor") {
+              navigate("/teacher");
+            } else {
+              navigate("/student");
+            }
+          }}
+        />
         <span className="teacher-title">Curio Prof</span>
         <Button
-  icon="pi pi-home"
-  label="Accueil"
-  className="accueil-button"
-  onClick={() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user?.user_type === "professor") {
-      navigate("/teacher");
-    } else {
-      navigate("/student");
-    }
-  }}
-/>
+          icon="pi pi-home"
+          label="Accueil"
+          className="accueil-button"
+          onClick={() => {
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (user?.user_type === "professor") {
+              navigate("/teacher");
+            } else {
+              navigate("/student");
+            }
+          }}
+        />
+      </div>
 
+      <div className="teacher-header-center">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="🔍 Rechercher..."
+          className="search-input"
+        />
+        <button className="search-button" onClick={handleSearch}>Rechercher</button>
       </div>
 
       <div className="teacher-header-right">
-        <Button
-          icon="pi pi-search"
-          className="search-toggle-button"
-          onClick={(e) => searchOp.current.toggle(e)}
-          tooltip="Rechercher un utilisateur"
-        />
-
-        <OverlayPanel ref={searchOp} className="overlay-panel-custom">
-          <input
-            type="text"
-            placeholder="🔍 Rechercher un utilisateur"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") navigate(`/profile/${searchQuery}`);
-            }}
-            className="user-search-bar"
-          />
-        </OverlayPanel>
-
         <div className="notif-wrapper">
           <div className="notif-icon" onClick={(e) => notifOp.current.toggle(e)}>
             <FaBell />
@@ -226,9 +228,7 @@ const TeacherHeader = () => {
                 <small>{user.speciality?.name || "Professeur"}</small>
               </div>
               <ul className="overlay-links">
-                
                 <li onClick={() => navigate(`/teacher-profile/${user.id}/edit`)}>⚙️  Profil</li>
-
                 <li onClick={() => setModalPhotoVisible(true)}>🖼️ Changer Photo</li>
                 <li onClick={() => setDarkMode(!darkMode)}>{darkMode ? "☀️ Mode clair" : "🌙 Mode sombre"}</li>
                 <li onClick={handleLogout}>🚪 Déconnexion</li>

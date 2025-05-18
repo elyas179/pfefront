@@ -110,6 +110,7 @@ const StudentHeader = () => {
       setTimeout(() => {
         setLoadingSearch(false);
         navigate("/search-results");
+        navigate(0);
       }, 1000);
     } catch (err) {
       setLoadingSearch(false);
