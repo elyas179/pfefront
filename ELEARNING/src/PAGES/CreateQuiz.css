@@ -1,51 +1,420 @@
-.create-quiz-container {
-  max-width: 600px;
-  margin: 3rem auto;
-  background-color: var(--surface-card);
-  border-radius: 20px;
+/* 🎨 THEME VARS */
+:root {
+  --light-bg: #f9fafb;
+  --light-card: #ffffff;
+  --light-text: #1f2937;
+  --light-border: #e5e7eb;
+
+  --dark-bg: #111827;
+  --dark-card: #1f2937;
+  --dark-text: #f3f4f6;
+  --dark-border: #374151;
+
+  --blue: #3b82f6;
+  --blue-hover: #2563eb;
+  --green: #10b981;
+  --red: #ef4444;
+  --transition: 0.3s ease;
+}
+
+body.light .create-quiz-wrapper {
+  background: var(--light-bg);
+  color: var(--light-text);
+}
+body.dark .create-quiz-wrapper {
+  background: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+/* 📦 WRAPPER */
+.create-quiz-wrapper {
   padding: 2rem;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
-  color: var(--text-color);
-  transition: all 0.3s ease-in-out;
+  min-height: 100vh;
+  transition: var(--transition);
 }
 
-.create-quiz-container h2 {
-  text-align: center;
-  color: var(--primary-color, #9333ea);
-  margin-bottom: 2rem;
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-.create-quiz-form {
+/* 🧾 FORM STYLES */
+.quiz-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
-.p-float-label > input,
-.p-float-label > textarea {
-  width: 100%;
+.quiz-main-card {
+  background-color: var(--light-card);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+body.dark .quiz-main-card {
+  background-color: var(--dark-card);
+  box-shadow: 0 4px 14px rgba(255,255,255,0.05);
 }
 
+.form-section h4 {
+  font-size: 1.3rem;
+  color: var(--blue);
+  margin-bottom: 1rem;
+  position: relative;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+/* ✅ Question card */
+.question-card {
+  background: transparent;
+  border: 1px solid var(--light-border);
+  border-radius: 10px;
+  padding: 1rem;
+  transition: all var(--transition);
+}
+body.dark .question-card {
+  border: 1px solid var(--dark-border);
+}
+
+.answer-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* 💠 BUTTONS */
+.add-answer-btn,
+.add-question-btn,
 .submit-btn {
-  margin-top: 1rem;
-  background-color: var(--primary-color, #9333ea);
-  color: #fff;
+  background: var(--blue);
+  color: white;
   border: none;
-  font-weight: bold;
-  padding: 0.8rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 8px;
-  transition: background 0.3s ease-in-out;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease;
 }
 
+.add-answer-btn:hover,
+.add-question-btn:hover,
 .submit-btn:hover {
-  background-color: #7b24c4;
+  background: var(--blue-hover);
+  transform: translateY(-2px);
+}
+
+.add-answer-btn:active,
+.add-question-btn:active,
+.submit-btn:active {
+  transform: scale(0.97);
 }
 
 .quiz-message {
-  margin-top: 1.5rem;
-  text-align: center;
+  margin-top: 1rem;
   font-weight: bold;
-  color: var(--text-color);
+  color: var(--green);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+/* ✏️ Description (InputTextarea) */
+.p-inputtextarea,
+.p-inputtextarea:enabled {
+  background-color: inherit !important;
+  color: inherit !important;
+  border: 1px solid var(--light-border);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  transition: background-color 0.3s ease;
+}
+
+body.dark .p-inputtextarea {
+  background-color: var(--dark-card) !important;
+  border: 1px solid var(--dark-border);
+}
+
+/* ✅ Questions Cards */
+.question-card {
+  background-color: inherit;
+  border: 1px solid var(--light-border);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+body.dark .question-card {
+  background-color: var(--dark-card);
+  border: 1px solid var(--dark-border);
+}
+/* 🌗 Thèmes dynamiques */
+:root {
+  --light-bg: #f9f9f9;
+  --light-card: #ffffff;
+  --light-text: #111;
+  --light-border: #ccc;
+
+  --dark-bg: #0e0e0e;
+  --dark-card: #1a1a1a;
+  --dark-text: #ffffff;
+  --dark-border: #444;
+
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --danger: #ef4444;
+  --success: #22c55e;
+
+  --transition: 0.3s ease;
+}
+
+/* 👁️‍🗨️ Global Wrapper */
+body.light .create-quiz-wrapper {
+  background-color: var(--light-bg);
+  color: var(--light-text);
+}
+
+body.dark .create-quiz-wrapper {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+.create-quiz-wrapper {
+  padding: 2rem;
+  min-height: 100vh;
+  transition: var(--transition);
+}
+
+/* 🧾 Main Card */
+.quiz-main-card {
+  background-color: inherit;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  transition: var(--transition);
+}
+
+/* 📋 Form Sections */
+.quiz-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-section h4 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: inherit;
+}
+
+/* 📐 Grid for inputs */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+/* 🧠 Inputs */
+.p-inputtext,
+.p-dropdown,
+textarea,
+input {
+  background-color: inherit;
+  color: inherit;
+  border: 1px solid var(--light-border);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+body.dark .p-inputtext,
+body.dark .p-dropdown,
+body.dark textarea,
+body.dark input {
+  background-color: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  color: var(--dark-text);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #999;
+}
+
+/* 🧠 Question Card */
+.question-card {
+  background-color: inherit;
+  border: 1px solid var(--light-border);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 1rem;
+  transition: var(--transition);
+}
+
+body.dark .question-card {
+  border: 1px solid var(--dark-border);
+}
+
+/* 🧠 Answer Rows */
+.answer-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+/* ➕ Buttons */
+.add-answer-btn,
+.add-question-btn,
+.submit-btn {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-answer-btn:hover,
+.add-question-btn:hover,
+.submit-btn:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.02);
+}
+
+/* 📨 Message */
+.quiz-message {
+  margin-top: 1rem;
+  font-weight: 500;
+  color: var(--success);
+}
+
+/* 🔦 Responsive */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* 🌙 DARK MODE GLOBAL RESET */
+body.dark {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark .p-inputtext,
+body.dark .p-dropdown,
+body.dark .p-dropdown-label,
+body.dark .p-inputtextarea,
+body.dark input,
+body.dark select,
+body.dark textarea {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+  border: 1px solid #444 !important;
+}
+
+body.dark .p-dropdown-panel {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+}
+
+body.dark .p-dropdown-item.p-highlight {
+  background-color: #333 !important;
+  color: #fff !important;
+}
+
+body.dark .p-card {
+  background-color: #1f1f1f !important;
+  color: #fff !important;
+  border: 1px solid #333;
+}
+
+body.dark .p-button {
+  background-color: #9333ea !important;
+  color: white !important;
+  border: none;
+}
+
+body.dark .p-button:hover {
+  background-color: #7e22ce !important;
+}
+
+body.dark .quiz-form input,
+body.dark .quiz-form textarea {
+  background-color: #1f1f1f !important;
+  color: #fff !important;
+  border: 1px solid #333;
+}
+
+body.dark .question-card {
+  background-color: #1f1f1f !important;
+  color: #fff !important;
+  border: 1px solid #333;
+}
+/* 🌙 Forcer les <select> HTML standards à respecter le dark mode */
+body.dark select {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+  border: 1px solid #444 !important;
+}
+
+/* 🌙 Forcer les dropdowns PrimeReact (QCM, Module, Chapitre) à respecter le dark mode */
+body.dark .p-dropdown {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+  border: 1px solid #444 !important;
+}
+
+body.dark .p-dropdown-label,
+body.dark .p-dropdown-item {
+  color: #ffffff !important;
+}
+
+body.dark .p-dropdown-panel {
+  background-color: #1f1f1f !important;
+  border-color: #444 !important;
+}
+
+body.dark .p-dropdown-item.p-highlight {
+  background-color: #2c2c2c !important;
+  color: #ffffff !important;
+}
+/* 🌙 Fixe les Dropdowns PrimeReact en mode sombre */
+body.dark .p-dropdown {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+  border: 1px solid #555 !important;
+}
+
+body.dark .p-dropdown .p-dropdown-label {
+  color: #ffffff !important;
+}
+
+body.dark .p-dropdown-panel {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+  border: 1px solid #555 !important;
+}
+
+body.dark .p-dropdown-item {
+  color: #ffffff !important;
+}
+
+body.dark .p-dropdown-item.p-highlight {
+  background-color: #292929 !important;
+  color: #ffffff !important;
+}
+body.dark .p-dropdown {
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }

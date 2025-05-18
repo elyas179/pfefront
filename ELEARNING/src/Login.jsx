@@ -6,17 +6,20 @@ import "./AuthForm.css";
 
 const Login = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
 
-  const [loading, setLoading] = useState(false); // 🆕 Loading state
+  const [loading, setLoading] = useState(false);
 
+  // 🔄 Nettoyage des anciennes sessions
   useEffect(() => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("user");
+    localStorage.removeItem("userType");
   }, []);
 
   const handleChange = (e) => {
@@ -29,9 +32,10 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // 🆕 Start loading
+    setLoading(true);
 
     try {
+      // 🔐 Authentification
       const res = await axios.post("http://127.0.0.1:8000/api/token/", {
         username: formData.username,
         password: formData.password,
@@ -39,8 +43,8 @@ const Login = () => {
 
       const token = res.data.access;
       localStorage.setItem("accessToken", token);
-      console.log("✅ TOKEN reçu :", token);
 
+      // 👤 Récupération des infos utilisateur
       const userRes = await axios.get("http://127.0.0.1:8000/api/users/me/", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -49,44 +53,41 @@ const Login = () => {
 
       const user = userRes.data;
       localStorage.setItem("user", JSON.stringify(user));
-      console.log("👤 Utilisateur connecté :", user);
+      localStorage.setItem("userType", user.user_type); // <-- nécessaire pour les routes protégées
 
+      // 🚀 Redirection selon le rôle
       if (user.user_type === "professor") {
         navigate("/teacher");
-      } else {
+      } else if (user.user_type === "student") {
         navigate("/student");
+      } else {
+        alert("Type d'utilisateur inconnu.");
       }
     } catch (error) {
-      console.error("❌ Erreur de connexion :", error);
-      if (error.response) {
-        alert("Erreur : " + (error.response.data.detail || "Connexion échouée."));
-      } else {
-        alert("Erreur inconnue, vérifie ton serveur.");
-      }
+      console.error("❌ Erreur :", error);
+      const msg = error.response?.data?.detail || "Erreur de connexion.";
+      alert(msg);
     } finally {
-      setLoading(false); // 🆕 Stop loading
+      setLoading(false);
     }
   };
+
   if (loading) {
     return (
-      <div className="register-loading-screen">
+      <motion.div
+        className="loading-screen"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="spinner" />
         <p>Connexion en cours...</p>
-      </div>
+      </motion.div>
     );
   }
-  
-  return loading ? (
-    <motion.div
-      className="loading-screen"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      🔐 Connexion en cours...
-    </motion.div>
-  ) : (
+
+  return (
     <motion.div
       className="auth-container"
       initial={{ opacity: 0, x: 100 }}
@@ -104,7 +105,7 @@ const Login = () => {
           S'inscrire
         </button>
       </div>
-  
+
       <div className="auth-right">
         <h2>Connexion</h2>
         <form onSubmit={handleSubmit}>
@@ -127,17 +128,13 @@ const Login = () => {
           <a href="#" className="forgot">
             Mot de passe oublié ?
           </a>
-          <button
-            className="auth-button-filled"
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? "Connexion en cours..." : "Connexion"}
+          <button className="auth-button-filled" type="submit">
+            Connexion
           </button>
         </form>
       </div>
     </motion.div>
-  );  
+  );
 };
 
 export default Login;

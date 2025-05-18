@@ -11,11 +11,11 @@ const dashboardItems = [
   { icon: "pi pi-book", label: "Mes Cours", to: "/teacher-courses" },
   { icon: "pi pi-plus", label: "Ajouter un Cours", to: "/add-course" },
   { icon: "pi pi-database", label: "Choisir mes Modules", to: "/choose-modules" }, // ✅ New item
-  { icon: "pi pi-file", label: "Mes Ressources", to: "/teacher-resources" },
+
   { icon: "pi pi-users", label: "Étudiants", to: "/teacher-students" },
   { icon: "pi pi-pencil", label: "Créer un Quiz", to: "/create-quiz" },
   { icon: "pi pi-users", label: "Demandes d'accès", to: "/access-requests" },
-  { icon: "pi pi-cog", label: "Paramètres", to: "/edit-profile" },
+
   { icon: "pi pi-comments", label: "Chat Bot", to: "/teacher-chat" },
   { icon: "pi pi-question-circle", label: "FAQ", to: "/teacher-faq" },
 ];
@@ -40,7 +40,7 @@ const TeacherDashboard = () => {
         const token = localStorage.getItem("accessToken");
 
         const [profRes, levelRes, specRes] = await Promise.all([
-          axios.get("http://127.0.0.1:8000/api/users/professors/", {
+          axios.get("http://127.0.0.1:8000/api/users/me/", {
             headers: { Authorization: `Bearer ${token}` },
           }),
           axios.get("http://127.0.0.1:8000/courses/levels/", {
