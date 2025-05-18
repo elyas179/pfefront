@@ -43,28 +43,18 @@ import Program from "./Program";
 import AnnouncementsPage from "./PAGES/AnnouncementsPage";
 import ChooseModules from "./PAGES/ChooseModules";
 import SearchResults from "./SearchResults";
-
 import TeacherProfile from "./PAGES/TeacherProfile";
 import SearchResultst from "./SearchResultst";
-
-// Quiz
 import GenQuiz from "./GenQuiz";
 import PlayQuiz from "./PlayQuiz";
 import AssignModules from "./AssignModules";
 
-// 🛡️ Auth & routing protection
-const isAuthenticated = () => {
-  const token = localStorage.getItem("accessToken");
-  return !!token;
-};
-
+// 🔐 Private route handler
 const PrivateRoute = ({ element, allowedRoles }) => {
   const token = localStorage.getItem("accessToken");
   const userType = localStorage.getItem("userType");
-
   if (!token) return <Navigate to="/login" replace />;
   if (allowedRoles && !allowedRoles.includes(userType)) return <Navigate to="/" replace />;
-
   return element;
 };
 
@@ -91,12 +81,12 @@ const AppContent = () => {
 
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          {/* Public */}
+          {/* Public routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Student */}
+          {/* Student Only */}
           <Route path="/student" element={<PrivateRoute element={<Student />} allowedRoles={["student"]} />} />
           <Route path="/announcements" element={<PrivateRoute element={<AnnouncementsPage />} allowedRoles={["student"]} />} />
           <Route path="/chat" element={<PrivateRoute element={<Chat />} allowedRoles={["student"]} />} />
@@ -117,7 +107,7 @@ const AppContent = () => {
           <Route path="/quizzes/play" element={<PrivateRoute element={<PlayQuiz />} allowedRoles={["student"]} />} />
           <Route path="/assign-modules" element={<PrivateRoute element={<AssignModules />} allowedRoles={["student"]} />} />
 
-          {/* Teacher */}
+          {/* Teacher Only */}
           <Route path="/teacher" element={<PrivateRoute element={<TeacherDashboard />} allowedRoles={["professor"]} />} />
           <Route path="/create-quiz" element={<PrivateRoute element={<CreateQuiz />} allowedRoles={["professor"]} />} />
           <Route path="/access-requests" element={<PrivateRoute element={<AccessRequests />} allowedRoles={["professor"]} />} />
@@ -132,7 +122,7 @@ const AppContent = () => {
           <Route path="/teacher-profile/:id/edit" element={<PrivateRoute element={<TeacherProfile />} allowedRoles={["professor"]} />} />
           <Route path="/teacher-search-results" element={<PrivateRoute element={<SearchResultst />} allowedRoles={["professor"]} />} />
 
-          {/* Shared (all roles) */}
+          {/* Shared */}
           <Route path="/profile/:id" element={<PrivateRoute element={<UserProfile />} allowedRoles={["student", "professor"]} />} />
           <Route path="/profile/:id/edit" element={<PrivateRoute element={<EditProfile />} allowedRoles={["student", "professor"]} />} />
           <Route path="/modules" element={<PrivateRoute element={<ModulesPage />} allowedRoles={["student", "professor"]} />} />
