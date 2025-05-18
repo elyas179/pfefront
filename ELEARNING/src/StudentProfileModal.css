@@ -8,7 +8,7 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
-<<<<<<< HEAD:ELEARNING/src/StudentProfileModal.css
+
 .profile-container {
     display: flex;
     justify-content: center;
@@ -123,7 +123,7 @@
 }
 
   
-=======
+
 .profile-header {
   display: flex;
   align-items: center;
@@ -188,4 +188,4 @@
   text-align: center;
   padding: 2rem;
 }
->>>>>>> 8600bf189b294162d1672a4eab7e34a9592cfffe:ELEARNING/src/UserProfile.css
+
