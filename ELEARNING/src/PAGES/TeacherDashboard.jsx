@@ -17,7 +17,7 @@ const dashboardItems = [
   { icon: "pi pi-users", label: "Demandes d'accès", to: "/access-requests" },
   { icon: "pi pi-cog", label: "Paramètres", to: "/edit-profile" },
   { icon: "pi pi-comments", label: "Chat Bot", to: "/teacher-chat" },
-  { icon: "pi pi-question-circle", label: "FAQ", to: "/faq" },
+  { icon: "pi pi-question-circle", label: "FAQ", to: "/teacher-faq" },
 ];
 
 

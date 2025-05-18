@@ -43,6 +43,7 @@ import Program from "./Program";
 import AnnouncementsPage from "./PAGES/AnnouncementsPage";
 import ChooseModules from "./PAGES/ChooseModules";
 import SearchResults from "./SearchResults";
+import TeacherProfile from './PAGES/TeacherProfile';
 
 // ✅ New quiz components
 import GenQuiz from "./GenQuiz";
@@ -63,13 +64,13 @@ const AppContent = () => {
   const isStudentHeader = [
     "/student", "/chat", "/courses", "/my-modules", "/studentsettings",
     "/faq", "/modules/", "/quizes", "/quiz/", "/performance", "/profile",
-    "/StudentProfessors", "/Program", "/quizzes/gen", "/quizzes/play", "/search-results"
+    "/StudentProfessors", "/Program", "/quizzes/gen", "/quizzes/play", "/search-results" ,"/announcements"
   ].some(path => location.pathname.startsWith(path));
 
   const isTeacherHeader = [
     "/teacher", "/create-quiz", "/access-requests", "/teacher-settings",
     "/teacher-chat", "/teacher-faq", "/teacher-courses", "/add-course",
-    "/teacher-resources", "/teacher-students", "/choose-modules"
+    "/teacher-resources", "/teacher-students", "/choose-modules", "/teacher-profile/:id/edit"
   ].some(path => location.pathname.startsWith(path));
 
   return (
@@ -120,6 +121,7 @@ const AppContent = () => {
           <Route path="/teacher-resources" element={<PrivateRoute element={<TeacherResources />} />} />
           <Route path="/teacher-students" element={<PrivateRoute element={<TeacherStudents />} />} />
           <Route path="/choose-modules" element={<PrivateRoute element={<ChooseModules />} />} />
+          <Route path="/teacher-profile/:id/edit" element={<PrivateRoute element={<TeacherProfile />} />} />
 
           {/* Profile */}
           <Route path="/profile/:id" element={<PrivateRoute element={<UserProfile />} />} />

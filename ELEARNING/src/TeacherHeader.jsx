@@ -227,7 +227,7 @@ const TeacherHeader = () => {
               </div>
               <ul className="overlay-links">
                 
-                <li onClick={() => navigate(`/profile/${user.id}/edit`)}>⚙️  Profil</li>
+                <li onClick={() => navigate(`/teacher-profile/${user.id}/edit`)}>⚙️  Profil</li>
 
                 <li onClick={() => setModalPhotoVisible(true)}>🖼️ Changer Photo</li>
                 <li onClick={() => setDarkMode(!darkMode)}>{darkMode ? "☀️ Mode clair" : "🌙 Mode sombre"}</li>

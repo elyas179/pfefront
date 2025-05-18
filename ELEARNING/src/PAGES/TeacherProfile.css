@@ -1,0 +1,130 @@
+
+:root {
+    --bg-color-light: #f9fafb;
+    --bg-color-dark: #1e1e2f;
+    --text-color-light: #111827;
+    --text-color-dark: #f4f4f5;
+    --border-color-light: #d1d5db;
+    --border-color-dark: #3f3f46;
+    --primary-color: #9333ea;
+    --success-color: #22c55e;
+  }
+  
+  /* Applique le bon thème dynamiquement */
+  .editpage-full {
+    width: 100%;
+    min-height: 100vh;
+    padding: 3rem 5%;
+    box-sizing: border-box;
+    background-color: var(--surface-card, var(--bg-color-light));
+    color: var(--text-color, var(--text-color-light));
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  /* Titre principal */
+  .editpage-full h1 {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+    text-align: center;
+  }
+  
+  /* Données actuelles affichées */
+  .editpage-info {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .editpage-info p {
+    margin: 0.4rem 0;
+  }
+  
+  .editpage-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0.8rem 0;
+    border: 2px solid var(--primary-color);
+  }
+  
+  /* Séparateur entre affichage et édition */
+  .editpage-separator {
+    margin: 2rem 0;
+    border: none;
+    border-top: 1px solid var(--border-color-light);
+  }
+  
+  /* Formulaire de modification */
+  .editpage-form-plain {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .editpage-form-plain label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: var(--text-color, #333);
+  }
+  
+  .editpage-form-plain input,
+  .editpage-form-plain textarea {
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
+    background-color: var(--surface-ground, #fff);
+    color: var(--text-color, #111);
+    transition: border-color 0.2s ease-in-out;
+  }
+  
+  .editpage-form-plain input:disabled {
+    background-color: #e5e7eb;
+    color: #6b7280;
+    cursor: not-allowed;
+  }
+  
+  .editpage-form-plain button {
+    margin-top: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.9rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    width: 100%;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .editpage-success {
+    margin-top: 2rem;
+    background-color: var(--success-color);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+  }
+  .editpage-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color, #9333ea);
+    display: block;
+    margin: 1rem auto;
+    box-shadow: 0 0 10px rgba(147, 51, 234, 0.5);
+  }
+  .editpage-info {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    text-align: center; /* 👈 centré */
+  }
+  
+  
