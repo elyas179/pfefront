@@ -9,7 +9,6 @@ import "./TeacherDashboard.css";
 
 const dashboardItems = [
   { icon: "pi pi-book", label: "Mes Cours", to: "/teacher-courses" },
-  { icon: "pi pi-plus", label: "Ajouter un Cours", to: "/add-course" },
   { icon: "pi pi-database", label: "Choisir mes Modules", to: "/choose-modules" }, // ✅ New item
 
   { icon: "pi pi-users", label: "Étudiants", to: "/teacher-students" },
