@@ -85,7 +85,7 @@ const Home = () => {
             {res.access_type === "public" ? (
               "🔓 Public"
             ) : res.access_approved ? (
-              "🔒 Privé (accepté)"
+              "🔒 Privé"
             ) : accessRequested[res.id] ? (
               <span className="pending">🔒 Privé (en attente)</span>
             ) : (
@@ -219,15 +219,15 @@ const Home = () => {
           <motion.p className="search-subtitle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
             (cours, module, ressource, chapitre, spécialité...)
           </motion.p>
-          <motion.div className="homepage-search-bar" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+          <motion.div className="home-search-bar" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="🔍 Tapez votre recherche ici..."
-              className="search-input search-animated-input"
+              className="home-search-input search-animated-input"
             />
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="search-button" onClick={handleSearch}>
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="home-search-button" onClick={handleSearch}>
               Rechercher
             </motion.button>
           </motion.div>

@@ -844,30 +844,26 @@ body.dark-mode .delete-button:hover {
   transition: all 0.2s ease;
 }
 
-.student-header-center:hover {
-  box-shadow: 0 0 12px rgba(147, 51, 234, 0.4);
+.student-header-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+
 .search-input {
-  border: none;
-  outline: none;
-  padding: 8px 12px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  width: 180px;
   border-radius: 8px;
-  font-size: 0.95rem;
-  background-color: transparent;
-  width: 240px;
-  color: #333;
 }
 
 .search-button {
-  background-color: #9333ea;
-  color: white;
-  border: none;
-  padding: 8px 14px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  margin-left: 8px;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
 }
 
 .search-button:hover {
