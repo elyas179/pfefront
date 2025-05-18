@@ -24,28 +24,35 @@ const Register = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🔁 Remove tokens just in case
   useEffect(() => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
   }, []);
 
-  // 🔁 Load levels & specialities
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/courses/levels/')
-      .then(res => {
-        const data = Array.isArray(res.data) ? res.data : res.data.results || [];
-        setLevels(data);
-      })
-      .catch(err => console.error('❌ Erreur niveaux:', err));
-
-    axios.get('http://127.0.0.1:8000/courses/specialities/')
+    axios.get('http://127.0.0.1:8000/api/courses/specialities/')
       .then(res => {
         const data = Array.isArray(res.data) ? res.data : res.data.results || [];
         setSpecialities(data);
       })
       .catch(err => console.error('❌ Erreur spécialités:', err));
   }, []);
+
+  useEffect(() => {
+    if (formData.speciality) {
+      axios.get(`http://127.0.0.1:8000/api/courses/speciality/${formData.speciality}/levels/`)
+        .then(res => {
+          const data = Array.isArray(res.data.levels) ? res.data.levels : [];
+          setLevels(data);
+        })
+        .catch(err => {
+          console.error("❌ Erreur niveaux :", err);
+          setLevels([]);
+        });
+    } else {
+      setLevels([]);
+    }
+  }, [formData.speciality]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -89,7 +96,7 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users/register/', payload);
+      await axios.post('http://127.0.0.1:8000/api/users/register/', payload);
       setSuccessMessage("✅ Inscription réussie ! Connecte-toi maintenant.");
     } catch (error) {
       console.error("❌ Erreur d'inscription :", error.response?.data || error.message);
@@ -99,11 +106,6 @@ const Register = () => {
     }
   };
 
-  const selectedSpeciality = specialities.find(s => String(s.id) === formData.speciality);
-  const specialityName = selectedSpeciality?.name.toLowerCase() || '';
-  const availableLevels = levels.filter(level =>
-    specialityName.includes("tronc") ? level.name.startsWith("L1") : level.name.startsWith("L2")
-  );
   if (loading) {
     return (
       <div className="register-loading-screen">
@@ -112,7 +114,7 @@ const Register = () => {
       </div>
     );
   }
-  
+
   return (
     <motion.div
       className="auth-container"
@@ -163,7 +165,7 @@ const Register = () => {
               {formData.speciality && (
                 <select name="level" value={formData.level} onChange={handleChange} required>
                   <option value="">Choisir un niveau</option>
-                  {availableLevels.map(level => (
+                  {levels.map(level => (
                     <option key={level.id} value={level.id}>{level.name}</option>
                   ))}
                 </select>
