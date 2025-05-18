@@ -18,6 +18,7 @@ const PlayQuiz = () => {
   const [showResults, setShowResults] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [recentQuizId, setRecentQuizId] = useState(null);
+  const [isCalculating, setIsCalculating] = useState(false);
 
   useEffect(() => {
     const recent = localStorage.getItem("recentQuizId");
@@ -76,6 +77,8 @@ const PlayQuiz = () => {
     if (currentIndex + 1 < selectedQuiz.questions.length) {
       setCurrentIndex(currentIndex + 1);
     } else {
+      setIsCalculating(true);
+
       const totalCorrect = selectedQuiz.questions.reduce((acc, q) => {
         const correct = q.answers.filter((a) => a.is_correct).map((a) => a.id).sort().toString();
         const selected = selectedAnswers[q.id] ? [selectedAnswers[q.id]].sort().toString() : "";
@@ -102,7 +105,10 @@ const PlayQuiz = () => {
         }
       }
 
-      setShowResults(true);
+      setTimeout(() => {
+        setIsCalculating(false);
+        setShowResults(true);
+      }, 2000);
     }
   };
 
@@ -120,7 +126,15 @@ const PlayQuiz = () => {
       <div className="quiz-play-page full-quiz-mode">
         <h1 className="quiz-title">🎯 {selectedQuiz.title}</h1>
 
-        {currentQuestion && !showResults && (
+        {isCalculating && (
+          <div className="calculating-screen">
+            <div className="spinner"></div>
+            <h2>Calcul du score...</h2>
+            <p>Un instant pendant que nous analysons vos réponses.</p>
+          </div>
+        )}
+
+        {currentQuestion && !showResults && !isCalculating && (
           <div className="quiz-question-block">
             <h2 className="question-title">
               {currentIndex + 1}. {currentQuestion.text}
@@ -148,29 +162,33 @@ const PlayQuiz = () => {
           </div>
         )}
 
-        {showResults && (
+        {showResults && !isCalculating && (
           <div className="quiz-results">
             <FaCheckCircle className="result-icon" />
             <h2>✅ Quiz terminé !</h2>
             <p>Score : {score} / {selectedQuiz.questions.length}</p>
-            <ul className="review-list">
+            <div className="review-answers">
+              <h3>Vos réponses :</h3>
               {selectedQuiz.questions.map((q) => {
                 const correctIds = q.answers.filter((a) => a.is_correct).map((a) => a.id);
                 const userAnswerId = selectedAnswers[q.id];
                 return (
-                  <li key={q.id} className="review-item">
-                    <strong>{q.text}</strong>
+                  <div key={q.id} className="review-question">
+                    <p><strong>{q.text}</strong></p>
                     <ul>
                       {q.answers.map((ans) => (
-                        <li key={ans.id} className={`review-answer ${ans.id === userAnswerId ? "selected-answer" : ""} ${ans.is_correct ? "correct-answer" : ""}`}>
+                        <li
+                          key={ans.id}
+                          className={`review-answer ${ans.id === userAnswerId ? "selected-answer" : ""} ${ans.is_correct ? "correct-answer" : ""}`}
+                        >
                           {ans.text}
                         </li>
                       ))}
                     </ul>
-                  </li>
+                  </div>
                 );
               })}
-            </ul>
+            </div>
             <button className="quiz-start-btn" onClick={resetQuiz}>Retour</button>
           </div>
         )}

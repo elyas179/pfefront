@@ -49,6 +49,9 @@ import SearchResultst from './SearchResultst';
 import GenQuiz from "./GenQuiz";
 import PlayQuiz from "./PlayQuiz";
 
+// ✅ AssignModules page
+import AssignModules from "./AssignModules";
+
 const isAuthenticated = () => {
   const token = localStorage.getItem("accessToken");
   return !!token;
@@ -64,7 +67,8 @@ const AppContent = () => {
   const isStudentHeader = [
     "/student", "/chat", "/courses", "/my-modules", "/studentsettings",
     "/faq", "/modules/", "/quizes", "/quiz/", "/performance", "/profile",
-    "/StudentProfessors", "/Program", "/quizzes/gen", "/quizzes/play", "/search-results" ,"/announcements"
+    "/StudentProfessors", "/Program", "/quizzes/gen", "/quizzes/play",
+    "/search-results", "/announcements", "/assign-modules"
   ].some(path => location.pathname.startsWith(path));
 
   const isTeacherHeader = [
@@ -109,6 +113,7 @@ const AppContent = () => {
           <Route path="/search-results" element={<SearchResults />} />
           <Route path="/quizzes/gen" element={<PrivateRoute element={<GenQuiz />} />} />
           <Route path="/quizzes/play" element={<PrivateRoute element={<PlayQuiz />} />} />
+          <Route path="/assign-modules" element={<PrivateRoute element={<AssignModules />} />} />
 
           {/* Teacher */}
           <Route path="/teacher" element={<PrivateRoute element={<TeacherDashboard />} />} />
