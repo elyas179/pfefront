@@ -1,325 +1,401 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
 import "./TeacherCourses.css";
 
-const TeacherCourses = () => {
+const MODULES_ENDPOINT = "http://127.0.0.1:8000/api/users/choosemodules/";
+const RESOURCES_ENDPOINT = "http://127.0.0.1:8000/api/courses/resources/my/";
+
+const resourceTypes = [
+  "cours-pdf",
+  "cours-vidéo",
+  "td-pdf",
+  "td-vidéo",
+  "tp-pdf",
+  "tp-vidéo",
+];
+const accessTypes = [
+  { value: "public", label: "Public" },
+  { value: "private", label: "Privé" },
+];
+
+const getToken = () => localStorage.getItem("accessToken");
+
+function TeacherCourses() {
   const [modules, setModules] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [expandedModule, setExpandedModule] = useState(null);
   const [expandedChapter, setExpandedChapter] = useState(null);
-  const [editingChapterId, setEditingChapterId] = useState(null);
-  const [chapterName, setChapterName] = useState("");
-  const [resources, setResources] = useState([]);
-  const [editResourceId, setEditResourceId] = useState(null);
-  const [resourceEdits, setResourceEdits] = useState({});
-  const [newResource, setNewResource] = useState({
-    name: "",
-    link: "",
-    chapter: null,
-    resource_type: "cours-pdf",
-    access_type: "public",
-  });
-
-  const [loadingAction, setLoadingAction] = useState("");
-
-  const token = localStorage.getItem("accessToken");
+  const [resources, setResources] = useState({});
+  const [addForm, setAddForm] = useState({});
+  const [editForm, setEditForm] = useState({});
+  const [editOpen, setEditOpen] = useState(null);
+  const [globalMsg, setGlobalMsg] = useState("");
+  const [actionLoading, setActionLoading] = useState({});
 
   useEffect(() => {
-    if (!token) return;
-    axios
-      .get("http://127.0.0.1:8000/api/users/choosemodules/", {
+    fetchModules();
+  }, []);
+
+  const fetchModules = async () => {
+    setLoading(true);
+    try {
+      const token = getToken();
+      const res = await axios.get(MODULES_ENDPOINT, {
         headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setModules(res.data || []))
-      .catch(() => setModules([]));
-  }, [token]);
-
-  const toggleModule = (id) => {
-    setExpandedModule(expandedModule === id ? null : id);
-    setExpandedChapter(null);
-    setResources([]);
-  };
-
-  const toggleChapter = (chapter) => {
-    const chapterId = chapter.id;
-    setEditingChapterId(null);
-    setExpandedChapter(expandedChapter === chapterId ? null : chapterId);
-
-    if (expandedChapter !== chapterId) {
-      axios
-        .get("http://127.0.0.1:8000/api/courses/resources/my/", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          const list = res.data || [];
-          setResources(list.filter((r) => r.chapter === chapterId));
-        })
-        .catch(() => setResources([]));
-    }
-  };
-
-  const handleChapterEdit = (chapter) => {
-    setEditingChapterId(chapter.id);
-    setChapterName(chapter.name);
-  };
-
-  const saveChapterName = async (id) => {
-    setLoadingAction("saving");
-    try {
-      await axios.patch(
-        `http://127.0.0.1:8000/api/courses/chapters/${id}/edit-name/`,
-        { name: chapterName },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      const updatedModules = modules.map((mod) => ({
-        ...mod,
-        chapters: mod.chapters.map((chap) =>
-          chap.id === id ? { ...chap, name: chapterName } : chap
-        ),
-      }));
-      setModules(updatedModules);
-      setEditingChapterId(null);
-    } catch (err) {
-      console.error("Erreur nom chapitre:", err);
-    } finally {
-      setLoadingAction("");
-    }
-  };
-
-  const handleResourceChange = (id, field, value) => {
-    setResourceEdits((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], [field]: value },
-    }));
-  };
-
-  const saveResourceEdit = async (id) => {
-    setLoadingAction("saving");
-    try {
-      await axios.patch(
-        `http://127.0.0.1:8000/api/courses/resources/${id}/edit/`,
-        resourceEdits[id],
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setEditResourceId(null);
-    } catch (err) {
-      console.error("Erreur édition ressource:", err);
-    } finally {
-      setLoadingAction("");
-    }
-  };
-
-  const deleteResource = async (id) => {
-    setLoadingAction("deleting");
-    try {
-      await axios.delete(
-        `http://127.0.0.1:8000/api/courses/resources/${id}/delete/`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setResources((prev) => prev.filter((r) => r.id !== id));
-    } catch (err) {
-      console.error("Erreur suppression ressource:", err);
-    } finally {
-      setLoadingAction("");
-    }
-  };
-
-  const addResource = async () => {
-    const { name, link, chapter, resource_type, access_type } = newResource;
-    if (!name || !link || !chapter) return;
-
-    setLoadingAction("adding");
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/courses/resources/",
-        { name, link, chapter, resource_type, access_type },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      const added = response.data;
-      setResources((prev) => [...prev, added]);
-      setNewResource({
-        name: "",
-        link: "",
-        chapter: chapter,
-        resource_type: "cours-pdf",
-        access_type: "public",
       });
-    } catch (err) {
-      console.error("Erreur ajout ressource:", err);
-    } finally {
-      setLoadingAction("");
+      setModules(Array.isArray(res.data) ? res.data : res.data.results || []);
+    } catch (e) {
+      setGlobalMsg("Erreur de chargement des modules.");
     }
+    setLoading(false);
+  };
+
+  const fetchResources = async (chapterId) => {
+    try {
+      const token = getToken();
+      const res = await axios.get(RESOURCES_ENDPOINT + `?chapter=${chapterId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setResources((prev) => ({
+        ...prev,
+        [chapterId]: Array.isArray(res.data) ? res.data : [],
+      }));
+    } catch {
+      setResources((prev) => ({ ...prev, [chapterId]: [] }));
+    }
+  };
+
+  const handleModuleAccordion = (moduleId) => {
+    setExpandedModule(expandedModule === moduleId ? null : moduleId);
+    setExpandedChapter(null);
+  };
+
+  const handleChapterAccordion = (chapterId) => {
+    setExpandedChapter(expandedChapter === chapterId ? null : chapterId);
+    if (expandedChapter !== chapterId) {
+      fetchResources(chapterId);
+    }
+  };
+
+  const handleAddFormChange = (chapterId, field, value) => {
+    setAddForm({
+      ...addForm,
+      [chapterId]: { ...addForm[chapterId], [field]: value },
+    });
+  };
+
+  const handleEditFormChange = (resourceId, field, value) => {
+    setEditForm({
+      ...editForm,
+      [resourceId]: { ...editForm[resourceId], [field]: value },
+    });
+  };
+
+  const getLinkValue = (form, fallback = "") => {
+    return form?.link !== undefined ? form.link : fallback;
+  };
+
+  const handleAddResource = async (chapterId) => {
+    const form = addForm[chapterId] || {};
+    const data = {
+      ...form,
+      name: form.name || "",
+      resource_type: form.resource_type || "cours-pdf",
+      link: getLinkValue(form, ""),
+      chapter: chapterId,
+      access_type: form.access_type || "public",
+    };
+    if (!data.name) return;
+    setActionLoading((l) => ({ ...l, ["add-" + chapterId]: true }));
+    try {
+      const token = getToken();
+      await axios.post(
+        "http://127.0.0.1:8000/api/courses/resources/",
+        data,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setAddForm((f) => ({ ...f, [chapterId]: {} }));
+      fetchResources(chapterId);
+    } catch {
+      setGlobalMsg("Erreur lors de l'ajout.");
+    }
+    setActionLoading((l) => ({ ...l, ["add-" + chapterId]: false }));
+  };
+
+  const handleEditResource = async (resId, chapterId) => {
+    const form = editForm[resId] || {};
+    const data = { ...form, link: getLinkValue(form, "") };
+    setActionLoading((l) => ({ ...l, ["edit-" + resId]: true }));
+    try {
+      const token = getToken();
+      await axios.patch(
+        `http://127.0.0.1:8000/api/courses/resources/${resId}/edit/`,
+        data,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setEditOpen(null);
+      fetchResources(chapterId);
+    } catch {
+      setGlobalMsg("Erreur lors de la modification.");
+    }
+    setActionLoading((l) => ({ ...l, ["edit-" + resId]: false }));
+  };
+
+  const handleDeleteResource = async (resId, chapterId) => {
+    if (!window.confirm("Supprimer cette ressource ?")) return;
+    setActionLoading((l) => ({ ...l, ["delete-" + resId]: true }));
+    try {
+      const token = getToken();
+      await axios.delete(
+        `http://127.0.0.1:8000/api/courses/resources/${resId}/delete/`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      fetchResources(chapterId);
+    } catch {
+      setGlobalMsg("Erreur lors de la suppression.");
+    }
+    setActionLoading((l) => ({ ...l, ["delete-" + resId]: false }));
   };
 
   return (
-    <div className="teacher-courses-container">
-      <h1 className="teacher-courses-title">👨‍🏫 Mes Modules Enseignés</h1>
-      <div className="modules-list">
-        {modules.map((mod) => (
-          <div key={mod.id} className="module-block">
-            <div
-              className="module-title"
-              onClick={() => toggleModule(mod.id)}
-            >
-              {mod.name}
-              <span className="arrow">{expandedModule === mod.id ? "▲" : "▼"}</span>
-            </div>
-            {expandedModule === mod.id && (
-              <div className="chapters-section">
-                {mod.chapters.map((chap) => (
-                  <div key={chap.id} className="chapter-block">
-                    <div className="chapter-header">
-                      {editingChapterId === chap.id ? (
-                        <>
-                          <input
-                            value={chapterName}
-                            onChange={(e) => setChapterName(e.target.value)}
-                          />
-                          <button onClick={() => saveChapterName(chap.id)}>
-                            {loadingAction === "saving" ? "💾 Saving..." : "💾"}
-                          </button>
-                        </>
+    <div className="tc-container">
+      <h1 className="tc-title">Mes modules</h1>
+      {globalMsg && <div className="tc-message">{globalMsg}</div>}
+      {loading ? (
+        <div className="tc-loading">Chargement...</div>
+      ) : modules.length === 0 ? (
+        <div className="tc-empty">Aucun module trouvé.</div>
+      ) : (
+        <div className="tc-accordion-list">
+          {modules.map((module) => (
+            <div key={module.id} className="tc-accordion">
+              <button
+                className={`tc-accordion-header ${expandedModule === module.id ? "active" : ""}`}
+                onClick={() => handleModuleAccordion(module.id)}
+              >
+                <span>{module.name}</span>
+                <span className="tc-arrow">{expandedModule === module.id ? "▲" : "▼"}</span>
+              </button>
+              <AnimatePresence initial={false}>
+                {expandedModule === module.id && (
+                  <motion.div
+                    className="tc-accordion-panel open"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.23, ease: "easeInOut" }}
+                  >
+                    <div className="tc-chapters-list">
+                      {module.chapters.length === 0 ? (
+                        <div className="tc-empty">Aucun chapitre.</div>
                       ) : (
-                        <span onClick={() => toggleChapter(chap)}>
-                          {chap.name}
-                          <span className="arrow">{expandedChapter === chap.id ? "▲" : "▼"}</span>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleChapterEdit(chap);
-                            }}
-                          >
-                            ✏️
-                          </button>
-                        </span>
+                        module.chapters.map((chapter) => (
+                          <div key={chapter.id} className="tc-accordion tc-chapter-accordion">
+                            <button
+                              className={`tc-accordion-header chapter-header ${expandedChapter === chapter.id ? "active" : ""}`}
+                              onClick={() => handleChapterAccordion(chapter.id)}
+                            >
+                              <span>{chapter.name}</span>
+                              <span className="tc-arrow">{expandedChapter === chapter.id ? "▲" : "▼"}</span>
+                            </button>
+                            <AnimatePresence initial={false}>
+                              {expandedChapter === chapter.id && (
+                                <motion.div
+                                  className="tc-accordion-panel chapter-panel open"
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.20 }}
+                                >
+                                  <div>
+                                    <div className="tc-resources-list">
+                                      {resources[chapter.id] && resources[chapter.id].length > 0 ? (
+                                        resources[chapter.id].map((res) => (
+                                          <motion.div
+                                            key={res.id}
+                                            className="tc-resource-card inline"
+                                            initial={{ y: 10, opacity: 0 }}
+                                            animate={{ y: 0, opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            transition={{ duration: 0.15 }}
+                                          >
+                                            {editOpen === res.id ? (
+                                              <div className="tc-resource-form inline">
+                                                <input
+                                                  type="text"
+                                                  placeholder="Nom"
+                                                  value={editForm[res.id]?.name ?? res.name}
+                                                  onChange={(e) =>
+                                                    handleEditFormChange(res.id, "name", e.target.value)
+                                                  }
+                                                  disabled={actionLoading["edit-" + res.id]}
+                                                />
+                                                <select
+                                                  value={editForm[res.id]?.resource_type ?? res.resource_type}
+                                                  onChange={(e) =>
+                                                    handleEditFormChange(res.id, "resource_type", e.target.value)
+                                                  }
+                                                  disabled={actionLoading["edit-" + res.id]}
+                                                >
+                                                  {resourceTypes.map((type) => (
+                                                    <option key={type} value={type}>
+                                                      {type}
+                                                    </option>
+                                                  ))}
+                                                </select>
+                                                <input
+                                                  type="url"
+                                                  placeholder="Lien"
+                                                  value={editForm[res.id]?.link ?? res.link}
+                                                  onChange={(e) =>
+                                                    handleEditFormChange(res.id, "link", e.target.value)
+                                                  }
+                                                  disabled={actionLoading["edit-" + res.id]}
+                                                  style={{ minWidth: "120px" }}
+                                                />
+                                                <select
+                                                  value={editForm[res.id]?.access_type ?? res.access_type}
+                                                  onChange={(e) =>
+                                                    handleEditFormChange(res.id, "access_type", e.target.value)
+                                                  }
+                                                  disabled={actionLoading["edit-" + res.id]}
+                                                >
+                                                  {accessTypes.map((at) => (
+                                                    <option key={at.value} value={at.value}>
+                                                      {at.label}
+                                                    </option>
+                                                  ))}
+                                                </select>
+                                                <button
+                                                  className="tc-btn save"
+                                                  onClick={() => handleEditResource(res.id, chapter.id)}
+                                                  disabled={actionLoading["edit-" + res.id]}
+                                                >
+                                                  {actionLoading["edit-" + res.id] ? "Mise à jour..." : "Valider"}
+                                                </button>
+                                                <button
+                                                  className="tc-btn cancel"
+                                                  onClick={() => setEditOpen(null)}
+                                                  disabled={actionLoading["edit-" + res.id]}
+                                                >
+                                                  Annuler
+                                                </button>
+                                              </div>
+                                            ) : (
+                                              <div className="tc-resource-info inline">
+                                                <span className="tc-resource-name">{res.name}</span>
+                                                <span className="tc-resource-type">{res.resource_type}</span>
+                                                <span className="tc-resource-access">
+                                                  {res.access_type === "public" ? "🌍" : "🔒"}
+                                                </span>
+                                                <a className="tc-resource-link" href={res.link} target="_blank" rel="noopener noreferrer">
+                                                  Ouvrir
+                                                </a>
+                                                <button
+                                                  className="tc-btn edit"
+                                                  onClick={() => {
+                                                    setEditForm({
+                                                      ...editForm,
+                                                      [res.id]: {
+                                                        name: res.name,
+                                                        resource_type: res.resource_type,
+                                                        link: res.link,
+                                                        access_type: res.access_type,
+                                                      },
+                                                    });
+                                                    setEditOpen(res.id);
+                                                  }}
+                                                  disabled={actionLoading["edit-" + res.id]}
+                                                >
+                                                  Modifier
+                                                </button>
+                                                <button
+                                                  className="tc-btn delete"
+                                                  onClick={() => handleDeleteResource(res.id, chapter.id)}
+                                                  disabled={actionLoading["delete-" + res.id]}
+                                                >
+                                                  {actionLoading["delete-" + res.id] ? "Suppression..." : "Supprimer"}
+                                                </button>
+                                              </div>
+                                            )}
+                                          </motion.div>
+                                        ))
+                                      ) : (
+                                        <div className="tc-empty">Aucune ressource.</div>
+                                      )}
+                                    </div>
+                                    <div className="tc-add-resource-form inline">
+                                      <input
+                                        type="text"
+                                        placeholder="Nom"
+                                        value={addForm[chapter.id]?.name || ""}
+                                        onChange={(e) =>
+                                          handleAddFormChange(chapter.id, "name", e.target.value)
+                                        }
+                                        disabled={actionLoading["add-" + chapter.id]}
+                                      />
+                                      <select
+                                        value={addForm[chapter.id]?.resource_type || resourceTypes[0]}
+                                        onChange={(e) =>
+                                          handleAddFormChange(chapter.id, "resource_type", e.target.value)
+                                        }
+                                        disabled={actionLoading["add-" + chapter.id]}
+                                      >
+                                        {resourceTypes.map((type) => (
+                                          <option key={type} value={type}>
+                                            {type}
+                                          </option>
+                                        ))}
+                                      </select>
+                                      <input
+                                        type="url"
+                                        placeholder="Lien"
+                                        value={addForm[chapter.id]?.link || ""}
+                                        onChange={(e) =>
+                                          handleAddFormChange(chapter.id, "link", e.target.value)
+                                        }
+                                        disabled={actionLoading["add-" + chapter.id]}
+                                        style={{ minWidth: "120px" }}
+                                      />
+                                      <select
+                                        value={addForm[chapter.id]?.access_type || accessTypes[0].value}
+                                        onChange={(e) =>
+                                          handleAddFormChange(chapter.id, "access_type", e.target.value)
+                                        }
+                                        disabled={actionLoading["add-" + chapter.id]}
+                                      >
+                                        {accessTypes.map((at) => (
+                                          <option key={at.value} value={at.value}>
+                                            {at.label}
+                                          </option>
+                                        ))}
+                                      </select>
+                                      <button
+                                        className="tc-btn add"
+                                        onClick={() => handleAddResource(chapter.id)}
+                                        disabled={actionLoading["add-" + chapter.id]}
+                                      >
+                                        {actionLoading["add-" + chapter.id] ? "Ajout..." : "Ajouter"}
+                                      </button>
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        ))
                       )}
                     </div>
-
-                    {expandedChapter === chap.id && (
-                      <div className="resources-section">
-                        {resources.map((res) => (
-                          <div key={res.id} className="resource-item">
-                            {editResourceId === res.id ? (
-                              <>
-                                <input
-                                  value={resourceEdits[res.id]?.name || res.name}
-                                  onChange={(e) =>
-                                    handleResourceChange(res.id, "name", e.target.value)
-                                  }
-                                />
-                                <input
-                                  value={resourceEdits[res.id]?.link || res.link}
-                                  onChange={(e) =>
-                                    handleResourceChange(res.id, "link", e.target.value)
-                                  }
-                                />
-                                <select
-                                  value={resourceEdits[res.id]?.resource_type || res.resource_type}
-                                  onChange={(e) =>
-                                    handleResourceChange(res.id, "resource_type", e.target.value)
-                                  }
-                                >
-                                  <option value="cours-pdf">Cours PDF</option>
-                                  <option value="cours-video">Cours Vidéo</option>
-                                  <option value="td-pdf">TD PDF</option>
-                                  <option value="td-video">TD Vidéo</option>
-                                  <option value="tp-pdf">TP PDF</option>
-                                  <option value="tp-video">TP Vidéo</option>
-                                </select>
-                                <select
-                                  value={resourceEdits[res.id]?.access_type || res.access_type}
-                                  onChange={(e) =>
-                                    handleResourceChange(res.id, "access_type", e.target.value)
-                                  }
-                                >
-                                  <option value="public">Public</option>
-                                  <option value="private">Privé</option>
-                                </select>
-                                <button onClick={() => saveResourceEdit(res.id)}>
-                                  {loadingAction === "saving" ? "💾 Saving..." : "💾"}
-                                </button>
-                              </>
-                            ) : (
-                              <>
-                                <span>{res.name}</span>
-                                <button onClick={() => setEditResourceId(res.id)}>✏️</button>
-                                <button onClick={() => deleteResource(res.id)}>
-                                  {loadingAction === "deleting" ? "🗑️ Deleting..." : "🗑️"}
-                                </button>
-                              </>
-                            )}
-                          </div>
-                        ))}
-
-                        <div className="resource-item add-resource-form">
-                          <input
-                            type="text"
-                            placeholder="Nom"
-                            value={newResource.chapter === chap.id ? newResource.name : ""}
-                            onChange={(e) =>
-                              setNewResource((prev) => ({
-                                ...prev,
-                                name: e.target.value,
-                                chapter: chap.id,
-                              }))
-                            }
-                          />
-                          <input
-                            type="url"
-                            placeholder="Lien"
-                            value={newResource.chapter === chap.id ? newResource.link : ""}
-                            onChange={(e) =>
-                              setNewResource((prev) => ({
-                                ...prev,
-                                link: e.target.value,
-                                chapter: chap.id,
-                              }))
-                            }
-                          />
-                          <select
-                            value={newResource.chapter === chap.id ? newResource.resource_type : "cours-pdf"}
-                            onChange={(e) =>
-                              setNewResource((prev) => ({
-                                ...prev,
-                                resource_type: e.target.value,
-                                chapter: chap.id,
-                              }))
-                            }
-                          >
-                            <option value="cours-pdf">Cours PDF</option>
-                            <option value="cours-video">Cours Vidéo</option>
-                            <option value="td-pdf">TD PDF</option>
-                            <option value="td-video">TD Vidéo</option>
-                            <option value="tp-pdf">TP PDF</option>
-                            <option value="tp-video">TP Vidéo</option>
-                          </select>
-                          <select
-                            value={newResource.chapter === chap.id ? newResource.access_type : "public"}
-                            onChange={(e) =>
-                              setNewResource((prev) => ({
-                                ...prev,
-                                access_type: e.target.value,
-                                chapter: chap.id,
-                              }))
-                            }
-                          >
-                            <option value="public">Public</option>
-                            <option value="private">Privé</option>
-                          </select>
-                          <button onClick={addResource}>
-                            {loadingAction === "adding" ? "➕ Adding..." : "➕"}
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
-};
+}
 
 export default TeacherCourses;

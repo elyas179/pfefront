@@ -1,204 +1,234 @@
-/* === Global Layout === */
-.teacher-courses-container {
-  padding: 2rem;
-  max-width: 1100px;
-  margin: auto;
-  font-family: 'Segoe UI', sans-serif;
-  color: white;
-  transition: background 0.3s, color 0.3s;
+:root {
+  --tc-bg: #faf8fe;
+  --tc-primary: #9c27b0;
+  --tc-primary-light: #eedeff;
+  --tc-primary-dark: #5f1573;
+  --tc-border: #ecd9ff;
+  --tc-text: #232042;
+  --tc-muted: #a68abb;
+  --tc-success: #4fa37d;
+  --tc-danger: #d32f2f;
+  --tc-card-bg: #fff;
+  --tc-card-shadow: 0 2px 12px rgba(156,39,176,0.09);
 }
 
-.teacher-courses-title {
-  font-size: 2.4rem;
-  text-align: center;
-  color: #3b82f6;
+body { background: var(--tc-bg); }
+
+.tc-container {
+  max-width: 860px;
+  margin: 32px auto;
+  background: var(--tc-card-bg);
+  box-shadow: var(--tc-card-shadow);
+  border-radius: 16px;
+  padding: 32px 36px 36px 36px;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.tc-title {
+  color: var(--tc-primary-dark);
+  font-size: 2.2rem;
   font-weight: 700;
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.6rem;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  text-align: center;
 }
 
-/* === Module Styling === */
-.module-block {
-  background: linear-gradient(135deg, #1e1e2f, #161622);
-  margin-bottom: 1.2rem;
+.tc-message {
+  margin-bottom: 16px;
+  color: var(--tc-danger);
+  text-align: center;
+  font-weight: 500;
+}
+
+.tc-loading,
+.tc-empty {
+  text-align: center;
+  color: var(--tc-muted);
+  padding: 18px 0;
+}
+
+.tc-accordion-list { margin: 0; padding: 0; }
+.tc-accordion {
+  margin-bottom: 13px;
+  border: 1.5px solid var(--tc-border);
   border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px #00000033;
+  background: var(--tc-card-bg);
+  box-shadow: 0 1px 7px rgba(156,39,176,0.04);
 }
 
-.module-title {
-  font-size: 1.5rem;
-  padding: 1rem 1.5rem;
-  font-weight: bold;
-  color: #8b5cf6;
-  cursor: pointer;
+.tc-accordion-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: #111827;
-  border-bottom: 1px solid #2a2a3d;
-  transition: background 0.3s;
-}
-
-.module-title:hover {
-  background-color: #2c2c3f;
-}
-
-.arrow {
-  font-size: 1.2rem;
-  color: #60a5fa;
-}
-
-/* === Chapter Styling === */
-.chapter-block {
-  padding: 1rem 1.5rem;
-  background-color: #1f1f2f;
-  border-top: 1px solid #2c2c3c;
-}
-
-.chapter-header {
-  font-size: 1.1rem;
+  justify-content: space-between;
+  background: var(--tc-primary-light);
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 1.14rem;
   font-weight: 600;
-  color: #fbbf24;
-  margin-bottom: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
+  color: var(--tc-primary-dark);
+  padding: 18px 30px;
+  border-radius: 12px 12px 0 0;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.18s;
+}
+.tc-accordion-header.active {
+  background: var(--tc-primary);
+  color: #fff;
+}
+.tc-arrow {
+  font-size: 1.18em;
+  margin-left: 12px;
 }
 
-.chapter-header input {
-  padding: 0.4rem 0.6rem;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background-color: #111827;
-  color: #f9fafb;
-  flex-grow: 1;
+.tc-accordion-panel {
+  max-height: 0;
+  overflow: hidden;
+  background: var(--tc-card-bg);
+  transition: max-height 0.3s, box-shadow 0.18s;
+  border-radius: 0 0 12px 12px;
+  box-shadow: none;
+  padding: 0 20px;
+}
+.tc-accordion-panel.open {
+  max-height: 2000px;
+  padding: 14px 20px 20px 20px;
+  box-shadow: 0 2px 8px rgba(156,39,176,0.05);
 }
 
-/* === Resources === */
-.resources-section {
-  margin-top: 1rem;
+.tc-chapters-list { margin: 0; padding: 0; }
+.tc-chapter-accordion {
+  margin-bottom: 10px;
+  border: 1px solid var(--tc-border);
+  border-radius: 10px;
+  background: #faf0ff;
+}
+.chapter-header {
+  font-size: 1.05rem;
+  font-weight: 500;
+  background: #f6e6ff;
+  color: var(--tc-primary-dark);
+  border-radius: 10px 10px 0 0;
+}
+.chapter-header.active {
+  background: var(--tc-primary);
+  color: #fff;
+}
+.chapter-panel.open {
+  max-height: 1400px;
+  padding: 12px 18px 16px 18px;
+}
+
+.tc-resources-list {
+  margin: 8px 0 10px 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 9px;
 }
 
-.resource-item {
-  background-color: #2a2a3d;
-  padding: 1rem;
-  border-radius: 10px;
+.tc-resource-card.inline, .tc-resource-info.inline, .tc-resource-form.inline, .tc-add-resource-form.inline {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
+  flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
-  transition: background-color 0.2s;
+  gap: 12px;
+  background: var(--tc-card-bg);
+  border-radius: 8px;
+  padding: 9px 13px;
+  border: 1px solid var(--tc-border);
+  box-shadow: 0 1px 4px rgba(156,39,176,0.05);
+  margin-bottom: 3px;
 }
 
-.resource-item:hover {
-  background-color: #34344a;
+.tc-resource-info.inline > *, .tc-resource-form.inline > *, .tc-add-resource-form.inline > * {
+  margin-bottom: 0 !important;
 }
 
-.resource-item input,
-.resource-item select {
-  background-color: #1e1e2f;
-  color: white;
-  border: 1px solid #555;
+.tc-resource-name {
+  font-weight: 600;
+  color: var(--tc-primary-dark);
+  font-size: 1.05em;
+}
+
+.tc-resource-type {
+  background: #e9d3fc;
+  color: var(--tc-primary-dark);
   border-radius: 6px;
-  padding: 0.5rem 0.8rem;
-  font-size: 0.95rem;
-  transition: border 0.2s, box-shadow 0.2s;
+  padding: 1px 10px;
+  font-size: 0.95em;
+  margin-left: 2px;
+  margin-right: 2px;
 }
 
-.resource-item input:focus,
-.resource-item select:focus {
-  border-color: #6366f1;
-  outline: none;
-  box-shadow: 0 0 6px #6366f199;
+.tc-resource-access {
+  font-size: 1.22em;
+  margin-right: 4px;
 }
 
-.resource-item button {
-  background: #6366f1;
-  color: white;
+.tc-resource-link {
+  color: var(--tc-primary-dark);
+  font-weight: 500;
+  text-decoration: underline;
+  margin-right: 10px;
+  margin-left: 2px;
+}
+
+.tc-btn {
   border: none;
   border-radius: 6px;
-  padding: 0.45rem 0.9rem;
-  font-size: 0.9rem;
+  padding: 6px 13px;
+  font-size: 0.98em;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.18s, color 0.18s, box-shadow 0.16s;
 }
-
-.resource-item button:hover {
-  background: #4f46e5;
+.tc-btn.edit {
+  background: var(--tc-primary-light);
+  color: var(--tc-primary-dark);
 }
-
-/* === Add Form === */
-.add-resource-form {
-  background-color: #111827;
-  border-top: 1px dashed #3b82f6;
-  padding-top: 1rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
+.tc-btn.edit:hover {
+  background: var(--tc-primary);
+  color: #fff;
 }
-
-/* === Light Mode === */
-body.light .teacher-courses-container {
-  background-color: #ffffff;
-  color: #1f2937;
+.tc-btn.delete {
+  background: #ffebee;
+  color: var(--tc-danger);
 }
-
-body.light .teacher-courses-title {
-  color: #2563eb;
+.tc-btn.delete:hover {
+  background: var(--tc-danger);
+  color: #fff;
 }
-
-body.light .module-block {
-  background: #f9fafb;
-  box-shadow: 0 0 8px #d1d5db;
+.tc-btn.save {
+  background: var(--tc-success);
+  color: #fff;
 }
-
-body.light .module-title {
-  background: #e5e7eb;
-  color: #4f46e5;
+.tc-btn.cancel {
+  background: #f0eef4;
+  color: #232042;
 }
-
-body.light .chapter-block {
-  background-color: #ffffff;
-  border-top: 1px solid #e5e7eb;
+.tc-btn.add {
+  background: var(--tc-primary);
+  color: #fff;
 }
-
-body.light .chapter-header {
-  color: #d97706;
+.tc-btn.add:hover {
+  background: var(--tc-primary-dark);
 }
-
-body.light .resource-item {
-  background-color: #f3f4f6;
+.tc-resource-form.inline input,
+.tc-resource-form.inline select,
+.tc-add-resource-form.inline input,
+.tc-add-resource-form.inline select {
+  border: 1px solid var(--tc-border);
+  border-radius: 5px;
+  padding: 4px 7px;
+  font-size: 0.97em;
+  background: #faf4ff;
+  transition: border 0.18s;
 }
-
-body.light .resource-item:hover {
-  background-color: #e5e7eb;
-}
-
-body.light .resource-item input,
-body.light .resource-item select {
-  background-color: white;
-  color: #1f2937;
-  border: 1px solid #ccc;
-}
-
-body.light .resource-item button {
-  background-color: #6366f1;
-}
-
-body.light .resource-item button:hover {
-  background-color: #4f46e5;
-}
-
-body.light .add-resource-form {
-  background-color: #f9fafb;
-  border-top: 1px dashed #60a5fa;
+.tc-resource-form.inline input:focus,
+.tc-resource-form.inline select:focus,
+.tc-add-resource-form.inline input:focus,
+.tc-add-resource-form.inline select:focus {
+  border-color: var(--tc-primary);
+  outline: none;
 }

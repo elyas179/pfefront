@@ -27,9 +27,12 @@ const ModuleDetail = () => {
     const fetchModule = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-        const res = await axios.get(`http://127.0.0.1:8000/api/users/modules/${id}/`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          `http://127.0.0.1:8000/api/users/modules/${id}/`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setModule(res.data);
       } catch (err) {
         console.error("Erreur de chargement du module:", err);
@@ -124,24 +127,33 @@ const ModuleDetail = () => {
 
                     <span className="drive-col">{formatDate(res.created_at)}</span>
 
+                    {/* ----- ACCÈS LOGIQUE CORRIGÉE ICI ----- */}
                     <span className="drive-col">
-                    {res.link || res.access_approved ? (
-  res.access_type === "public" ? "🔓 Public" : "🔒 Privé (accepté)"
-) : accessRequested[res.id] ? (
-  <span style={{ color: "#aaa", fontStyle: "italic" }}>Demande envoyée</span>
-) : (
-  <button
-    onClick={(e) => {
-      e.stopPropagation();
-      handleRequestAccess(res.id);
-    }}
-    className="request-access-btn"
-  >
-    Demander l'accès
-  </button>
-)}
-
+                      {res.access_type === "public" ? (
+                        res.link ? (
+                          <span>🔓 Public</span>
+                        ) : (
+                          <span style={{ color: "#aaa" }}>Non disponible</span>
+                        )
+                      ) : res.access_approved && res.link ? (
+                        <span>🔒 Privé (accepté)</span>
+                      ) : accessRequested[res.id] ? (
+                        <span style={{ color: "#aaa", fontStyle: "italic" }}>
+                          Demande envoyée
+                        </span>
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRequestAccess(res.id);
+                          }}
+                          className="request-access-btn"
+                        >
+                          Demander l'accès
+                        </button>
+                      )}
                     </span>
+                    {/* ------------------------------------- */}
 
                     <span className="drive-col">{res.owner_name || "—"}</span>
                   </div>
