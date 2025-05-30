@@ -69,11 +69,11 @@ const StudentProfessors = () => {
 
   return (
     <div className="professors-page">
-      <h1 className="professors-title">👩‍🏫 Nos Professeurs</h1>
+      <h1 className="professors-title">👩‍🏫 Nos Enseignants</h1>
 
       <div className="search-followings-container">
         <div className="followings-list">
-          <h2>📌 Mes Professeurs Suivis</h2>
+          <h2>📌 Mes Enseignants Suivis</h2>
           {myFollowings.length > 0 ? (
             <ul>
               {myFollowings.map(follow => {

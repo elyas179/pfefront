@@ -8,11 +8,11 @@ const RESOURCES_ENDPOINT = "http://127.0.0.1:8000/api/courses/resources/my/";
 
 const resourceTypes = [
   "cours-pdf",
-  "cours-vidéo",
+  "cours-video",
   "td-pdf",
-  "td-vidéo",
+  "td-video",
   "tp-pdf",
-  "tp-vidéo",
+  "tp-video",
 ];
 const accessTypes = [
   { value: "public", label: "Public" },
