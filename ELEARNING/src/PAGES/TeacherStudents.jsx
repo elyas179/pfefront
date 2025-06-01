@@ -9,6 +9,23 @@ const TeacherStudents = () => {
 
   const token = localStorage.getItem("accessToken");
 
+  const SPECIALITY_MAP = {
+  1: "ACAD",
+  2: "",
+  3: "ISIL",
+  4: "TRONC-COMMUN"
+};
+
+const LEVEL_MAP = {
+  4: "L1-S1",
+  5: "L1-S2",
+  6: "L2-S3",
+  7: "L2-S4",
+  2: "L3-S5",
+  13: "L3-S6"
+
+};
+
   const fetchStudents = async (search = "") => {
     try {
       setLoading(true);
@@ -65,8 +82,8 @@ const TeacherStudents = () => {
   <h3>{student.username}</h3>
   <p>{student.first_name || "-"} {student.last_name || ""}</p>
   <p>✉️ {student.email || "—"}</p>
-  <p>🎓 Spécialité ID : {student.speciality ?? "—"}</p>
-  <p>📘 Niveau ID : {student.level ?? "—"}</p>
+  <p>🎓 Spécialité : {SPECIALITY_MAP[student.speciality] ?? "—"}</p>
+<p>📘 Niveau : {LEVEL_MAP[student.level] ?? "—"}</p>
 </div>
             </div>
           ))}
