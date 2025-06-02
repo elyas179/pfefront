@@ -107,7 +107,7 @@ const Chat = () => {
                   <span>.</span>
                 </span>
               ) : (
-                msg.text.replace(/\n/g, " ")
+                <span style={{ whiteSpace: "pre-wrap" }}>{msg.text}</span>
               )}
             </div>
           </div>
