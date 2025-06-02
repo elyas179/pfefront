@@ -25,7 +25,7 @@ const PlayQuiz = () => {
     if (recent) setRecentQuizId(parseInt(recent));
 
     axios
-      .get("http://127.0.0.1:8000/api/courses/modules/", {
+      .get("http://127.0.0.1:8000/api/users/my-modules/", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setModules(res.data))

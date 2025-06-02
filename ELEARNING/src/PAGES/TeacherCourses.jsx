@@ -26,7 +26,7 @@ function TeacherCourses() {
   const [loading, setLoading] = useState(true);
   const [expandedModule, setExpandedModule] = useState(null);
   const [expandedChapter, setExpandedChapter] = useState(null);
-  const [resources, setResources] = useState({});
+  const [resources, setResources] = useState({}); // {chapterId: [res, ...]}
   const [addForm, setAddForm] = useState({});
   const [editForm, setEditForm] = useState({});
   const [editOpen, setEditOpen] = useState(null);
@@ -210,6 +210,7 @@ function TeacherCourses() {
                                 >
                                   <div>
                                     <div className="tc-resources-list">
+                                      {/* Affiche UNIQUEMENT les ressources DU CHAPITRE courant */}
                                       {resources[chapter.id] && resources[chapter.id].length > 0 ? (
                                         resources[chapter.id].map((res) => (
                                           <motion.div

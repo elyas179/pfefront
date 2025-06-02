@@ -102,7 +102,12 @@ const ModuleDetail = () => {
               )}
 
               {chapter.all_resources?.map((res) => {
-                const isAccessible = Boolean(res.link);
+                // Seules ressources publiques OU privées et acceptées sont cliquables
+                const isAccessible =
+                  res.access_type === "public"
+                    ? Boolean(res.link)
+                    : res.access_approved && Boolean(res.link);
+
                 return (
                   <div
                     key={res.id}
@@ -127,7 +132,6 @@ const ModuleDetail = () => {
 
                     <span className="drive-col">{formatDate(res.created_at)}</span>
 
-                    {/* ----- ACCÈS LOGIQUE CORRIGÉE ICI ----- */}
                     <span className="drive-col">
                       {res.access_type === "public" ? (
                         res.link ? (
@@ -153,7 +157,6 @@ const ModuleDetail = () => {
                         </button>
                       )}
                     </span>
-                    {/* ------------------------------------- */}
 
                     <span className="drive-col">{res.owner_name || "—"}</span>
                   </div>
